@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 @layer base {
   :root {
     --background: 200 20% 98%;
@@ -9,7 +8,6 @@
     --btn-background-hover: 200 10% 89%;
     --foreground: 200 50% 3%;
   }
-
   @media (prefers-color-scheme: dark) {
     :root {
       --background: 200 50% 3%;
@@ -19,7 +17,6 @@
     }
   }
 }
-
 @layer base {
   * {
     @apply border-foreground/20;
