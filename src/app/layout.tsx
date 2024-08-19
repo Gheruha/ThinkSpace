@@ -19,9 +19,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png" />
 				<link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png" />
 				<link rel="manifest" href="/site.webmanifest" />
+				<link
+					rel="stylesheet"
+					href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+				/>
 			</head>
 			<body className="bg-background text-foreground">
-				<main className="min-h-screen flex flex-col items-center">{children}</main>
+				<main className="items-center">{children}</main>
 			</body>
 		</html>
 	);
