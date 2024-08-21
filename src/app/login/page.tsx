@@ -1,12 +1,27 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
+	const router = useRouter();
 	const [data, setData] = useState<{ email: string; password: string }>({
 		email: '',
 		password: ''
 	});
+
+	useEffect(() => {
+		const checkSession = async () => {
+			const {
+				data: { session }
+			} = await supabase.auth.getSession();
+
+			if (session) {
+				router.push('/');
+			}
+		};
+		checkSession();
+	}, [router]);
 
 	const signUp = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -18,6 +33,7 @@ export default function Login() {
 
 			if (loginData) {
 				console.log(loginData);
+				router.refresh();
 			}
 		} catch (error) {
 			console.log(error);
@@ -34,6 +50,7 @@ export default function Login() {
 
 			if (loginData) {
 				console.log(loginData);
+				router.refresh();
 			}
 		} catch (error) {
 			console.log(error);
