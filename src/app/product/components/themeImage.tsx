@@ -8,9 +8,11 @@ type ThemeImageProps = {
 };
 
 export function ThemeImage({ lightSrc, darkSrc, alt, className }: ThemeImageProps) {
-	const { theme } = useTheme();
+	const { theme, systemTheme } = useTheme();
 
-	const imageSrc = theme === 'dark' ? darkSrc : lightSrc;
+	const currentTheme = theme === 'system' ? systemTheme : theme;
+
+	const imageSrc = currentTheme === 'dark' ? darkSrc : lightSrc;
 
 	return <img src={imageSrc} alt={alt} className={className} />;
 }
