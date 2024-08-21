@@ -1,5 +1,6 @@
 import { GeistSans } from 'geist/font/sans';
 import '@/styles/css/global.css';
+import { ThemeProvider } from '@/components/theme-provider';
 
 const defaultUrl = process.env.VERCEL_URL
 	? `https://${process.env.VERCEL_URL}`
@@ -25,7 +26,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				/>
 			</head>
 			<body className="bg-background text-foreground">
-				<main className="items-center">{children}</main>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+					disableTransitionOnChange
+				>
+					<main className="items-center">{children}</main>
+				</ThemeProvider>
 			</body>
 		</html>
 	);
