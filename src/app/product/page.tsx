@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { ModeToggle } from '@/components/theme-toggler';
 import { ChevronUp, ChevronDown, ArrowRight } from 'lucide-react';
+import { ThemeImage } from './components/themeImage';
 import Link from 'next/link';
 
 export default function Home() {
@@ -23,7 +25,12 @@ export default function Home() {
 			<header className="h-16 p-4">
 				<div className="flex space-x-3">
 					<a className="flex items-center space-x-4 min-w-[10.25rem]" href="/example">
-						<img src="favicon.png" alt="icon" className="w-8 h-8" />
+						<ThemeImage
+							lightSrc="icons/light_mode/favicon.png"
+							darkSrc="icons/dark_mode/favicon.png"
+							alt="icon"
+							className="w-8 h-8"
+						/>
 						<span className="text-xl font-medium w-36">Think Space</span>
 					</a>
 					<nav className="flex justify-between w-full">
@@ -49,6 +56,7 @@ export default function Home() {
 							</Button>
 						</div>
 						<div className="flex space-x-3">
+							<ModeToggle />
 							<Link href="/login" passHref>
 								<Button variant="ghost" size="xs">
 									<span className="text-lg font-normal">Log in</span>
@@ -69,7 +77,7 @@ export default function Home() {
 					<p className="hero-text">
 						Organize your <span className="text-violet-700">Life</span>
 					</p>
-					<p className="text-gray-800 max-w-[40rem] simple-text">
+					<p className="text-gray-800 dark:text-gray-200 max-w-[40rem] simple-text">
 						All in one single place, use all the templates available or create one by yourself.
 					</p>
 					<Button className="flex space-x-1 get-started">
@@ -86,7 +94,12 @@ export default function Home() {
 						size="icon"
 						onClick={() => window.open('https://github.com/Gheruha/ThinkSpace', '_blank')}
 					>
-						<img src="github_logo.png" alt="icon" className="w-8 h-8" />
+						<ThemeImage
+							lightSrc="icons/light_mode/github_logo.png"
+							darkSrc="icons/dark_mode/github_logo.png"
+							alt="icon"
+							className="w-8 h-8"
+						/>
 					</Button>
 					<span className="opacity-70 pt-1">© 2024 Think Space</span>
 				</div>
