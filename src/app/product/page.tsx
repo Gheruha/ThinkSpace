@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronUp, ChevronDown, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Home() {
 	const [about, setAbout] = useState(false);
@@ -48,12 +49,16 @@ export default function Home() {
 							</Button>
 						</div>
 						<div className="flex space-x-3">
-							<Button variant="ghost" size="xs">
-								<span className="text-lg font-normal">Log in</span>
-							</Button>
-							<Button size="xs" className="rounded-sm">
-								<span className="text-lg font-normal">Sign up</span>
-							</Button>
+							<Link href="/login" passHref>
+								<Button variant="ghost" size="xs">
+									<span className="text-lg font-normal">Log in</span>
+								</Button>
+							</Link>
+							<Link href="/login" passHref>
+								<Button size="xs" className="rounded-sm">
+									<span className="text-lg font-normal">Sign up</span>
+								</Button>
+							</Link>
 						</div>
 					</nav>
 				</div>

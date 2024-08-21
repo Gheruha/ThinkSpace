@@ -2,7 +2,6 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(req: NextRequest) {
-	// Changed to "middleware"
 	const res = NextResponse.next();
 	const supabase = createMiddlewareClient({ req, res });
 
@@ -12,10 +11,19 @@ export async function middleware(req: NextRequest) {
 
 	console.log(session);
 
-	if (!session) {
-		// If there's no session, redirect to the login page
-		return NextResponse.rewrite(new URL('/product', req.url));
+	// Extract the pathname from the URL
+	const { pathname } = req.nextUrl;
+
+	// Allow access to the login and product pages without session
+	if (pathname.startsWith('/login') || pathname.startsWith('/product')) {
+		return res;
 	}
+
+	// Redirect to the login page if there's no session and the user is accessing other protected routes
+	if (!session) {
+		return NextResponse.redirect(new URL('/product', req.url));
+	}
+
 	// Always return the response object
 	return res;
 }
