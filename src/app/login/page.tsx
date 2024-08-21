@@ -17,7 +17,7 @@ export default function Login() {
 			});
 
 			if (loginData) {
-				window.location.reload();
+				console.log(loginData);
 			}
 		} catch (error) {
 			console.log(error);
