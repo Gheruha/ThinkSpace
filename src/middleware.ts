@@ -14,7 +14,7 @@ export async function middleware(req: NextRequest) {
 
 	if (!session) {
 		// If there's no session, redirect to the login page
-		return NextResponse.rewrite(new URL('/login', req.url));
+		return NextResponse.rewrite(new URL('/product', req.url));
 	}
 	// Always return the response object
 	return res;
