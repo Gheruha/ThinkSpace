@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -30,6 +31,21 @@
     --chart-5: 27 87% 67%;
   }
 }
+
+.login {
+  @apply flex flex-col w-2/5 text-foreground 
+}
+
+.login-input-text{
+  @apply rounded-md px-4 py-2 bg-inherit border mb-6 focus:outline-violet-700
+}
+
+@media(max-width: 1000px){
+  .login{
+    @apply w-3/4
+  }
+}
+
 @media (max-width: 600px) {
   .hero-text {
     @apply text-6xl pb-1;
@@ -40,7 +56,11 @@
   .get-started {
     @apply text-base flex justify-center w-full;
   }
+  .login{
+    @apply w-full
+  }
 }
+
 @media (min-width: 600px) {
   .hero-page {
     @apply flex flex-col items-start;
