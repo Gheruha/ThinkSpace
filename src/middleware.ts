@@ -14,12 +14,12 @@ export async function middleware(req: NextRequest) {
 	// Extract the pathname from the URL
 	const { pathname } = req.nextUrl;
 
-	// Allow access to the login and product pages without session
-	if (pathname.startsWith('/login') || pathname.startsWith('/product')) {
+	// Allow access to the auth and product pages without session
+	if (pathname.startsWith('/auth') || pathname.startsWith('/product')) {
 		return res;
 	}
 
-	// Redirect to the login page if there's no session and the user is accessing other protected routes
+	// Redirect to the auth page if there's no session and the user is accessing other protected routes
 	if (!session) {
 		return NextResponse.redirect(new URL('/product', req.url));
 	}

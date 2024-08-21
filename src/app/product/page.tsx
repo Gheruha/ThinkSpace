@@ -5,11 +5,17 @@ import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/theme-toggler';
 import { ChevronUp, ChevronDown, ArrowRight } from 'lucide-react';
 import { ThemeImage } from './components/themeImage';
+import { useButtonContext } from './components/clickedButton';
 import Link from 'next/link';
 
 export default function Home() {
 	const [about, setAbout] = useState(false);
 	const [download, setDownload] = useState(false);
+	const { setClickedButton } = useButtonContext();
+
+	const handleClick = (button: string) => {
+		setClickedButton(button);
+	};
 
 	function isAbout() {
 		setAbout(!about);
@@ -57,13 +63,13 @@ export default function Home() {
 						</div>
 						<div className="flex space-x-3">
 							<ModeToggle />
-							<Link href="/login" passHref>
-								<Button variant="ghost" size="xs">
+							<Link href="/auth" passHref>
+								<Button variant="ghost" size="xs" onClick={() => handleClick('Log In')}>
 									<span className="text-lg font-normal">Log in</span>
 								</Button>
 							</Link>
-							<Link href="/login" passHref>
-								<Button size="xs" className="rounded-sm">
+							<Link href="/auth" passHref>
+								<Button size="xs" className="rounded-sm" onClick={() => handleClick('Sign Up')}>
 									<span className="text-lg font-normal">Sign up</span>
 								</Button>
 							</Link>

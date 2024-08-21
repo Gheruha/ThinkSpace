@@ -1,6 +1,7 @@
 import { GeistSans } from 'geist/font/sans';
 import '@/styles/css/global.css';
 import { ThemeProvider } from '@/components/theme-provider';
+import { ButtonProvider } from './product/components/clickedButton';
 
 const defaultUrl = process.env.VERCEL_URL
 	? `https://${process.env.VERCEL_URL}`
@@ -32,7 +33,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					enableSystem
 					disableTransitionOnChange
 				>
-					<main className="items-center">{children}</main>
+					<ButtonProvider>
+						<main className="items-center">{children}</main>
+					</ButtonProvider>
 				</ThemeProvider>
 			</body>
 		</html>
