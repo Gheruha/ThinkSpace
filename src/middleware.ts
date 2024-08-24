@@ -14,8 +14,12 @@ export async function middleware(req: NextRequest) {
 	// Extract the pathname from the URL
 	const { pathname } = req.nextUrl;
 
-	// Allow access to the auth and product pages without session
-	if (pathname.startsWith('/auth') || pathname.startsWith('/product')) {
+	// Allow access to the product, auth, pricing pages without session
+	if (
+		pathname.startsWith('/product') ||
+		pathname.startsWith('/auth') ||
+		pathname.startsWith('/pricing')
+	) {
 		return res;
 	}
 
