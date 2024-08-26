@@ -18,7 +18,8 @@ export async function middleware(req: NextRequest) {
 	if (
 		pathname.startsWith('/product') ||
 		pathname.startsWith('/auth') ||
-		pathname.startsWith('/pricing')
+		pathname.startsWith('/pricing') ||
+		pathname.startsWith('/testing')
 	) {
 		return res;
 	}
