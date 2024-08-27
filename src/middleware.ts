@@ -6,10 +6,14 @@ export async function middleware(req: NextRequest) {
 	const supabase = createMiddlewareClient({ req, res });
 
 	const {
-		data: { session }
+		data: { session },
+		error
 	} = await supabase.auth.getSession();
 
 	console.log(session);
+	if (error) {
+		console.log(error);
+	}
 
 	// Extract the pathname from the URL
 	const { pathname } = req.nextUrl;
@@ -23,10 +27,9 @@ export async function middleware(req: NextRequest) {
 	) {
 		return res;
 	}
-
 	// Redirect to the auth page if there's no session and the user is accessing other protected routes
 	if (!session) {
-		return NextResponse.redirect(new URL('/product', req.url));
+		return NextResponse.redirect(new URL('/login', req.url));
 	}
 
 	// Always return the response object

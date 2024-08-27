@@ -199,12 +199,12 @@ export default function LearningProductLayout({ children }: { children: React.Re
 										className="flex flex-col space-y-3 py-4 border-t"
 										style={{ backgroundColor: 'hsl(var(--background))' }}
 									>
-										<Link href="/auth" passHref>
+										<Link href="/auth1" passHref>
 											<Button size="xs" className="w-full" onClick={() => handleClick('Sign Up')}>
 												<span className="text-lg font-normal">Sign up</span>
 											</Button>
 										</Link>
-										<Link href="/auth" passHref>
+										<Link href="/auth1" passHref>
 											<Button
 												variant="outline"
 												size="xs"
