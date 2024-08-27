@@ -145,12 +145,12 @@ export default function LearningProductLayout({ children }: { children: React.Re
 										</Button>
 									</Link>
 									<ModeToggle />
-									<Link href="/auth" passHref>
+									<Link href="/authentication" passHref>
 										<Button variant="ghost" size="xs" onClick={() => handleClick('Log In')}>
 											<span className="text-lg font-normal">Log in</span>
 										</Button>
 									</Link>
-									<Link href="/auth" passHref>
+									<Link href="/authentication" passHref>
 										<Button size="xs" className="rounded-sm" onClick={() => handleClick('Sign Up')}>
 											<span className="text-lg font-normal">Sign up</span>
 										</Button>
