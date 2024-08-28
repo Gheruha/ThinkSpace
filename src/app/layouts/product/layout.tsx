@@ -220,7 +220,7 @@ export default function LearningProductLayout({ children }: { children: React.Re
 						</nav>
 					)}
 				</div>
-				<main className="flex pt-20 px-8 justify-center">{children}</main>
+				<main className="flex pt-20 px-8 justify-center z-30">{children}</main>
 				{/* Footer */}
 				<footer className="pt-16 pb-10 px-4 mt-auto">
 					<div className="flex justify-center items-center space-x-2">

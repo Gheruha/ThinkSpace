@@ -71,6 +71,14 @@
 	.get-started {
 		@apply text-base flex justify-center w-full;
 	}
+
+	.pricing-plans-grid {
+		@apply col-span-12 mb-4 relative;
+	}
+
+	.pricing-tab {
+		@apply w-full pt-10 pb-4;
+	}
 }
 
 @media (min-width: 600px) {
@@ -88,6 +96,14 @@
 
 	.get-started {
 		@apply text-lg;
+	}
+
+	.pricing-plans-grid {
+		@apply col-span-12 mb-4 relative;
+	}
+
+	.pricing-tab {
+		@apply w-full pt-10 pb-4;
 	}
 }
 
@@ -107,9 +123,26 @@
 	.get-started {
 		@apply text-xl;
 	}
+
+	.pricing-plans-grid {
+		@apply col-span-6 mb-4 relative;
+	}
+
+	.pricing-tab {
+		@apply w-full pt-10 pb-4;
+	}
+}
+
+@media (min-width: 1024px) {
+	.pricing-tab {
+		@apply w-[20rem];
+	}
 }
 
 @media (min-width: 1080px) {
+	.pricing-plans-grid {
+		@apply col-span-4 mb-4 relative;
+	}
 }
 
 @media (min-width: 1280px) {
@@ -119,5 +152,4 @@
 }
 
 @layer utilities {
-
 }
