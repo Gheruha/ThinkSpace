@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { LoginForm } from './components/log_in';
 import { SignUpForm } from './components/sign_up';
 import { useButtonContext } from '../product/components/clickedButton';
+import { Card } from '@/components/ui/card';
+import SignupForm from './components/signupForm';
 
 export default function Auth() {
 	const router = useRouter();

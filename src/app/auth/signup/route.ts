@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
 
 	if (data) console.log(data);
 	if (error) console.log(error);
+	console.log('I am here motherfucker');
 
 	return NextResponse.redirect(url.origin, {
 		status: 301
