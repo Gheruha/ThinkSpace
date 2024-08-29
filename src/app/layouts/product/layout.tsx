@@ -145,13 +145,13 @@ export default function LearningProductLayout({ children }: { children: React.Re
 										</Button>
 									</Link>
 									<ModeToggle />
-									<Link href="/authentication" passHref>
-										<Button variant="ghost" size="xs" onClick={() => handleClick('Log In')}>
+									<Link href="/auth" onClick={() => handleClick('Log In')} passHref>
+										<Button variant="ghost" size="xs">
 											<span className="text-lg font-normal">Log in</span>
 										</Button>
 									</Link>
-									<Link href="/authentication" passHref>
-										<Button size="xs" className="rounded-sm" onClick={() => handleClick('Sign Up')}>
+									<Link href="/auth" onClick={() => handleClick('Sign Up')} passHref>
+										<Button size="xs" className="rounded-sm">
 											<span className="text-lg font-normal">Sign up</span>
 										</Button>
 									</Link>
@@ -199,18 +199,13 @@ export default function LearningProductLayout({ children }: { children: React.Re
 										className="flex flex-col space-y-3 py-4 border-t"
 										style={{ backgroundColor: 'hsl(var(--background))' }}
 									>
-										<Link href="/auth1" passHref>
-											<Button size="xs" className="w-full" onClick={() => handleClick('Sign Up')}>
+										<Link href="/auth" onClick={() => handleClick('Sign Up')} passHref>
+											<Button size="xs" className="w-full">
 												<span className="text-lg font-normal">Sign up</span>
 											</Button>
 										</Link>
-										<Link href="/auth1" passHref>
-											<Button
-												variant="outline"
-												size="xs"
-												className="w-full"
-												onClick={() => handleClick('Log In')}
-											>
+										<Link href="/auth" onClick={() => handleClick('Log In')} passHref>
+											<Button variant="outline" size="xs" className="w-full">
 												<span className="text-lg font-normal">Log in</span>
 											</Button>
 										</Link>

@@ -21,9 +21,8 @@ export async function middleware(req: NextRequest) {
 	// Allow access to the product, auth, pricing pages without session
 	if (
 		pathname.startsWith('/product') ||
-		pathname.startsWith('/authentication') ||
-		pathname.startsWith('/pricing') ||
 		pathname.startsWith('/auth') ||
+		pathname.startsWith('/pricing') ||
 		pathname.startsWith('/testing')
 	) {
 		return res;

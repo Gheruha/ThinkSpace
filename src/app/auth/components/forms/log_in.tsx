@@ -1,11 +1,10 @@
 import Link from 'next/link';
 
+import { useButtonContext } from '@/app/product/components/clickedButton';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useButtonContext } from '../../product/components/clickedButton';
-import { ChangeEventHandler, MouseEventHandler } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export function LoginForm() {
 	const { setClickedButton } = useButtonContext();
@@ -14,7 +13,7 @@ export function LoginForm() {
 	};
 
 	return (
-		<form action="/auth/signin" method="post">
+		<form action="/auth/components/routes/login" method="post">
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-xl">Login</CardTitle>
@@ -24,7 +23,7 @@ export function LoginForm() {
 					<div className="grid gap-4">
 						<div className="grid gap-2">
 							<Label htmlFor="email">Email</Label>
-							<Input id="email" type="email" placeholder="m@example.com" required />
+							<Input id="email" name="email" type="email" placeholder="m@example.com" required />
 						</div>
 						<div className="grid gap-2">
 							<div className="flex items-center">
@@ -33,7 +32,13 @@ export function LoginForm() {
 									Forgot your password?
 								</Link>
 							</div>
-							<Input id="password" type="password" placeholder="••••••••" required />
+							<Input
+								id="password"
+								name="password"
+								type="password"
+								placeholder="••••••••"
+								required
+							/>
 						</div>
 						<Button type="submit" className="w-full">
 							Login
@@ -44,7 +49,7 @@ export function LoginForm() {
 					</div>
 					<div className="mt-4 text-center text-sm">
 						Don&apos;t have an account?{' '}
-						<Link href="#" className="underline" onClick={() => handleClick('Sign Up')}>
+						<Link href="/auth" className="underline" onClick={() => handleClick('Sign Up')}>
 							Sign up
 						</Link>
 					</div>

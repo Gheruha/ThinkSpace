@@ -1,42 +1,19 @@
 import Link from 'next/link';
 
+import { useButtonContext } from '@/app/product/components/clickedButton';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useButtonContext } from '../../product/components/clickedButton';
-import { ChangeEventHandler, MouseEventHandler } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-interface SignUpFormProps {
-	firstName: string;
-	lastName: string;
-	email: string;
-	password: string;
-	setFirstName: ChangeEventHandler<HTMLInputElement>;
-	setLastName: ChangeEventHandler<HTMLInputElement>;
-	setEmail: ChangeEventHandler<HTMLInputElement>;
-	setPassword: ChangeEventHandler<HTMLInputElement>;
-	signUp: MouseEventHandler<HTMLButtonElement>;
-}
-
-export function SignUpForm({
-	firstName,
-	lastName,
-	email,
-	password,
-	setFirstName,
-	setLastName,
-	setEmail,
-	setPassword,
-	signUp
-}: SignUpFormProps) {
+export function SignUpForm() {
 	const { setClickedButton } = useButtonContext();
 	const handleClick = (button: string) => {
 		setClickedButton(button);
 	};
 
 	return (
-		<form action="/auth/signup" method="post">
+		<form action="/auth/components/routes/signup" method="post">
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-xl">Sign Up</CardTitle>
@@ -47,23 +24,11 @@ export function SignUpForm({
 						<div className="grid grid-cols-2 gap-4">
 							<div className="grid gap-2">
 								<Label htmlFor="first-name">First name</Label>
-								<Input
-									id="first-name"
-									placeholder="Dorin"
-									required
-									value={firstName}
-									onChange={setFirstName}
-								/>
+								<Input id="first-name" name="first-name" placeholder="Dorin" />
 							</div>
 							<div className="grid gap-2">
 								<Label htmlFor="last-name">Last name</Label>
-								<Input
-									id="last-name"
-									placeholder="Gheruha"
-									required
-									value={lastName}
-									onChange={setLastName}
-								/>
+								<Input id="last-name" name="last-name" placeholder="Gheruha" />
 							</div>
 						</div>
 						<div className="grid gap-2">

@@ -15,14 +15,14 @@ export async function POST(req: NextRequest) {
 		cookies: () => cookieStore
 	});
 
-	const { data, error } = await supabase.auth.signInWithPassword({
+	const { data, error } = await supabase.auth.signUp({
 		email,
-		password
+		password,
+		options: { emailRedirectTo: `${url.origin}/auth/components/routes/callback` }
 	});
 
 	if (data) console.log(data);
 	if (error) console.log(error);
-	console.log('I am in signin');
 
 	return NextResponse.redirect(url.origin, {
 		status: 301

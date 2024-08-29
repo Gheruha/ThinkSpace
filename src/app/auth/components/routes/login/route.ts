@@ -15,15 +15,13 @@ export async function POST(req: NextRequest) {
 		cookies: () => cookieStore
 	});
 
-	const { data, error } = await supabase.auth.signUp({
+	const { data, error } = await supabase.auth.signInWithPassword({
 		email,
-		password,
-		options: { emailRedirectTo: `${url.origin}/auth/callback` }
+		password
 	});
 
 	if (data) console.log(data);
 	if (error) console.log(error);
-	console.log('I am here motherfucker');
 
 	return NextResponse.redirect(url.origin, {
 		status: 301
