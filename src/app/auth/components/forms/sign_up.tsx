@@ -1,3 +1,4 @@
+'use client';
 import Link from 'next/link';
 
 import { useButtonContext } from '@/app/product/components/clickedButton';
@@ -5,13 +6,36 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useToast } from '@/components/ui/use-toast';
+import { useEffect, useState } from 'react';
 
 export function SignUpForm() {
+	const [isUser, setIsUser] = useState(false);
+	const { toast } = useToast();
+
 	const { setClickedButton } = useButtonContext();
 	const handleClick = (button: string) => {
 		setClickedButton(button);
 	};
 
+	useEffect(() => {
+		// Retrieve the isUser cookie value
+		const isUser = document.cookie
+			.split('; ')
+			.find((row) => row.startsWith('isUser='))
+			?.split('=')[1];
+
+		// Show toast if isUser is true
+		if (isUser === 'true') {
+			toast({
+				description: 'Check your email for confirmation',
+				duration: 60000
+			});
+
+			// Optionally, clear the cookie after use
+			document.cookie = 'isUser=; Max-Age=90; path=/';
+		}
+	}, [toast]);
 	return (
 		<form action="/auth/components/routes/signup" method="post">
 			<Card className="mx-auto max-w-sm">

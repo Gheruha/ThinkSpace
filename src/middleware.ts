@@ -10,7 +10,6 @@ export async function middleware(req: NextRequest) {
 		error
 	} = await supabase.auth.getSession();
 
-	console.log(session);
 	if (error) {
 		console.log(error);
 	}

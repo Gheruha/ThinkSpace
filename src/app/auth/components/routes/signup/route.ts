@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
 	const url = new URL(req.url);
+	let isUser = false;
 
 	const formData = await req.formData();
 	const email = String(formData.get('email'));
@@ -21,10 +22,13 @@ export async function POST(req: NextRequest) {
 		options: { emailRedirectTo: `${url.origin}/auth/components/routes/callback` }
 	});
 
-	if (data) console.log(data);
+	if (data.user) isUser = true;
 	if (error) console.log(error);
 
-	return NextResponse.redirect(url.origin, {
+	const response = NextResponse.redirect(`${url.origin}/auth/`, {
 		status: 301
 	});
+	response.cookies.set('isUser', String(isUser), { path: '/' });
+
+	return response;
 }

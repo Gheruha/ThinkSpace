@@ -5,12 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useToast } from '@/components/ui/use-toast';
 
 export function LoginForm() {
 	const { setClickedButton } = useButtonContext();
 	const handleClick = (button: string) => {
 		setClickedButton(button);
 	};
+
+	const { toast } = useToast();
 
 	return (
 		<form action="/auth/components/routes/login" method="post">
@@ -40,8 +43,16 @@ export function LoginForm() {
 								required
 							/>
 						</div>
-						<Button type="submit" className="w-full">
-							Login
+						<Button
+							type="submit"
+							className="w-full"
+							onClick={() => {
+								toast({
+									description: 'Your message has been sent.'
+								});
+							}}
+						>
+							Create an account
 						</Button>
 						<Button variant="outline" className="w-full">
 							Login with Google
