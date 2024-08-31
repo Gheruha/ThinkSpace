@@ -27,13 +27,10 @@ export async function POST(req: NextRequest) {
 		isMail = true;
 	} else if (
 		data.user?.user_metadata.email_verified === true ||
-		data.user?.user_metadata.length < 1
+		Object.keys(data.user?.user_metadata || {}).length === 0
 	) {
 		isSignedUp = true;
 	}
-
-	console.log(data);
-	console.log(error);
 
 	const response = NextResponse.redirect(`${url.origin}/auth/`, {
 		status: 301
