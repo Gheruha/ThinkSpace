@@ -20,10 +20,9 @@ export async function POST(req: NextRequest) {
 		password
 	});
 
-	if (data) console.log(data);
-	if (error) console.log(error);
-
-	return NextResponse.redirect(url.origin, {
+	const response = NextResponse.redirect(`${url.origin}/auth/`, {
 		status: 301
 	});
+	response.cookies.set('isError', String(error?.message), { path: '/' });
+	return response;
 }

@@ -1,16 +1,15 @@
 'use client';
 import Link from 'next/link';
-
+import { Check } from 'lucide-react';
 import { useButtonContext } from '@/app/product/components/clickedButton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export function SignUpForm() {
-	const [isUser, setIsUser] = useState(false);
 	const { toast } = useToast();
 
 	const { setClickedButton } = useButtonContext();
@@ -18,24 +17,41 @@ export function SignUpForm() {
 		setClickedButton(button);
 	};
 
+	// Retrieve the isUser cookie value
 	useEffect(() => {
-		// Retrieve the isUser cookie value
-		const isUser = document.cookie
+		const isMail = document.cookie
 			.split('; ')
-			.find((row) => row.startsWith('isUser='))
+			.find((row) => row.startsWith('isMail='))
+			?.split('=')[1];
+		const isSignedUp = document.cookie
+			.split('; ')
+			.find((row) => row.startsWith('isSignedUp='))
 			?.split('=')[1];
 
 		// Show toast if isUser is true
-		if (isUser === 'true') {
+		if (isMail === 'true') {
 			toast({
 				description: 'Check your email for confirmation',
 				duration: 60000
 			});
 
-			// Optionally, clear the cookie after use
-			document.cookie = 'isUser=; Max-Age=90; path=/';
+			document.cookie = 'isMail=; Max-Age=0; path=/';
+
+			// Retrieve the isSignedUp cookie value
+		} else if (isSignedUp === 'true') {
+			toast({
+				description: (
+					<div style={{ display: 'flex', alignItems: 'center' }}>
+						<Check style={{ marginRight: '8px', color: 'hsl(var(--primary))' }} />
+						<span>Already signed up, you must sign in.</span>
+					</div>
+				),
+				duration: 60000
+			});
+			document.cookie = 'isSignedUp=; Max-Age=0; path=/';
 		}
 	}, [toast]);
+
 	return (
 		<form action="/auth/components/routes/signup" method="post">
 			<Card className="mx-auto max-w-sm">
