@@ -15,15 +15,24 @@ export async function POST(req: NextRequest) {
 		cookies: () => cookieStore
 	});
 
-	const { data, error } = await supabase.auth.signInWithPassword({
+	const { error } = await supabase.auth.signInWithPassword({
 		email,
 		password
 	});
 
-	if (data) console.log(data);
-	if (error) console.log(error);
+	if (error) {
+		// If there is an error, redirect to the /auth page
+		const errorResponse = NextResponse.redirect(`${url.origin}/auth`, {
+			status: 301
+		});
+		// Store the error message in a cookie
+		errorResponse.cookies.set('isError', error.message, { path: '/' });
+		return errorResponse;
+	}
 
-	return NextResponse.redirect(url.origin, {
+	// If no error, redirect to the original URL
+	const successResponse = NextResponse.redirect(`${url.origin}`, {
 		status: 301
 	});
+	return successResponse;
 }

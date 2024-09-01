@@ -1,7 +1,13 @@
-import React from 'react';
+import { Button } from '@/components/ui/button';
 
-const page = () => {
-	return <div>Main</div>;
-};
-
-export default page;
+export default function main() {
+	return (
+		<div>
+			<form action="/auth/components/routes/logout" method="post">
+				<Button size="xs" className="rounded-sm" variant="ghost">
+					<span className="text-lg font-normal">Log Out</span>
+				</Button>
+			</form>
+		</div>
+	);
+}
