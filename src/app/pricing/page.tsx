@@ -17,7 +17,7 @@ export default function Pricing() {
 				<TabsList className="grid w-full grid-cols-2 rounded-3xl">
 					<TabsTrigger
 						value="monthly"
-						className="rounded-3xl"
+						className="rounded-3xl h-full"
 						onClick={() => {
 							setIsMonthly(true);
 						}}
@@ -26,15 +26,15 @@ export default function Pricing() {
 					</TabsTrigger>
 					<TabsTrigger
 						value="yearly"
-						className="rounded-3xl space-x-1.5"
+						className="flex flex-wrap rounded-3xl space-x-1.5"
 						onClick={() => {
 							setIsMonthly(false);
 						}}
 					>
-						<p>Pay yearly</p>
-						<p className="text-xs font-normal" style={{ color: 'hsl(var(--primary))' }}>
+						<span>Pay yearly</span>
+						<span className="text-xs font-normal" style={{ color: 'hsl(var(--primary))' }}>
 							save 30%
-						</p>
+						</span>
 					</TabsTrigger>
 				</TabsList>
 			</Tabs>
