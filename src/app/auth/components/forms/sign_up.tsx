@@ -1,4 +1,5 @@
 'use client';
+
 import Link from 'next/link';
 import { Check } from 'lucide-react';
 import { useButtonContext } from '@/app/product/components/clickedButton';
@@ -7,15 +8,25 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
-import { useEffect } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useBlurContext } from '../blur';
 
 export function SignUpForm() {
 	const { toast } = useToast();
+	let [showPassword, setShowPassword] = useState(false);
 
 	const { setClickedButton } = useButtonContext();
+	const { isBlur, triggerBlur } = useBlurContext();
+
 	const handleClick = (button: string) => {
 		setClickedButton(button);
 	};
+
+	function togglePasswordVisibility(event: React.MouseEvent<HTMLButtonElement>) {
+		event.preventDefault();
+		setShowPassword((showPassword = !showPassword));
+	}
 
 	// Retrieve the isUser cookie value
 	useEffect(() => {
@@ -35,6 +46,7 @@ export function SignUpForm() {
 				duration: 60000
 			});
 
+			triggerBlur();
 			document.cookie = 'isMail=; Max-Age=0; path=/';
 
 			// Retrieve the isSignedUp cookie value
@@ -50,10 +62,14 @@ export function SignUpForm() {
 			});
 			document.cookie = 'isSignedUp=; Max-Age=0; path=/';
 		}
-	}, [toast]);
+	}, [toast, triggerBlur]);
 
 	return (
-		<form action="/auth/components/routes/signup" method="post">
+		<form
+			action="/auth/components/routes/signup"
+			method="post"
+			className={isBlur ? 'blur-lg pointer-events-none' : ''}
+		>
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-xl">Sign Up</CardTitle>
@@ -77,13 +93,24 @@ export function SignUpForm() {
 						</div>
 						<div className="grid gap-2">
 							<Label htmlFor="password">Password</Label>
-							<Input
-								id="password"
-								name="password"
-								type="password"
-								placeholder="••••••••"
-								required
-							/>
+							<div className="flex relative">
+								<Input
+									id="password"
+									name="password"
+									type={showPassword ? 'text' : 'password'}
+									className="pr-10"
+									placeholder="••••••••"
+									required
+								/>
+								<Button
+									variant="icon"
+									size="xs"
+									onClick={togglePasswordVisibility}
+									className="absolute right-0 py-5"
+								>
+									{showPassword ? <Eye size="20" /> : <EyeOff size="20" />}
+								</Button>
+							</div>
 						</div>
 						<Button type="submit" className="w-full">
 							Create an account
