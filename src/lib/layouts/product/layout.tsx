@@ -78,10 +78,7 @@ export default function LearningProductLayout({ children }: { children: React.Re
 	return (
 		<div className="flex flex-col min-h-screen">
 			{/* Header */}
-			<div
-				className="top-0 sticky block z-40"
-				style={{ backgroundColor: 'hsl(var(--background))' }}
-			>
+			<div className="top-0 sticky block z-40 backdrop-blur-lg">
 				<header className="h-16 px-4">
 					<div
 						className={`flex space-x-3 py-4 transition-all duration-100 ${showBorder ? 'border-b' : ''}`}
