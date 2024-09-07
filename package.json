@@ -34,7 +34,7 @@
 		"shadergradient": "^1.2.14",
 		"tailwindcss": "3.4.1",
 		"tailwindcss-animate": "^1.0.7",
-		"three": "^0.168.0",
+		"three": "^0.154.0",
 		"typescript": "5.3.3"
 	},
 	"devDependencies": {
