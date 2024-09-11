@@ -16,9 +16,36 @@ import {
 	InputOTPSlot
 } from '@/components/ui/input-otp';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export function OTPInput() {
 	const [value, setValue] = useState('');
+	const [errorMessage, setErrorMessage] = useState('');
+	const router = useRouter();
+
+	const handleVerifyOTP = async () => {
+		try {
+			const response = await fetch('/auth/api/verifyOTP', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ otp: value })
+			});
+
+			const result = await response.json();
+			console.log(result);
+
+			if (response.ok) {
+				// OTP verified successfully, navigate to the reset password form
+				router.push('/auth/resetPassword');
+			} else {
+				// OTP verification failedx
+				setErrorMessage(result.message || 'Invalid OTP');
+			}
+		} catch (error) {
+			console.error('Error verifying OTP:', error);
+			setErrorMessage('An error occurred while verifying OTP');
+		}
+	};
 
 	return (
 		<Card className="">
@@ -43,6 +70,7 @@ export function OTPInput() {
 						<InputOTPSlot index={5} />
 					</InputOTPGroup>
 				</InputOTP>
+				{errorMessage && <p className="text-red-500">{errorMessage}</p>}
 			</CardContent>
 			<CardFooter className="flex flex-col space-y-8">
 				<div className="flex justify-between w-full">
@@ -51,7 +79,7 @@ export function OTPInput() {
 						Resend OTP
 					</Button>
 				</div>
-				<Button type="submit" className="w-full">
+				<Button type="submit" className="w-full" onClick={handleVerifyOTP}>
 					Verify
 				</Button>
 			</CardFooter>
