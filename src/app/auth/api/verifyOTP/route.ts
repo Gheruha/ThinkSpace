@@ -7,7 +7,6 @@ export async function POST(req: NextRequest) {
 	const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
 
 	const { otp } = await req.json();
-
 	// Fetch user OTP (this is a sample flow, you should implement according to your OTP storage logic)
 	const {
 		data: { user },
