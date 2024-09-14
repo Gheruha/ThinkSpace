@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 
-export default function main() {
+export default function Main() {
 	return (
 		<div>
 			<form action="/auth/components/routes/logout" method="post">
