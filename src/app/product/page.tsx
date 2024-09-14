@@ -12,7 +12,6 @@ export default function Product() {
 			<p className="text-gray-800 dark:text-gray-200 max-w-[40rem] simple-text">
 				All in one single place, use all the templates available or create one by yourself.
 			</p>
-			<p>Get Started</p>
 			<Button className="flex space-x-1 get-started">
 				<span>Get Started</span>
 				<ArrowRight size={20} strokeWidth={3} />

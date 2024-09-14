@@ -75,17 +75,9 @@ export function LoginForm() {
 		}
 	};
 
-	const onSubmit = (data: any) => {
-		console.log(data);
-	};
-
 	return (
 		<Form {...form}>
-			<form
-				action="/auth/components/routes/login"
-				method="post"
-				onSubmit={form.handleSubmit(onSubmit)}
-			>
+			<form action="/auth/components/routes/login" method="post">
 				<Card className="mx-auto max-w-sm">
 					<CardHeader>
 						<CardTitle className="text-xl">Login</CardTitle>
