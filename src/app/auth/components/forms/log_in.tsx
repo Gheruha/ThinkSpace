@@ -26,6 +26,11 @@ const formSchema = z.object({
 	})
 });
 
+let email = '';
+export const getEmail = () => {
+	return email;
+};
+
 export function LoginForm() {
 	const { setClickedButton } = useButtonContext();
 	let [showPassword, setShowPassword] = useState(false);
@@ -54,7 +59,7 @@ export function LoginForm() {
 		// Validate the email field
 		const isEmailValid = await form.trigger('email');
 		if (isEmailValid) {
-			const email = form.getValues('email');
+			email = form.getValues('email');
 
 			try {
 				// Send the email to the backend handler to generate OTP
@@ -67,7 +72,10 @@ export function LoginForm() {
 					// Redirect the user to the reset password page
 					router.push(`/auth/resetPassword?email=${encodeURIComponent(email)}`);
 				} else {
+					const errorBody = await response.text();
+					console.error('Error response:', errorBody);
 					console.error('Error sending OTP:', response);
+					alert('Failed to send OTP. Please try again.');
 				}
 			} catch (error) {
 				console.error('Error handling forgot password:', error);
