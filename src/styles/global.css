@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 @layer base {
 	:root {
 		--background: 0 0% 100%;
@@ -30,14 +29,13 @@
 		--chart-4: 43 74% 66%;
 		--chart-5: 27 87% 67%;
 	}
-
 	.dark {
 		--background: 224 71.4% 4.1%;
 		--foreground: 210 20% 98%;
 		--card: 224 71.4% 4.1%;
 		--card-foreground: 210 20% 98%;
 		--popover: 224 71.4% 4.1%;
-		--popover-foreground: 210 20% 98%;
+		--popover-foreground: 200 20% 98%;
 		--primary: 263.4 70% 50.4%;
 		--primary-foreground: 210 20% 98%;
 		--secondary: 215 27.9% 16.9%;
@@ -58,95 +56,70 @@
 		--chart-5: 340 75% 55%;
 	}
 }
-
 @media (max-width: 600px) {
 	.hero-text {
 		@apply text-6xl pb-1;
 	}
-
 	.simple-text {
 		@apply text-xl pb-4;
 	}
-
 	.get-started {
 		@apply text-base flex justify-center w-full;
 	}
-
 	.pricing-plans-grid {
 		@apply col-span-12 mb-4 relative;
 	}
-
 	.pricing-tab {
 		@apply w-full pt-10 pb-4;
 	}
 }
-
 @media (min-width: 600px) {
 	.hero-page {
 		@apply flex flex-col items-start;
 	}
-
 	.hero-text {
 		@apply text-8xl pb-3;
 	}
-
 	.simple-text {
 		@apply text-2xl pb-8;
 	}
-
 	.get-started {
 		@apply text-lg;
 	}
-
 	.pricing-plans-grid {
 		@apply col-span-12 mb-4 relative;
 	}
-
 	.pricing-tab {
 		@apply w-full pt-10 pb-4;
 	}
 }
-
 @media (min-width: 840px) {
 	.hero-page {
 		@apply flex flex-col items-center;
 	}
-
 	.hero-text {
 		@apply text-8xl;
 	}
-
 	.simple-text {
 		@apply text-center text-3xl;
 	}
-
 	.get-started {
 		@apply text-xl;
 	}
-
 	.pricing-plans-grid {
 		@apply col-span-6 mb-4 relative;
 	}
-
 	.pricing-tab {
 		@apply w-full pt-10 pb-4;
 	}
 }
-
 @media (min-width: 1024px) {
 	.pricing-tab {
 		@apply w-[20rem];
 	}
 }
-
 @media (min-width: 1080px) {
 	.pricing-plans-grid {
 		@apply col-span-4 mb-4 relative;
 	}
-}
-
-@media (min-width: 1280px) {
-}
-
-@media (min-width: 1600px) {
 }
