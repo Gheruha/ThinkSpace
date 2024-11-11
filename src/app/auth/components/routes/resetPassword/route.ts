@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 
 	// Generate 6-digit OTP
 	const lengthCode = 6;
-	const otpCode = Array.from({ length: 6 }, () => randomInt(0, 10)).join('');
+	const otpCode = Array.from({ length: lengthCode }, () => randomInt(0, 10)).join('');
 
 	// Store the OTP in a temporary database or session (Here, we assume there's an otp_codes table)
 	const { error: insertError } = await supabase
