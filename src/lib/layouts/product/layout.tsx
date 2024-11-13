@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ThemeImage } from '@/app/product/components/themeImage';
 import { useButtonContext } from '@/app/product/components/clickedButton';
 import { ModeToggle } from '@/components/theme-toggler';
-import { Hammer, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -134,11 +134,6 @@ export default function LearningProductLayout({ children }: { children: React.Re
 								</NavigationMenu>
 							</div>
 							<div className="hidden lg:flex space-x-3">
-								<Link href="/testing" passHref className="">
-									<Button variant="outline" size="xs">
-										<Hammer />
-									</Button>
-								</Link>
 								<ModeToggle />
 								<Link href="/auth" onClick={() => handleClick('Log In')} passHref>
 									<Button variant="ghost" size="xs">
@@ -152,11 +147,6 @@ export default function LearningProductLayout({ children }: { children: React.Re
 								</Link>
 							</div>
 							<div className="lg:hidden flex justify-end w-full space-x-3">
-								<Link href="/testing" passHref>
-									<Button variant="outline" size="xs">
-										<Hammer />
-									</Button>
-								</Link>
 								<ModeToggle />
 								<Button variant="ghost" size="xs" onClick={() => setMenuOpen(!menuOpen)}>
 									<Menu />
@@ -166,7 +156,7 @@ export default function LearningProductLayout({ children }: { children: React.Re
 					</div>
 				</header>
 				{menuOpen && (
-					<nav className="fixed top-16 left-0 w-full h-[calc(100vh-4rem)] z-50">
+					<nav className="fixed top-16 left-0 w-full h-[calc(100%-4rem)] z-50">
 						<Card className="h-full border-0">
 							<CardContent className="h-full px-4">
 								<Accordion
