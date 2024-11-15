@@ -6,7 +6,8 @@
 		"start": "next start",
 		"test": "jest",
 		"test:watch": "jest --watchAll",
-		"coverage": "jest --coverage --watchAll"
+		"coverage": "jest --coverage --watchAll",
+		"supabase": "supabase"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.9.0",
@@ -21,7 +22,7 @@
 		"@radix-ui/react-tabs": "^1.1.0",
 		"@radix-ui/react-toast": "^1.2.1",
 		"@supabase/auth-helpers-nextjs": "^0.10.0",
-		"@supabase/ssr": "latest",
+		"@supabase/ssr": "^0.5.2",
 		"@supabase/supabase-js": "latest",
 		"autoprefixer": "10.4.17",
 		"class-variance-authority": "^0.7.0",
@@ -35,6 +36,7 @@
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"react-hook-form": "^7.53.0",
+		"supabase": "^1.219.2",
 		"tailwindcss": "3.4.1",
 		"tailwindcss-animate": "^1.0.7",
 		"ts-node": "^10.9.2",
