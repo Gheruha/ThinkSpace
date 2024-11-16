@@ -1,13 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { getRouteHandlerSupabaseClient } from '@/lib/supabaseClients';
 
 export async function POST(req: NextRequest) {
-	const cookieStore = cookies();
-	const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-
-	// Check if cookies are available
-	console.log('Cookies:', cookieStore.getAll());
+	const supabase = getRouteHandlerSupabaseClient();
 
 	const body = await req.json();
 	const otp = String(body.otp);
