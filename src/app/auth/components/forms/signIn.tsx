@@ -12,15 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 // Validation schema
-const signUpSchema = z.object({
-	firstName: z
-		.string()
-		.regex(/^[A-Za-z]+$/, 'First name must contain only letters.')
-		.min(2, 'First name is required.'),
-	lastName: z
-		.string()
-		.regex(/^[A-Za-z]+$/, 'Last name must contain only letters.')
-		.min(2, 'Last name is required.'),
+const signInSchema = z.object({
 	email: z
 		.string()
 		.email('Invalid email format.')
@@ -33,20 +25,22 @@ const signUpSchema = z.object({
 });
 
 // Component props
-type SignUpFormValues = z.infer<typeof signUpSchema>;
-interface SignUpFormProps {
+type SignInFormValues = z.infer<typeof signInSchema>;
+interface SignInFormProps {
 	switchForm: () => void;
 }
 
-export function SignUpForm({ switchForm }: SignUpFormProps) {
+export function SignInForm({ switchForm }: SignInFormProps) {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
 	const {
 		register,
 		handleSubmit,
-		formState: { errors }
-	} = useForm<SignUpFormValues>({
-		resolver: zodResolver(signUpSchema)
+		formState: { errors },
+		getValues,
+		trigger
+	} = useForm<SignInFormValues>({
+		resolver: zodResolver(signInSchema)
 	});
 
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
@@ -54,42 +48,45 @@ export function SignUpForm({ switchForm }: SignUpFormProps) {
 		setShowPassword((prev) => !prev);
 	};
 
-	const onSubmit: SubmitHandler<SignUpFormValues> = async (data) => {
-		const response = await fetch('/api/auth/signUp', {
+	const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
+		const response = await fetch('/api/auth/signIn', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(data)
 		});
 
 		const result = await response.json();
-		alert(result.message || 'SignUp successful!');
+		alert(result.message || 'SignIn successful!');
+	};
+
+	const handleForgotPassword = async (e: React.MouseEvent<HTMLAnchorElement>): Promise<void> => {
+		e.preventDefault();
+		const email = getValues('email');
+		const result = await trigger('email');
+
+		if (!result) {
+			return;
+		}
+
+		const response = await fetch('/api/auth/resetPassword', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ email })
+		});
+
+		const responseResult = await response.json();
+		alert(responseResult.message || 'ResetPassword successful!');
 	};
 
 	return (
 		<form noValidate onSubmit={handleSubmit(onSubmit)}>
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
-					<CardTitle className="text-xl">Sign Up</CardTitle>
-					<CardDescription>Enter your information to create an account</CardDescription>
+					<CardTitle className="text-xl">Sign In</CardTitle>
+					<CardDescription>Enter your email below to access your workspace</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<div className="grid gap-4">
-						<div className="grid grid-cols-2 gap-4 items-start">
-							<div className="grid gap-2">
-								<Label htmlFor="first-name">First name</Label>
-								<Input id="first-name" {...register('firstName')} type="text" placeholder="Dorin" />
-								{errors.firstName && (
-									<p className="text-red-500 text-sm">{errors.firstName.message}</p>
-								)}
-							</div>
-							<div className="grid gap-2">
-								<Label htmlFor="last-name">Last name</Label>
-								<Input id="last-name" {...register('lastName')} type="text" placeholder="Gheruha" />
-								{errors.lastName && (
-									<p className="text-red-500 text-sm">{errors.lastName.message}</p>
-								)}
-							</div>
-						</div>
 						<div className="grid gap-2">
 							<Label htmlFor="email">Email</Label>
 							<Input
@@ -101,7 +98,16 @@ export function SignUpForm({ switchForm }: SignUpFormProps) {
 							{errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
 						</div>
 						<div className="grid gap-2">
-							<Label htmlFor="password">Password</Label>
+							<div className="flex items-center">
+								<Label htmlFor="password">Password</Label>
+								<Link
+									href="#"
+									className="ml-auto inline-block text-sm underline"
+									onClick={handleForgotPassword}
+								>
+									Forgot your password?
+								</Link>
+							</div>
 							<div className="flex relative">
 								<Input
 									id="password"
@@ -129,16 +135,16 @@ export function SignUpForm({ switchForm }: SignUpFormProps) {
 							)}
 						</div>
 						<Button type="submit" className="w-full">
-							Create an account
+							Access Your Workspace
 						</Button>
 						<Button variant="outline" className="w-full">
-							Sign up with GitHub
+							Sign in with GitHub
 						</Button>
 					</div>
 					<div className="mt-4 text-center text-sm">
-						Already have an account?{' '}
+						Don&apos;t have an account?{' '}
 						<Link href="/auth" className="underline" onClick={switchForm}>
-							Sign in
+							Sign up
 						</Link>
 					</div>
 				</CardContent>
