@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
 	const { data, error } = await supabase.auth.signUp({
 		email,
 		password,
-		options: { emailRedirectTo: `${url.origin}/auth/backend/routes/callback` }
+		options: { emailRedirectTo: `${url.origin}/auth/routes/callback` }
 	});
 
 	if (data.user?.user_metadata.email_verified === false) {
