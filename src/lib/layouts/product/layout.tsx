@@ -1,9 +1,9 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ThemeImage } from '@/app/product/components/themeImage';
-import { useButtonContext } from '@/app/product/components/clickedButton';
 import { ModeToggle } from '@/components/theme-toggler';
 import { Menu } from 'lucide-react';
 
@@ -26,13 +26,20 @@ import {
 } from '@/components/ui/accordion';
 
 export default function LearningProductLayout({ children }: { children: React.ReactNode }) {
-	const { setClickedButton } = useButtonContext();
-	const handleClick = (button: string) => {
-		setClickedButton(button);
-	};
+	const router = useRouter();
 
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [showBorder, setShowBorder] = useState(false);
+
+	const goToSignUp = (e: React.MouseEvent<HTMLAnchorElement>): void => {
+		e.preventDefault();
+		router.push('/auth?mode=signUp');
+	};
+
+	const goToSignIn = (e: React.MouseEvent<HTMLAnchorElement>): void => {
+		e.preventDefault();
+		router.push('/auth?mode=signIn');
+	};
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -135,12 +142,12 @@ export default function LearningProductLayout({ children }: { children: React.Re
 							</div>
 							<div className="hidden lg:flex space-x-3">
 								<ModeToggle />
-								<Link href="/auth" onClick={() => handleClick('Log In')} passHref>
+								<Link href="/auth" onClick={goToSignIn} passHref>
 									<Button variant="ghost" size="xs">
-										<span className="text-lg font-normal">Log in</span>
+										<span className="text-lg font-normal">Sign in</span>
 									</Button>
 								</Link>
-								<Link href="/auth" onClick={() => handleClick('Sign Up')} passHref>
+								<Link href="/auth" onClick={goToSignUp} passHref>
 									<Button size="xs" className="rounded-sm">
 										<span className="text-lg font-normal">Sign up</span>
 									</Button>
@@ -184,14 +191,14 @@ export default function LearningProductLayout({ children }: { children: React.Re
 									className="flex flex-col space-y-3 py-4 border-t"
 									style={{ backgroundColor: 'hsl(var(--background))' }}
 								>
-									<Link href="/auth" onClick={() => handleClick('Sign Up')} passHref>
+									<Link href="/auth" onClick={goToSignUp} passHref>
 										<Button size="xs" className="w-full">
 											<span className="text-lg font-normal">Sign up</span>
 										</Button>
 									</Link>
-									<Link href="/auth" onClick={() => handleClick('Log In')} passHref>
+									<Link href="/auth" onClick={goToSignIn} passHref>
 										<Button variant="outline" size="xs" className="w-full">
-											<span className="text-lg font-normal">Log in</span>
+											<span className="text-lg font-normal">Sign in</span>
 										</Button>
 									</Link>
 								</div>

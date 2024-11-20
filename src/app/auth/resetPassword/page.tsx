@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { OTPVerification } from '../components/verification/OTPVerification';
+import { PasswordResetForm } from '../components/verification/passwordResetForm';
 
 export default function resetPassword() {
 	const searchParams = useSearchParams();
@@ -19,7 +20,7 @@ export default function resetPassword() {
 
 	return (
 		<div className="flex justify-center items-center h-screen">
-			{isOTPVerified ? <div>ResetPasswordForm</div> : <OTPVerification />}
+			{isOTPVerified ? <PasswordResetForm /> : <OTPVerification />}
 		</div>
 	);
 }
