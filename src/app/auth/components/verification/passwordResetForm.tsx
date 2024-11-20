@@ -1,22 +1,18 @@
 'use client';
 
 import { useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
 
 const passwordResetSchema = z
 	.object({
-		password: z
-			.string()
-			.min(12, 'Password must be at least 12 characters.')
-			.regex(/[A-Z]/, 'Password must include at least one uppercase letter.')
-			.regex(/\d/, 'Password must include at least one number.'),
+		password: z.string().min(8, 'Password must be at least 8 characters.'),
 		confirmPassword: z.string()
 	})
 	.refine((data) => data.password === data.confirmPassword, {
@@ -38,6 +34,16 @@ export function PasswordResetForm() {
 		resolver: zodResolver(passwordResetSchema)
 	});
 
+	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
+		e.preventDefault();
+		setShowPassword((prev) => !prev);
+	};
+
+	const toggleConfirmPasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
+		e.preventDefault();
+		setShowConfirmPassword((prev) => !prev);
+	};
+
 	const onSubmit: SubmitHandler<PasswordResetFormValues> = async (data) => {
 		const response = await fetch('/api/auth/resetPassword', {
 			method: 'POST',
@@ -47,16 +53,6 @@ export function PasswordResetForm() {
 
 		const result = await response.json();
 		alert(result.message || 'ResetPassword successful!');
-	};
-
-	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
-		e.preventDefault();
-		setShowPassword((prev) => !prev);
-	};
-
-	const toggleConfirmPasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
-		e.preventDefault();
-		setShowConfirmPassword((prev) => !prev);
 	};
 
 	return (
@@ -92,8 +88,7 @@ export function PasswordResetForm() {
 								<p className="text-red-500 text-sm">{errors.password.message}</p>
 							) : (
 								<p className="text-sm text-muted-foreground">
-									Password must be at least 12 characters and include at least one uppercase letter
-									and one number.
+									Password must be at least 8 characters.
 								</p>
 							)}
 						</div>

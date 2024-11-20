@@ -1,32 +1,24 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { FormEvent, useState } from 'react';
 import Link from 'next/link';
-import { Eye, EyeOff } from 'lucide-react';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Eye, EyeOff } from 'lucide-react';
 import useAuthStore from '@/lib/stores/authStore';
 
 // Validation schema
 const signInSchema = z.object({
-	email: z
-		.string()
-		.email('Invalid email format.')
-		.regex(/^[^@]+@[^@]+\.[^@]+$/, 'Invalid email address.'),
-	password: z
-		.string()
-		.min(12, 'Password must be at least 12 characters.')
-		.regex(/[A-Z]/, 'Password must include at least one uppercase letter.')
-		.regex(/\d/, 'Password must include at least one number.')
+	email: z.string().email('Invalid email format.'),
+	password: z.string().min(8, 'Password must be at least 8 characters.')
 });
 
-// Component props
 type SignInFormValues = z.infer<typeof signInSchema>;
 
 export function SignInForm() {
@@ -49,30 +41,9 @@ export function SignInForm() {
 		setShowPassword((prev) => !prev);
 	};
 
-	const switchToSignUp = (e: React.MouseEvent<HTMLAnchorElement>): void => {
-		e.preventDefault();
-		router.push('/auth?mode=signUp');
-	};
-
-	const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
-		const response = await fetch('/api/auth/signIn', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(data)
-		});
-
-		const result = await response.json();
-		alert(result.message || 'SignIn successful!');
-	};
-
-	const handleForgotPassword = async (e: React.MouseEvent<HTMLAnchorElement>): Promise<void> => {
-		e.preventDefault();
+	const handleForgotPassword = async (): Promise<void> => {
 		const email = getValues('email');
-		const result = await trigger('email');
-
-		if (!result) {
-			return;
-		}
+		if (!(await trigger('email'))) return;
 
 		setEmail(email);
 		router.push('/auth/resetPassword?step=otp');
@@ -85,6 +56,17 @@ export function SignInForm() {
 
 		const responseResult = await response.json();
 		alert(responseResult.message || 'ResetPassword successful!');
+	};
+
+	const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
+		const response = await fetch('/api/auth/signIn', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(data)
+		});
+
+		const result = await response.json();
+		alert(result.message || 'SignIn successful!');
 	};
 
 	return (
@@ -136,8 +118,7 @@ export function SignInForm() {
 							</div>
 							{!errors.password ? (
 								<p className="text-sm text-muted-foreground">
-									Password must be at least 12 characters and include at least one uppercase letter
-									and one number.
+									Password must be at least 8 characters.
 								</p>
 							) : (
 								<p className="text-red-500 text-sm">{errors.password.message}</p>
@@ -152,7 +133,7 @@ export function SignInForm() {
 					</div>
 					<div className="mt-4 text-center text-sm">
 						Don&apos;t have an account?{' '}
-						<Link href="/auth" className="underline" onClick={switchToSignUp}>
+						<Link href="/auth?mode=signUp" className="underline">
 							Sign up
 						</Link>
 					</div>

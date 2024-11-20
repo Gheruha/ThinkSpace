@@ -1,16 +1,15 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import Link from 'next/link';
-import { Eye, EyeOff } from 'lucide-react';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Eye, EyeOff } from 'lucide-react';
 
 // Validation schema
 const signUpSchema = z.object({
@@ -22,22 +21,13 @@ const signUpSchema = z.object({
 		.string()
 		.regex(/^[A-Za-z]+$/, 'Last name must contain only letters.')
 		.min(2, 'Last name is required.'),
-	email: z
-		.string()
-		.email('Invalid email format.')
-		.regex(/^[^@]+@[^@]+\.[^@]+$/, 'Invalid email address.'),
-	password: z
-		.string()
-		.min(12, 'Password must be at least 12 characters.')
-		.regex(/[A-Z]/, 'Password must include at least one uppercase letter.')
-		.regex(/\d/, 'Password must include at least one number.')
+	email: z.string().email('Invalid email format.'),
+	password: z.string().min(8, 'Password must be at least 8 characters.')
 });
 
-// Component props
 type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export function SignUpForm() {
-	const router = useRouter();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
 	const {
@@ -51,11 +41,6 @@ export function SignUpForm() {
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
 		e.preventDefault();
 		setShowPassword((prev) => !prev);
-	};
-
-	const switchToSignIn = (e: React.MouseEvent<HTMLAnchorElement>): void => {
-		e.preventDefault();
-		router.push('/auth?mode=signIn');
 	};
 
 	const onSubmit: SubmitHandler<SignUpFormValues> = async (data) => {
@@ -125,8 +110,7 @@ export function SignUpForm() {
 							</div>
 							{!errors.password ? (
 								<p className="text-sm text-muted-foreground">
-									Password must be at least 12 characters and include at least one uppercase letter
-									and one number.
+									Password must be at least 8 characters.
 								</p>
 							) : (
 								<p className="text-red-500 text-sm">{errors.password.message}</p>
@@ -141,7 +125,7 @@ export function SignUpForm() {
 					</div>
 					<div className="mt-4 text-center text-sm">
 						Already have an account?{' '}
-						<Link href="/auth" className="underline" onClick={switchToSignIn}>
+						<Link href="/auth?mode=signIn" className="underline">
 							Sign in
 						</Link>
 					</div>
