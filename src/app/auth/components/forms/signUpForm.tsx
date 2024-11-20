@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
@@ -34,11 +35,9 @@ const signUpSchema = z.object({
 
 // Component props
 type SignUpFormValues = z.infer<typeof signUpSchema>;
-interface SignUpFormProps {
-	switchForm: () => void;
-}
 
-export function SignUpForm({ switchForm }: SignUpFormProps) {
+export function SignUpForm() {
+	const router = useRouter();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
 	const {
@@ -52,6 +51,11 @@ export function SignUpForm({ switchForm }: SignUpFormProps) {
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
 		e.preventDefault();
 		setShowPassword((prev) => !prev);
+	};
+
+	const switchToSignIn = (e: React.MouseEvent<HTMLAnchorElement>): void => {
+		e.preventDefault();
+		router.push('/auth?mode=signIn');
 	};
 
 	const onSubmit: SubmitHandler<SignUpFormValues> = async (data) => {
@@ -137,7 +141,7 @@ export function SignUpForm({ switchForm }: SignUpFormProps) {
 					</div>
 					<div className="mt-4 text-center text-sm">
 						Already have an account?{' '}
-						<Link href="/auth" className="underline" onClick={switchForm}>
+						<Link href="/auth" className="underline" onClick={switchToSignIn}>
 							Sign in
 						</Link>
 					</div>

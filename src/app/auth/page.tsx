@@ -1,19 +1,19 @@
 'use client';
 
-import { useState } from 'react';
-import { SignUpForm } from './components/forms/signUp';
-import { SignInForm } from './components/forms/signIn';
+import { useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { SignUpForm } from './components/forms/signUpForm';
+import { SignInForm } from './components/forms/signInForm';
 
 export default function Auth() {
-	const [isSignUp, setIsSignUp] = useState<boolean>(true);
+	const searchParams = useSearchParams();
+
+	const mode = searchParams.get('mode');
+	const isSignUp = mode === 'signUp';
 
 	return (
 		<div className="flex justify-center items-center h-screen">
-			{isSignUp ? (
-				<SignUpForm switchForm={() => setIsSignUp(false)} />
-			) : (
-				<SignInForm switchForm={() => setIsSignUp(true)} />
-			)}
+			{isSignUp ? <SignUpForm /> : <SignInForm />}
 		</div>
 	);
 }

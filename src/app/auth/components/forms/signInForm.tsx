@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import { Eye, EyeOff } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import useAuthStore from '@/lib/stores/authStore';
 
 // Validation schema
 const signInSchema = z.object({
@@ -26,11 +28,10 @@ const signInSchema = z.object({
 
 // Component props
 type SignInFormValues = z.infer<typeof signInSchema>;
-interface SignInFormProps {
-	switchForm: () => void;
-}
 
-export function SignInForm({ switchForm }: SignInFormProps) {
+export function SignInForm() {
+	const router = useRouter();
+	const setEmail = useAuthStore((state) => state.setEmail);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
 	const {
@@ -46,6 +47,11 @@ export function SignInForm({ switchForm }: SignInFormProps) {
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
 		e.preventDefault();
 		setShowPassword((prev) => !prev);
+	};
+
+	const switchToSignUp = (e: React.MouseEvent<HTMLAnchorElement>): void => {
+		e.preventDefault();
+		router.push('/auth?mode=signUp');
 	};
 
 	const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
@@ -67,6 +73,9 @@ export function SignInForm({ switchForm }: SignInFormProps) {
 		if (!result) {
 			return;
 		}
+
+		setEmail(email);
+		router.push('/auth/resetPassword?step=otp');
 
 		const response = await fetch('/api/auth/resetPassword', {
 			method: 'POST',
@@ -143,7 +152,7 @@ export function SignInForm({ switchForm }: SignInFormProps) {
 					</div>
 					<div className="mt-4 text-center text-sm">
 						Don&apos;t have an account?{' '}
-						<Link href="/auth" className="underline" onClick={switchForm}>
+						<Link href="/auth" className="underline" onClick={switchToSignUp}>
 							Sign up
 						</Link>
 					</div>
