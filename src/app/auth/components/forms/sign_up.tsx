@@ -115,8 +115,12 @@ export function SignUpForm() {
 						<Button type="submit" className="w-full">
 							Create an account
 						</Button>
-						<Button variant="outline" className="w-full">
-							Sign up with GitHub
+						<Button
+							variant="outline"
+							className="w-full"
+							onClick={() => (window.location.href = '/auth/components/routes/googleOAuth')}
+						>
+							Sign up with Google
 						</Button>
 					</div>
 					<div className="mt-4 text-center text-sm">
