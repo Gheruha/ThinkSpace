@@ -1,40 +1,43 @@
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
+import { getRouteHandlerSupabaseClient } from '@/lib/supabaseClients';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function middleware(req: NextRequest) {
-	const res = NextResponse.next();
-	const supabase = createMiddlewareClient({ req, res });
+export async function GET(req: NextRequest) {
+	const url = new URL(req.url);
+	const code = url.searchParams.get('code');
 
-	const {
-		data: { session },
-		error
-	} = await supabase.auth.getSession();
-
-	if (error) {
-		console.log(error);
+	if (!code) {
+		return NextResponse.redirect(`${url.origin}/auth/error`);
 	}
 
-	// Extract the pathname from the URL
-	const { pathname } = req.nextUrl;
+	const supabase = getRouteHandlerSupabaseClient();
 
-	// Allow access to the product, auth, pricing pages without session
-	if (
-		pathname.startsWith('/product') ||
-		pathname.startsWith('/auth') ||
-		pathname.startsWith('/pricing') ||
-		pathname.startsWith('/testing')
-	) {
-		return res;
-	}
-	// Redirect to the auth page if there's no session and the user is accessing other protected routes
-	if (!session) {
-		return NextResponse.rewrite(new URL('/product', req.url));
+	// Exchange the authorization code for a session
+	const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+	if (error || !data?.session) {
+		console.error('Error exchanging code for session:', error?.message);
+		return NextResponse.redirect(`${url.origin}/auth/error`);
 	}
 
-	// Always return the response object
-	return res;
+	// Destructure session from the data object
+	const { session } = data;
+
+	// Create a new response to redirect back to the home page
+	const response = NextResponse.redirect(`${url.origin}/dashboard`);
+
+	// Set cookies for session management
+	response.cookies.set('sb-access-token', session.access_token, {
+		httpOnly: true,
+		secure: process.env.NODE_ENV === 'production',
+		path: '/',
+		maxAge: session.expires_in
+	});
+
+	response.cookies.set('sb-refresh-token', session.refresh_token, {
+		httpOnly: true,
+		secure: process.env.NODE_ENV === 'production',
+		path: '/'
+	});
+
+	return response;
 }
-
-export const config = {
-	matcher: ['/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)']
-};
