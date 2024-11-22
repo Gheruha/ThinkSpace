@@ -3,18 +3,13 @@ import { createRouteSupabaseClient } from '@/lib/supabase/client';
 
 export async function POST(req: NextRequest) {
 	try {
-		const url = new URL(req.url);
 		const supabase = createRouteSupabaseClient();
-		const { firstName, lastName, email, password } = await req.json();
+		const { email, password } = await req.json();
 
-		// Sign up user with Supabase
-		const { data, error } = await supabase.auth.signUp({
+		// Sign in user with Supabase
+		const { data, error } = await supabase.auth.signInWithPassword({
 			email,
-			password,
-			options: {
-				data: { firstName, lastName },
-				emailRedirectTo: `${url.origin}/api/auth/callback`
-			}
+			password
 		});
 
 		if (error) {
@@ -22,8 +17,8 @@ export async function POST(req: NextRequest) {
 		}
 
 		return NextResponse.json({
-			message: 'Sign up successful. Please verify your email.',
-			user: data.user
+			message: 'Sign in successful.',
+			session: data.session
 		});
 	} catch (error) {
 		return NextResponse.json({ message: 'Internal server error.' }, { status: 500 });
