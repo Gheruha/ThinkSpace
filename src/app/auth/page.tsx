@@ -1,10 +1,11 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { SignUpForm } from './components/authentication/signUpForm';
 import { SignInForm } from './components/authentication/signInForm';
 
-export default function Auth() {
+function AuthContent() {
 	const searchParams = useSearchParams();
 	const mode = searchParams.get('mode')?.toLowerCase();
 
@@ -19,4 +20,12 @@ export default function Auth() {
 	};
 
 	return <div>{renderForm()}</div>;
+}
+
+export default function Auth() {
+	return (
+		<Suspense fallback={<div>Loading...</div>}>
+			<AuthContent />
+		</Suspense>
+	);
 }
