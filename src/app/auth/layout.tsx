@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { Toaster } from '@/components/ui/toaster';
 import { ArrowLeft } from 'lucide-react';
 
 interface AuthLayoutProps {
@@ -24,6 +25,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
 				</Button>
 			</div>
 			<div className="mx-auto">{children}</div>
+			<Toaster />
 		</div>
 	);
 }

@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 import useAuthStore from '@/lib/stores/authStore';
 
 // Validation schema
@@ -23,6 +24,7 @@ type SignInFormValues = z.infer<typeof signInSchema>;
 
 export function SignInForm() {
 	const router = useRouter();
+	const { toast } = useToast();
 	const setEmail = useAuthStore((state) => state.setEmail);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -66,7 +68,10 @@ export function SignInForm() {
 		});
 
 		const result = await response.json();
-		alert(result.message || 'SignIn successful!');
+		toast({
+			description: result.message,
+			variant: response.ok ? 'default' : 'destructive'
+		});
 	};
 
 	return (

@@ -5,27 +5,33 @@ import { createClient } from '@supabase/supabase-js';
 import { createMiddlewareClient, createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 // Environment variables validation
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseUrl: string | undefined = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey: string | undefined = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseServiceRoleKey: string | undefined = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
+if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceRoleKey) {
 	throw new Error(
-		'Missing Supabase environment variables. Ensure NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set.'
+		'Missing Supabase environment variables. Ensure NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY and SUPABASE_SERVICE_ROLE_KEY are set.'
 	);
 }
 
 // Create a Supabase client for client-side use.
-export const createSupabaseClient = () => {
+export const createClientSupabaseAnonymous = () => {
 	return createClient(supabaseUrl, supabaseAnonKey);
 };
 
+// Create a Supabase client for server-side use.
+export const createClientSupabaseServiceRole = () => {
+	return createClient(supabaseUrl, supabaseServiceRoleKey);
+};
+
 // Create a Supabase client for middleware use.
-export const createMiddlewareSupabaseClient = (req: NextRequest, res: NextResponse) => {
+export const createSupabaseMiddlewareClient = (req: NextRequest, res: NextResponse) => {
 	return createMiddlewareClient({ req, res });
 };
 
 // Create a Supabase client for API route or server-side use.
-export const createRouteSupabaseClient = () => {
+export const createSupabaseApiClient = () => {
 	return createRouteHandlerClient({
 		cookies: getCookies as () => ReadonlyRequestCookies
 	});

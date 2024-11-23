@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Eye, EyeOff } from 'lucide-react';
+import { Check, Eye, EyeOff } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 
 // Validation schema
 const signUpSchema = z.object({
@@ -28,6 +29,7 @@ const signUpSchema = z.object({
 type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 export function SignUpForm() {
+	const { toast } = useToast();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
 	const {
@@ -51,7 +53,19 @@ export function SignUpForm() {
 		});
 
 		const result = await response.json();
-		alert(result.message || 'SignUp successful!');
+		toast({
+			description:
+				result.message === 'Already signed up, you must sign in.' ? (
+					<div style={{ display: 'flex', alignItems: 'center' }}>
+						<Check style={{ marginRight: '8px', color: 'hsl(var(--foreground))' }} />
+						<span>{result.message}</span>
+					</div>
+				) : (
+					result.message
+				),
+
+			variant: response.ok ? 'default' : 'destructive'
+		});
 	};
 
 	return (
