@@ -50,7 +50,7 @@ export function SignInForm() {
 		setEmail(email);
 		router.push('/auth/resetPassword?step=otp');
 
-		const response = await fetch('/api/auth/resetPassword', {
+		const response = await fetch('/api/auth/forgotPassword', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email })

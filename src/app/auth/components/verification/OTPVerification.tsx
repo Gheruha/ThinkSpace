@@ -50,7 +50,7 @@ export function OTPVerification() {
 	const handleResendOTP = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
 		e.preventDefault();
 
-		const response = await fetch('/api/auth/resendOTP', {
+		const response = await fetch('/api/auth/forgotPassword', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email })
