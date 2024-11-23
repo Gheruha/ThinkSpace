@@ -30,7 +30,6 @@ export async function POST(req: NextRequest) {
 			password
 		});
 
-		console.log('userError:', error);
 		if (error) {
 			return NextResponse.json({ message: error.message }, { status: 400 });
 		}
