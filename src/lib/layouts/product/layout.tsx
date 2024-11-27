@@ -99,6 +99,8 @@ export default function LearningProductLayout({ children }: { children: React.Re
 								darkSrc="icons/dark_mode/favicon.png"
 								alt="icon"
 								className="w-8 h-8"
+								width={32}
+								height={32}
 							/>
 							<span className="text-xl font-medium w-36">Think Space</span>
 						</Link>
