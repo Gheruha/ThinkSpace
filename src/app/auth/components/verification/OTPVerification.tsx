@@ -17,7 +17,7 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
-import useAuthStore from '@/lib/stores/authStore';
+import useAuthStore from '@/lib/state/auth/auth.state';
 
 export function OTPVerification() {
 	const router = useRouter();

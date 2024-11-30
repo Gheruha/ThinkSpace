@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import useAuthStore from '@/lib/stores/authStore';
+import useAuthStore from '@/lib/state/auth/auth.state';
 
 // Validation schema
 const signInSchema = z.object({
