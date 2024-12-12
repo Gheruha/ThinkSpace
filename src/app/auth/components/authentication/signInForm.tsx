@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -13,6 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import useAuthStore from '@/lib/state/auth/auth.state';
+import { authService } from '@/lib/services/auth/auth.service';
 
 // Validation schema
 const signInSchema = z.object({
@@ -25,7 +26,7 @@ type SignInFormValues = z.infer<typeof signInSchema>;
 export function SignInForm() {
 	const router = useRouter();
 	const { toast } = useToast();
-	const setEmail = useAuthStore((state) => state.setEmail);
+	const setUser = useAuthStore((state) => state.setUser);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
 	const {
@@ -47,7 +48,7 @@ export function SignInForm() {
 		const email = getValues('email');
 		if (!(await trigger('email'))) return;
 
-		setEmail(email);
+		// setUser(email);
 		router.push('/auth/resetPassword?step=otp');
 
 		const response = await fetch('/api/auth/forgotPassword', {
@@ -61,17 +62,17 @@ export function SignInForm() {
 	};
 
 	const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
-		const response = await fetch('/api/auth/signIn', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(data)
-		});
-
-		const result = await response.json();
-		toast({
-			description: result.message,
-			variant: response.ok ? 'default' : 'destructive'
-		});
+		try {
+			const { user } = await authService.signIn(data);
+			setUser(user);
+			toast({ description: 'Sign in successful!' });
+			router.push('/');
+		} catch (error: any) {
+			toast({
+				description: error.message || 'Failed to sign in.',
+				variant: 'destructive'
+			});
+		}
 	};
 
 	return (

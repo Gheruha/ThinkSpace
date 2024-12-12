@@ -21,7 +21,7 @@ import useAuthStore from '@/lib/state/auth/auth.state';
 
 export function OTPVerification() {
 	const router = useRouter();
-	const email = useAuthStore((state) => state.email);
+	// const email = useAuthStore((state) => state.email);
 	const [otp, setOtp] = useState<string>('');
 
 	const handleVerifyOTP = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
@@ -34,8 +34,8 @@ export function OTPVerification() {
 
 		const response = await fetch('/api/auth/verifyOTP', {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email, otp })
+			headers: { 'Content-Type': 'application/json' }
+			// body: JSON.stringify({ email, otp })
 		});
 
 		const result = await response.json();
@@ -52,8 +52,8 @@ export function OTPVerification() {
 
 		const response = await fetch('/api/auth/forgotPassword', {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email })
+			headers: { 'Content-Type': 'application/json' }
+			// body: JSON.stringify({ email })
 		});
 
 		const result = await response.json();
@@ -67,7 +67,7 @@ export function OTPVerification() {
 					<CardTitle className="text-xl">Verification code</CardTitle>
 					<CardDescription>We have sent the code verification to</CardDescription>
 					<CardDescription className="font-medium" style={{ color: 'hsl(var(--primary))' }}>
-						{email}
+						{/* {email} */}
 					</CardDescription>
 				</CardHeader>
 				<CardContent>

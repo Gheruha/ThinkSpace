@@ -95,8 +95,8 @@ export default function LearningProductLayout({ children }: { children: React.Re
 					>
 						<Link href="/product" passHref className="flex space-x-4 min-w-[10.25rem]">
 							<ThemeImage
-								lightSrc="icons/light_mode/favicon.png"
-								darkSrc="icons/dark_mode/favicon.png"
+								lightSrc="/icons/light_mode/favicon.png"
+								darkSrc="/icons/dark_mode/favicon.png"
 								alt="icon"
 								className="w-8 h-8"
 								width={32}
@@ -219,8 +219,8 @@ export default function LearningProductLayout({ children }: { children: React.Re
 						onClick={() => window.open('https://github.com/Gheruha/ThinkSpace', '_blank')}
 					>
 						<ThemeImage
-							lightSrc="icons/light_mode/github_logo.png"
-							darkSrc="icons/dark_mode/github_logo.png"
+							lightSrc="/icons/light_mode/github_logo.png"
+							darkSrc="/icons/dark_mode/github_logo.png"
 							alt="icon"
 							className="w-8 h-8"
 						/>

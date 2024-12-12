@@ -5,7 +5,7 @@ export default function Main() {
 		<div>
 			<form action="/api/auth/signOut" method="post">
 				<Button size="xs" className="rounded-sm" variant="ghost">
-					<span className="text-lg font-normal">Log Out</span>
+					<span className="text-lg font-normal">Sign Out</span>
 				</Button>
 			</form>
 		</div>

@@ -1,19 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseApiClient } from '@/lib/supabase/client';
+import { NextResponse } from 'next/server';
+import { signOutUser } from '@/lib/utils/auth/auth.util';
 
-export async function POST(req: NextRequest) {
+export async function POST() {
 	try {
-		const supabaseApi = createSupabaseApiClient();
-
-		// Sign out user with Supabase
-		const { error } = await supabaseApi.auth.signOut();
-
-		if (error) {
-			return NextResponse.json({ error: error.message }, { status: 400 });
-		}
+		await signOutUser();
 
 		return NextResponse.json({
-			message: 'Sign out successful.'
+			message: 'User signed out successfully.'
 		});
 	} catch (error) {
 		return NextResponse.json({ message: 'Internal server error.' }, { status: 500 });

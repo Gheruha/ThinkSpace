@@ -24,7 +24,5 @@ export function ThemeImage({
 
 	const imageSrc = currentTheme === 'dark' ? darkSrc : lightSrc;
 
-	return (
-		<Image src={'/' + imageSrc} alt={alt} className={className} width={width} height={height} />
-	);
+	return <Image src={imageSrc} alt={alt} className={className} width={width} height={height} />;
 }

@@ -1,48 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseApiClient, createClientSupabaseServiceRole } from '@/lib/supabase/client';
+import { checkUserExists } from '@/lib/utils/auth/token.util';
+import { signUpUser } from '@/lib/utils/auth/auth.util';
 
 export async function POST(req: NextRequest) {
 	try {
 		const url = new URL(req.url);
-		const supabaseApi = createSupabaseApiClient();
-		const supabaseServiceRole = createClientSupabaseServiceRole();
 		const { firstName, lastName, email, password } = await req.json();
 
-		// Check if user exist in supabase
-		const { data: users, error: userError } = await supabaseServiceRole.auth.admin.listUsers();
-		if (userError || !users) {
-			return NextResponse.json({ error: 'User does not exist' }, { status: 404 });
-		}
-
-		// Find the user by email
-		const user = users?.users.find((u) => u.email === email);
-
-		// If user already exists
-		if (user) {
+		// Check if user exist
+		const userExists = await checkUserExists(email);
+		if (userExists) {
 			return NextResponse.json(
 				{ message: 'Already signed up, you must sign in.' },
 				{ status: 400 }
 			);
 		}
 
-		// Sign up user with Supabase
-		const { data, error } = await supabaseApi.auth.signUp({
+		// Sign up the user
+		const { user, message } = await signUpUser({
+			firstName,
+			lastName,
 			email,
 			password,
-			options: {
-				data: { firstName, lastName },
-				emailRedirectTo: `${url.origin}/api/auth/callback`
-			}
+			redirectUrl: `${url.origin}/api/auth/callback`
 		});
 
-		if (error) {
-			return NextResponse.json({ message: error.message }, { status: 400 });
-		}
-
-		return NextResponse.json({
-			message: 'Sign up successful. Please verify your email.',
-			user: data.user
-		});
+		return NextResponse.json({ message, user });
 	} catch (error) {
 		return NextResponse.json({ message: 'Internal server error.' }, { status: 500 });
 	}
