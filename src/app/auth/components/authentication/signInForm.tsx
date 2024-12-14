@@ -1,6 +1,6 @@
 'use client';
 
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -66,7 +66,6 @@ export function SignInForm() {
 			const { user } = await authService.signIn(data);
 			setUser(user);
 			toast({ description: 'Sign in successful!' });
-			router.push('/');
 		} catch (error: any) {
 			toast({
 				description: error.message || 'Failed to sign in.',

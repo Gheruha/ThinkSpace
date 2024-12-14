@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -11,6 +12,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { authService } from '@/lib/services/auth/auth.service';
+import { signUpDto } from '@/lib/dto/auth/auth.dto';
 
 // Validation schema
 const signUpSchema = z.object({
@@ -26,9 +29,8 @@ const signUpSchema = z.object({
 	password: z.string().min(8, 'Password must be at least 8 characters.')
 });
 
-type SignUpFormValues = z.infer<typeof signUpSchema>;
-
 export function SignUpForm() {
+	const router = useRouter();
 	const { toast } = useToast();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -36,7 +38,7 @@ export function SignUpForm() {
 		register,
 		handleSubmit,
 		formState: { errors }
-	} = useForm<SignUpFormValues>({
+	} = useForm<signUpDto>({
 		resolver: zodResolver(signUpSchema)
 	});
 
@@ -45,27 +47,24 @@ export function SignUpForm() {
 		setShowPassword((prev) => !prev);
 	};
 
-	const onSubmit: SubmitHandler<SignUpFormValues> = async (data) => {
-		const response = await fetch('/api/auth/signUp', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(data)
-		});
-
-		const result = await response.json();
-		toast({
-			description:
-				result.message === 'Already signed up, you must sign in.' ? (
+	const onSubmit: SubmitHandler<signUpDto> = async (data) => {
+		try {
+			const { message } = await authService.signUp(data);
+			toast({
+				description: (
 					<div style={{ display: 'flex', alignItems: 'center' }}>
 						<Check style={{ marginRight: '8px', color: 'hsl(var(--foreground))' }} />
-						<span>{result.message}</span>
+						<span>{message}</span>
 					</div>
-				) : (
-					result.message
 				),
-
-			variant: response.ok ? 'default' : 'destructive'
-		});
+				variant: 'default'
+			});
+		} catch (error: any) {
+			toast({
+				description: error.message || 'Failed to sign up.',
+				variant: 'destructive'
+			});
+		}
 	};
 
 	return (

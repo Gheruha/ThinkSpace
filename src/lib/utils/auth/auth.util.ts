@@ -42,7 +42,7 @@ export const signUpUser = async ({
 	password,
 	redirectUrl
 }: signUpDto): Promise<{ user: any; message: string }> => {
-	const supabase = createClientSupabaseAnonymous();
+	const supabase = createSupabaseApiClient();
 	const { data, error } = await supabase.auth.signUp({
 		email,
 		password,
