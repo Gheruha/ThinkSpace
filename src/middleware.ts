@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
 	} = await supabase.auth.getSession();
 
 	if (error) {
-		console.log(error);
+		console.error(error);
 	}
 
 	// Extract the pathname from the URL

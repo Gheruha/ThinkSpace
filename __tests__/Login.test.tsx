@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { ButtonProvider } from '@/app/product/components/clickedButton';
+import { ButtonProvider } from '@/components/clickedButton';
 import { LoginForm } from '@/app/auth/components/forms/log_in';
 import { useRouter } from 'next/navigation';
 
