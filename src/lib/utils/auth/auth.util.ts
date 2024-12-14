@@ -1,22 +1,26 @@
 import { createClientSupabaseAnonymous } from '@/lib/supabase/client';
 import { createSupabaseApiClient } from '@/lib/supabase/client';
 import { signUpDto } from '@/lib/dto/auth/auth.dto';
-import { clearToken } from './token.util';
+import { clearToken, saveToken } from './token.util';
 
 // Exchanges an authorization code for a Supabase session
 export const exchangeCodeForSession = async (code: string): Promise<void> => {
 	const supabase = createSupabaseApiClient();
-	const { error } = await supabase.auth.exchangeCodeForSession(code);
+	const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
 	if (error) {
 		console.error('Error exchanging code for session:', error.message);
 		throw new Error('Failed to exchange code for session');
 	}
+
+	if (data?.session?.access_token) {
+		await saveToken(data.session.access_token);
+	}
 };
 
 // Sign in the user
 export const signInUser = async (email: string, password: string): Promise<any> => {
-	const supabase = createClientSupabaseAnonymous();
+	const supabase = createSupabaseApiClient();
 	const { data, error } = await supabase.auth.signInWithPassword({
 		email,
 		password

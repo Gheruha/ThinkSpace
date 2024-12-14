@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies as getCookies } from 'next/headers';
+import { cookies } from 'next/headers';
 import { createClient } from '@supabase/supabase-js';
 import { createMiddlewareClient, createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
@@ -26,12 +26,16 @@ export const createClientSupabaseServiceRole = () => {
 
 // Create a Supabase client for middleware use.
 export const createSupabaseMiddlewareClient = (req: NextRequest, res: NextResponse) => {
-	return createMiddlewareClient({ req, res });
+	return createMiddlewareClient({
+		req,
+		res
+	});
 };
 
 // Create a Supabase client for API route or server-side use.
 export const createSupabaseApiClient = () => {
+	const cookieStore = cookies();
 	return createRouteHandlerClient({
-		cookies: async () => getCookies()
+		cookies: () => cookieStore
 	});
 };

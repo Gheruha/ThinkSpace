@@ -17,6 +17,11 @@ export const getToken = (): string | null => {
 	}
 };
 
+// Save the user's access token in localStorage
+export const saveToken = async (token: string): Promise<void> => {
+	localStorage.setItem(TOKEN_KEY, JSON.stringify({ access_token: token }));
+};
+
 // Clear the user's access token from localStorage
 export const clearToken = (): void => {
 	localStorage.removeItem(TOKEN_KEY);

@@ -1,5 +1,4 @@
 import { signInDto, signUpDto } from '@/lib/dto/auth/auth.dto';
-import { getToken, clearToken } from '@/lib/utils/auth/token.util';
 
 class AuthService {
 	async signIn(data: signInDto): Promise<{ token: string; user: any }> {

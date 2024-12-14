@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { checkUserExists } from '@/lib/utils/auth/token.util';
+import { checkUserExists, saveToken } from '@/lib/utils/auth/token.util';
 import { signInUser } from '@/lib/utils/auth/auth.util';
 
 export async function POST(req: NextRequest) {
