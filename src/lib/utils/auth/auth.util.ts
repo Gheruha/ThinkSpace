@@ -1,7 +1,7 @@
 import { createClientSupabaseAnonymous } from '@/lib/supabase/client';
 import { createSupabaseApiClient } from '@/lib/supabase/client';
 import { signUpDto } from '@/lib/dto/auth/auth.dto';
-import { clearToken, saveToken } from './token.util';
+import { clearToken } from './token.util';
 
 // Exchanges an authorization code for a Supabase session
 export const exchangeCodeForSession = async (code: string): Promise<void> => {
