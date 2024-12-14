@@ -1,5 +1,5 @@
-import { ButtonProvider } from '@/app/product/components/clickedButton';
-import LearningProductLayout from '@/lib/layouts/product/layout';
+import { ButtonProvider } from '@/components/clickedButton';
+import LearningProductLayout from '@/lib/layouts/marketing';
 
 export default function ProductLayout({ children }: { children: React.ReactNode }) {
 	return (
