@@ -17,11 +17,11 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
-import useAuthStore from '@/lib/state/auth/auth.state';
+import useAuthStore from '@/lib/store/auth/auth.store';
 
 export function OTPVerification() {
 	const router = useRouter();
-	// const email = useAuthStore((state) => state.email);
+	const user = useAuthStore((state) => state.user);
 	const [otp, setOtp] = useState<string>('');
 
 	const handleVerifyOTP = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
@@ -59,6 +59,8 @@ export function OTPVerification() {
 		const result = await response.json();
 		alert(result.message || 'OTPResend successful!');
 	};
+
+	// console.log('User from OTPVerification:', user);
 
 	return (
 		<form onSubmit={handleVerifyOTP}>

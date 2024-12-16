@@ -15,4 +15,19 @@ const useAuthStore = create<AuthState>((set) => ({
 	clearUser: () => set({ isAuthenticated: false })
 }));
 
+export const handleUserSignIn = async (responseData: any) => {
+	const { user } = responseData;
+	const mappedUser: User = {
+		id: user?.id,
+		email: user?.user_metadata?.email,
+		firstName: user?.user_metadata?.firstName,
+		lastName: user?.user_metadata?.lastName
+	};
+
+	const setUser = useAuthStore.getState().setUser;
+	setUser(mappedUser);
+
+	// console.log('User after setUser:', useAuthStore.getState().user);
+};
+
 export default useAuthStore;

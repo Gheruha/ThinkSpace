@@ -1,26 +1,22 @@
-import { createClientSupabaseAnonymous } from '@/lib/supabase/client';
 import { createSupabaseApiClient } from '@/lib/supabase/client';
 import { signUpDto } from '@/lib/dto/auth/auth.dto';
-import { clearToken } from './token.util';
+import { handleUserSignIn } from '@/lib/store/auth/auth.store';
+import { signInDto } from '@/lib/dto/auth/auth.dto';
 
 // Exchanges an authorization code for a Supabase session
 export const exchangeCodeForSession = async (code: string): Promise<void> => {
-	const supabase = createSupabaseApiClient();
-	const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+	const supabase = await createSupabaseApiClient();
+	const { error } = await supabase.auth.exchangeCodeForSession(code);
 
 	if (error) {
 		console.error('Error exchanging code for session:', error.message);
 		throw new Error('Failed to exchange code for session');
 	}
-
-	// if (data?.session?.access_token) {
-	// 	await saveToken(data.session.access_token);
-	// }
 };
 
 // Sign in the user
-export const signInUser = async (email: string, password: string): Promise<any> => {
-	const supabase = createSupabaseApiClient();
+export const signInUser = async ({ email, password }: signInDto): Promise<any> => {
+	const supabase = await createSupabaseApiClient();
 	const { data, error } = await supabase.auth.signInWithPassword({
 		email,
 		password
@@ -29,6 +25,11 @@ export const signInUser = async (email: string, password: string): Promise<any> 
 	if (error) {
 		console.error('Error signing in:', error.message);
 		throw new Error('Failed to sign in');
+	}
+
+	if (data?.session?.user) {
+		console.log('Response user data:', data.session.user);
+		await handleUserSignIn(data.session);
 	}
 
 	return data;
@@ -42,7 +43,7 @@ export const signUpUser = async ({
 	password,
 	redirectUrl
 }: signUpDto): Promise<{ user: any; message: string }> => {
-	const supabase = createSupabaseApiClient();
+	const supabase = await createSupabaseApiClient();
 	const { data, error } = await supabase.auth.signUp({
 		email,
 		password,
@@ -65,13 +66,11 @@ export const signUpUser = async ({
 
 // Sign out the current user and clear their session
 export const signOutUser = async (): Promise<void> => {
-	const supabase = createClientSupabaseAnonymous();
+	const supabase = await createSupabaseApiClient();
 	const { error } = await supabase.auth.signOut();
 
 	if (error) {
 		console.error('Error signing out:', error.message);
 		throw new Error('Failed to sign out');
 	}
-
-	clearToken();
 };

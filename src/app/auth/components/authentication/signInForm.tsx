@@ -12,8 +12,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import useAuthStore from '@/lib/state/auth/auth.state';
 import { authService } from '@/lib/services/auth/auth.service';
+import { signInDto } from '@/lib/dto/auth/auth.dto';
 
 // Validation schema
 const signInSchema = z.object({
@@ -21,12 +21,9 @@ const signInSchema = z.object({
 	password: z.string().min(8, 'Password must be at least 8 characters.')
 });
 
-type SignInFormValues = z.infer<typeof signInSchema>;
-
 export function SignInForm() {
 	const router = useRouter();
 	const { toast } = useToast();
-	const setUser = useAuthStore((state) => state.setUser);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
 	const {
@@ -35,7 +32,7 @@ export function SignInForm() {
 		formState: { errors },
 		getValues,
 		trigger
-	} = useForm<SignInFormValues>({
+	} = useForm<signInDto>({
 		resolver: zodResolver(signInSchema)
 	});
 
@@ -61,14 +58,13 @@ export function SignInForm() {
 		alert(responseResult.message || 'ResetPassword successful!');
 	};
 
-	const onSubmit: SubmitHandler<SignInFormValues> = async (data) => {
+	const onSubmit: SubmitHandler<signInDto> = async (signInData) => {
 		try {
-			const { user } = await authService.signIn(data);
-			setUser(user);
-			toast({ description: 'Sign in successful!' });
+			const { message } = await authService.signIn(signInData);
+			toast({ description: message, variant: 'default' });
 		} catch (error: any) {
 			toast({
-				description: error.message || 'Failed to sign in.',
+				description: error.message,
 				variant: 'destructive'
 			});
 		}
