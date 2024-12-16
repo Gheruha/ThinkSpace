@@ -1,12 +1,12 @@
 import { signInDto, signUpDto } from '@/lib/dto/auth/auth.dto';
 
 class AuthService {
-	async signIn(data: signInDto): Promise<{ token: string; user: any }> {
+	async signIn(signInData: signInDto): Promise<{ message: string }> {
 		try {
 			const response = await fetch('api/auth/signIn', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(data)
+				body: JSON.stringify(signInData)
 			});
 
 			if (!response.ok) {
