@@ -33,7 +33,7 @@ export const createSupabaseMiddlewareClient = (req: NextRequest, res: NextRespon
 };
 
 // Create a Supabase client for API route or server-side use.
-export const createSupabaseApiClient = () => {
+export const createSupabaseApiClient = async () => {
 	const cookieStore = cookies();
 	return createRouteHandlerClient({
 		cookies: () => cookieStore

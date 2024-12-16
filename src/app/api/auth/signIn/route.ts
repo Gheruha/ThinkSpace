@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkUserExists } from '@/lib/utils/auth/token.util';
 import { signInUser } from '@/lib/utils/auth/auth.util';
+import { signInDto } from '@/lib/dto/auth/auth.dto';
 
 export async function POST(req: NextRequest) {
 	try {
-		const { email, password } = await req.json();
+		const { email, password }: signInDto = await req.json();
 
 		// Check if user exist
 		const userExists = await checkUserExists(email);
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest) {
 		}
 
 		// Sign in the user
-		const session = await signInUser(email, password);
+		const session = await signInUser({ email, password });
 
 		return NextResponse.json({
 			message: 'Sign in successful.',
