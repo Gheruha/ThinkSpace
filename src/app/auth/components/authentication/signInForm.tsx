@@ -13,7 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { authService } from '@/lib/services/auth/auth.service';
-import { signInDto } from '@/lib/dto/auth/auth.dto';
+import { SignInDto } from '@/lib/dto/auth/auth.dto';
 
 // Validation schema
 const signInSchema = z.object({
@@ -32,7 +32,7 @@ export function SignInForm() {
 		formState: { errors },
 		getValues,
 		trigger
-	} = useForm<signInDto>({
+	} = useForm<SignInDto>({
 		resolver: zodResolver(signInSchema)
 	});
 
@@ -58,7 +58,7 @@ export function SignInForm() {
 		alert(responseResult.message || 'ResetPassword successful!');
 	};
 
-	const onSubmit: SubmitHandler<signInDto> = async (signInData) => {
+	const onSubmit: SubmitHandler<SignInDto> = async (signInData) => {
 		try {
 			const { message } = await authService.signIn(signInData);
 			toast({ description: message, variant: 'default' });
