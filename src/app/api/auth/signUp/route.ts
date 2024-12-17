@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkUserExists } from '@/lib/utils/auth/token.util';
 import { signUpUser } from '@/lib/utils/auth/auth.util';
+import { SignUpDto } from '@/lib/dto/auth/auth.dto';
 
 export async function POST(req: NextRequest) {
 	try {
 		const url = new URL(req.url);
-		const { firstName, lastName, email, password } = await req.json();
+		const { firstName, lastName, email, password }: SignUpDto = await req.json();
 
 		// Check if user exist
 		const userExists = await checkUserExists(email);
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
 		}
 
 		// Sign up the user
-		const { user, message } = await signUpUser({
+		const session = await signUpUser({
 			firstName,
 			lastName,
 			email,
@@ -25,7 +26,10 @@ export async function POST(req: NextRequest) {
 			redirectUrl: `${url.origin}/api/auth/callback`
 		});
 
-		return NextResponse.json({ message, user });
+		return NextResponse.json({
+			message: 'Sign up successful.',
+			session: session.session
+		});
 	} catch (error) {
 		return NextResponse.json({ message: 'Internal server error.' }, { status: 500 });
 	}

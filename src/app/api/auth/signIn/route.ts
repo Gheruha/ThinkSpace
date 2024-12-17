@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkUserExists } from '@/lib/utils/auth/token.util';
 import { signInUser } from '@/lib/utils/auth/auth.util';
-import { signInDto } from '@/lib/dto/auth/auth.dto';
+import { SignInDto } from '@/lib/dto/auth/auth.dto';
 
 export async function POST(req: NextRequest) {
 	try {
-		const { email, password }: signInDto = await req.json();
+		const { email, password }: SignInDto = await req.json();
 
 		// Check if user exist
 		const userExists = await checkUserExists(email);
