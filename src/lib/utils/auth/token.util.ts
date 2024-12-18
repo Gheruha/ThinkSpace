@@ -1,3 +1,4 @@
+import { User } from '@/lib/dto/auth/auth.dto';
 import { createClientSupabaseAnonymous } from '@/lib/supabase/client';
 import { createClientSupabaseServiceRole } from '@/lib/supabase/client';
 
@@ -43,16 +44,34 @@ const TOKEN_KEY = 'supabase.auth.token';
 // };
 
 // Fetch the current user's details using the Supabase client
-export const fetchCurrentUser = async (): Promise<any> => {
+export const getCurrentUser = async (): Promise<User | null> => {
 	const supabase = createClientSupabaseAnonymous();
-	const { data, error } = await supabase.auth.getUser();
+	const {
+		data: { user },
+		error
+	} = await supabase.auth.getUser();
 
 	if (error) {
-		console.error('Failed to fetch user:', error.message);
+		console.error('Failed to fetch current user:', error.message);
 		throw new Error('Unable to fetch user details');
 	}
 
-	return data.user;
+	if (!user) {
+		console.error('User does not exist in getCurrentUser');
+		return null;
+	}
+
+	const { id, email, user_metadata } = user;
+
+	// Map the Supabase user object to match the User interface
+	const mappedUser: User = {
+		id,
+		email: email || 'Unknown',
+		firstName: user_metadata?.firstName || 'Unknown',
+		lastName: user_metadata?.lastName || 'Unknown'
+	};
+
+	return mappedUser;
 };
 
 // Check if user exist in Supabase database

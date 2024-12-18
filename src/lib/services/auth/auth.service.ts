@@ -40,6 +40,27 @@ class AuthService {
 			throw error;
 		}
 	}
+
+	async signOut(): Promise<{ message: string }> {
+		try {
+			const response = await fetch('api/auth/signOut', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			if (!response.ok) {
+				const error = await response.json();
+				throw new Error(error.message || 'Failed to sign out');
+			}
+
+			return response.json();
+		} catch (error: any) {
+			console.error('Error signing out:', error.message);
+			throw error;
+		}
+	}
 }
 
 export const authService = new AuthService();
