@@ -13,6 +13,7 @@ export interface SignUpDto {
 
 export interface ForgotPasswordDto {
 	email: string;
+	otpCode?: string;
 }
 
 export interface VerifyOTPDto {

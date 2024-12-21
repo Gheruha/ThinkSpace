@@ -1,5 +1,7 @@
+import { ForgotPasswordDto, User } from '@/lib/dto/auth/auth.dto';
 import { createClientSupabaseAnonymous } from '@/lib/supabase/client';
 import { createClientSupabaseServiceRole } from '@/lib/supabase/client';
+import { randomInt } from 'crypto';
 
 const TOKEN_KEY = 'supabase.auth.token';
 
@@ -43,16 +45,34 @@ const TOKEN_KEY = 'supabase.auth.token';
 // };
 
 // Fetch the current user's details using the Supabase client
-export const fetchCurrentUser = async (): Promise<any> => {
+export const getCurrentUser = async (): Promise<User | null> => {
 	const supabase = createClientSupabaseAnonymous();
-	const { data, error } = await supabase.auth.getUser();
+	const {
+		data: { user },
+		error
+	} = await supabase.auth.getUser();
 
 	if (error) {
-		console.error('Failed to fetch user:', error.message);
+		console.error('Failed to fetch current user:', error.message);
 		throw new Error('Unable to fetch user details');
 	}
 
-	return data.user;
+	if (!user) {
+		console.error('User does not exist in getCurrentUser');
+		return null;
+	}
+
+	const { id, email, user_metadata } = user;
+
+	// Map the Supabase user object to match the User interface
+	const mappedUser: User = {
+		id,
+		email: email || 'Unknown',
+		firstName: user_metadata?.firstName || 'Unknown',
+		lastName: user_metadata?.lastName || 'Unknown'
+	};
+
+	return mappedUser;
 };
 
 // Check if user exist in Supabase database
@@ -67,4 +87,22 @@ export const checkUserExists = async (email: string): Promise<boolean> => {
 
 	const user = users?.users.find((u) => u.email === email);
 	return !!user;
+};
+
+// Generates a random numeric OTP code
+export const generateOTPCode = (lengthCode: number): string => {
+	return Array.from({ length: lengthCode }, () => randomInt(0, 10)).join('');
+};
+
+// Insert the OTP Code in otp_codes table
+export const insertOTPCode = async ({ email, otpCode }: ForgotPasswordDto): Promise<void> => {
+	const supabaseServiceRole = createClientSupabaseServiceRole();
+	const { error } = await supabaseServiceRole
+		.from('otp_codes')
+		.insert([{ email: email, otp: otpCode, created_at: new Date() }]);
+
+	if (error) {
+		console.error('Error inserting OTP:', error);
+		throw new Error('Failed to insert OTP into the database');
+	}
 };
