@@ -14,6 +14,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { authService } from '@/lib/services/auth/auth.service';
 import { signInDto } from '@/lib/dto/auth/auth.dto';
+import { GoogleOAuth } from './googleOAuth';
 
 // Validation schema
 const signInSchema = z.object({
@@ -33,7 +34,7 @@ export function SignInForm() {
 		getValues,
 		trigger
 	} = useForm<signInDto>({
-		resolver: zodResolver(signInSchema)
+		// resolver: zodResolver(signInSchema)
 	});
 
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
@@ -71,7 +72,7 @@ export function SignInForm() {
 	};
 
 	return (
-		<form noValidate onSubmit={handleSubmit(onSubmit)}>
+		<form noValidate>
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-xl">Sign In</CardTitle>
@@ -125,12 +126,14 @@ export function SignInForm() {
 								<p className="text-red-500 text-sm">{errors.password.message}</p>
 							)}
 						</div>
-						<Button type="submit" className="w-full">
+
+						{/* Submit Buttons */}
+						<Button type="submit" className="w-full" onSubmit={handleSubmit(onSubmit)}>
 							Access Your Workspace
 						</Button>
-						<Button variant="outline" className="w-full">
-							Sign in with GitHub
-						</Button>
+						<GoogleOAuth />
+
+						{/* Submit Buttons */}
 					</div>
 					<div className="mt-4 text-center text-sm">
 						Don&apos;t have an account?{' '}

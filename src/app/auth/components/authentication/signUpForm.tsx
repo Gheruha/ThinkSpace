@@ -14,6 +14,7 @@ import { Check, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { authService } from '@/lib/services/auth/auth.service';
 import { signUpDto } from '@/lib/dto/auth/auth.dto';
+import { GoogleOAuth } from './googleOAuth';
 
 // Validation schema
 const signUpSchema = z.object({
@@ -39,7 +40,7 @@ export function SignUpForm() {
 		handleSubmit,
 		formState: { errors }
 	} = useForm<signUpDto>({
-		resolver: zodResolver(signUpSchema)
+		// resolver: zodResolver(signUpSchema)
 	});
 
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
@@ -68,7 +69,7 @@ export function SignUpForm() {
 	};
 
 	return (
-		<form noValidate onSubmit={handleSubmit(onSubmit)}>
+		<form onSubmit={handleSubmit(onSubmit)}>
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-xl">Sign Up</CardTitle>
@@ -132,9 +133,7 @@ export function SignUpForm() {
 						<Button type="submit" className="w-full">
 							Create an account
 						</Button>
-						<Button variant="outline" className="w-full">
-							Sign up with GitHub
-						</Button>
+						<GoogleOAuth />
 					</div>
 					<div className="mt-4 text-center text-sm">
 						Already have an account?{' '}

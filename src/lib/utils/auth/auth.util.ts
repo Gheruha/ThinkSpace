@@ -5,6 +5,7 @@ import { signInDto } from '@/lib/dto/auth/auth.dto';
 
 // Exchanges an authorization code for a Supabase session
 export const exchangeCodeForSession = async (code: string): Promise<void> => {
+	console.log('YOU ARE NOW IN THIS=====');
 	const supabase = await createSupabaseApiClient();
 	const { error } = await supabase.auth.exchangeCodeForSession(code);
 
