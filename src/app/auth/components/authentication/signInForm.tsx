@@ -13,12 +13,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { authService } from '@/lib/services/auth/auth.service';
-import { SignInDto } from '@/lib/dto/auth/auth.dto';
+import { SignInDto, ForgotPasswordDto } from '@/lib/dto/auth/auth.dto';
 
 // Validation schema
 const signInSchema = z.object({
 	email: z.string().email('Invalid email format.'),
 	password: z.string().min(8, 'Password must be at least 8 characters.')
+});
+
+const forgotPasswordSchema = z.object({
+	email: z.string().email('Invalid email format.')
 });
 
 export function SignInForm() {
@@ -29,11 +33,17 @@ export function SignInForm() {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
-		getValues,
-		trigger
+		formState: { errors }
 	} = useForm<SignInDto>({
 		resolver: zodResolver(signInSchema)
+	});
+
+	const {
+		register: forgotPasswordRegister,
+		handleSubmit: handleForgotPasswordSubmit,
+		formState: { errors: forgotPasswordErrors }
+	} = useForm<ForgotPasswordDto>({
+		resolver: zodResolver(forgotPasswordSchema)
 	});
 
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
@@ -41,21 +51,17 @@ export function SignInForm() {
 		setShowPassword((prev) => !prev);
 	};
 
-	const handleForgotPassword = async (): Promise<void> => {
-		const email = getValues('email');
-		if (!(await trigger('email'))) return;
-
-		// setUser(email);
-		router.push('/auth/resetPassword?step=otp');
-
-		const response = await fetch('/api/auth/forgotPassword', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email })
-		});
-
-		const responseResult = await response.json();
-		alert(responseResult.message || 'ResetPassword successful!');
+	const handleForgotPassword: SubmitHandler<ForgotPasswordDto> = async (forgotPasswordData) => {
+		try {
+			router.push('/auth/resetPassword?step=otp');
+			const { message } = await authService.forgotPassword(forgotPasswordData);
+			toast({ description: message, variant: 'default' });
+		} catch (error: any) {
+			toast({
+				description: error.message,
+				variant: 'destructive'
+			});
+		}
 	};
 
 	const onSubmit: SubmitHandler<SignInDto> = async (signInData) => {
@@ -84,18 +90,22 @@ export function SignInForm() {
 							<Input
 								id="email"
 								{...register('email')}
+								{...forgotPasswordRegister('email')}
 								type="email"
 								placeholder="email@example.com"
 							/>
 							{errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+							{forgotPasswordErrors.email && (
+								<p className="text-red-500 text-sm">{forgotPasswordErrors.email.message}</p>
+							)}
 						</div>
 						<div className="grid gap-2">
 							<div className="flex items-center">
 								<Label htmlFor="password">Password</Label>
 								<Link
-									href="#"
+									href="_"
 									className="ml-auto inline-block text-sm underline"
-									onClick={handleForgotPassword}
+									onClick={handleForgotPasswordSubmit(handleForgotPassword)}
 								>
 									Forgot your password?
 								</Link>
