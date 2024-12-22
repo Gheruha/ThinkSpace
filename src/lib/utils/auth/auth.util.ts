@@ -1,7 +1,8 @@
-import { createSupabaseApiClient } from '@/lib/supabase/client';
-import { signUpDto } from '@/lib/dto/auth/auth.dto';
-import { handleUserSignIn } from '@/lib/store/auth/auth.store';
-import { signInDto } from '@/lib/dto/auth/auth.dto';
+import { createSupabaseApiClient, createClientSupabaseServiceRole } from '@/lib/supabase/client';
+import { ForgotPasswordDto, SignUpDto } from '@/lib/dto/auth/auth.dto';
+import { handleUserAuthentication } from '@/lib/store/auth/auth.store';
+import { SignInDto } from '@/lib/dto/auth/auth.dto';
+import { insertOTPCode } from './token.util';
 
 // Exchanges an authorization code for a Supabase session
 export const exchangeCodeForSession = async (code: string): Promise<void> => {
@@ -16,7 +17,7 @@ export const exchangeCodeForSession = async (code: string): Promise<void> => {
 };
 
 // Sign in the user
-export const signInUser = async ({ email, password }: signInDto): Promise<any> => {
+export const signInUser = async ({ email, password }: SignInDto): Promise<any> => {
 	const supabase = await createSupabaseApiClient();
 	const { data, error } = await supabase.auth.signInWithPassword({
 		email,
@@ -28,9 +29,9 @@ export const signInUser = async ({ email, password }: signInDto): Promise<any> =
 		throw new Error('Failed to sign in');
 	}
 
-	if (data?.session?.user) {
-		console.log('Response user data:', data.session.user);
-		await handleUserSignIn(data.session);
+	if (data?.user) {
+		console.log('Response user data:', data.user);
+		await handleUserAuthentication(data);
 	}
 
 	return data;
@@ -43,7 +44,7 @@ export const signUpUser = async ({
 	email,
 	password,
 	redirectUrl
-}: signUpDto): Promise<{ user: any; message: string }> => {
+}: SignUpDto): Promise<any> => {
 	const supabase = await createSupabaseApiClient();
 	const { data, error } = await supabase.auth.signUp({
 		email,
@@ -59,10 +60,12 @@ export const signUpUser = async ({
 		throw new Error('Failed to sign up');
 	}
 
-	return {
-		user: data.user,
-		message: 'Sign up successful. Please verify your email.'
-	};
+	if (data?.user) {
+		console.log('Response user data:', data.user);
+		await handleUserAuthentication(data);
+	}
+
+	return data;
 };
 
 // Sign out the current user and clear their session
@@ -73,5 +76,19 @@ export const signOutUser = async (): Promise<void> => {
 	if (error) {
 		console.error('Error signing out:', error.message);
 		throw new Error('Failed to sign out');
+	}
+};
+
+// Send the OTP Code to user email
+export const forgotPassword = async ({ email, otpCode }: ForgotPasswordDto): Promise<any> => {
+	const supabase = await createSupabaseApiClient();
+
+	const { error } = await supabase.functions.invoke('send-email', {
+		body: { email: email, otp: otpCode }
+	});
+
+	if (error) {
+		console.error('Error sending email:', error);
+		throw new Error('Failed to send email to User');
 	}
 };

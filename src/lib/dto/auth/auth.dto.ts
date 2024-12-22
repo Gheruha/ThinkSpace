@@ -1,31 +1,32 @@
-export interface signInDto {
+export interface SignInDto {
 	email: string;
 	password: string;
 }
 
-export interface signUpDto {
+export interface SignUpDto {
 	email: string;
 	password: string;
 	firstName: string;
 	lastName: string;
-	redirectUrl: string;
+	redirectUrl?: string;
 }
 
-export interface forgotPasswordDto {
+export interface ForgotPasswordDto {
 	email: string;
+	otpCode?: string;
 }
 
-export interface verifyOTPDto {
+export interface VerifyOTPDto {
 	email: string;
 	otp: string;
 }
 
-export interface resetPasswordDto {
+export interface ResetPasswordDto {
 	password: string;
 	confirmPassword: string;
 }
 
-export interface resendOTPDto {
+export interface ResendOTPDto {
 	email: string;
 }
 

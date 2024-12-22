@@ -13,7 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Check, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { authService } from '@/lib/services/auth/auth.service';
-import { signUpDto } from '@/lib/dto/auth/auth.dto';
+import { SignUpDto } from '@/lib/dto/auth/auth.dto';
 
 // Validation schema
 const signUpSchema = z.object({
@@ -38,8 +38,8 @@ export function SignUpForm() {
 		register,
 		handleSubmit,
 		formState: { errors }
-	} = useForm<signUpDto>({
-		// resolver: zodResolver(signUpSchema)
+	} = useForm<SignUpDto>({
+		resolver: zodResolver(signUpSchema)
 	});
 
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
@@ -47,13 +47,13 @@ export function SignUpForm() {
 		setShowPassword((prev) => !prev);
 	};
 
-	const onSubmit: SubmitHandler<signUpDto> = async (data) => {
+	const onSubmit: SubmitHandler<SignUpDto> = async (signInData) => {
 		try {
-			const { message } = await authService.signUp(data);
+			const { message } = await authService.signUp(signInData);
 			toast({
 				description: (
-					<div style={{ display: 'flex', alignItems: 'center' }}>
-						<Check style={{ marginRight: '8px', color: 'hsl(var(--foreground))' }} />
+					<div className="flex items-center">
+						<Check className="mr-2 text-[hsl(var(--foreground))]" />
 						<span>{message}</span>
 					</div>
 				),
@@ -61,7 +61,7 @@ export function SignUpForm() {
 			});
 		} catch (error: any) {
 			toast({
-				description: error.message || 'Failed to sign up.',
+				description: error.message,
 				variant: 'destructive'
 			});
 		}

@@ -1,5 +1,6 @@
 import { GeistSans } from 'geist/font/sans';
 import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/toaster';
 import '@/styles/global.css';
 
 const defaultUrl = process.env.VERCEL_URL
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					disableTransitionOnChange
 				>
 					{children}
+					<Toaster />
 				</ThemeProvider>
 			</body>
 		</html>
