@@ -14,7 +14,6 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { authService } from '@/lib/services/auth/auth.service';
 import { signInDto } from '@/lib/dto/auth/auth.dto';
-import { GoogleOAuth } from './googleOAuth';
 
 // Validation schema
 const signInSchema = z.object({
@@ -131,7 +130,6 @@ export function SignInForm() {
 						<Button type="submit" className="w-full" onSubmit={handleSubmit(onSubmit)}>
 							Access Your Workspace
 						</Button>
-						<GoogleOAuth />
 
 						{/* Submit Buttons */}
 					</div>

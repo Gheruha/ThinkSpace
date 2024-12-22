@@ -14,7 +14,6 @@ import { Check, Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { authService } from '@/lib/services/auth/auth.service';
 import { signUpDto } from '@/lib/dto/auth/auth.dto';
-import { GoogleOAuth } from './googleOAuth';
 
 // Validation schema
 const signUpSchema = z.object({
@@ -133,7 +132,6 @@ export function SignUpForm() {
 						<Button type="submit" className="w-full">
 							Create an account
 						</Button>
-						<GoogleOAuth />
 					</div>
 					<div className="mt-4 text-center text-sm">
 						Already have an account?{' '}
