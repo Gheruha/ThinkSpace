@@ -7,14 +7,14 @@ export async function POST(req: NextRequest) {
 	try {
 		const { email, password }: SignInDto = await req.json();
 
-		// Check if user exist
-		const userExists = await checkUserExists(email);
-		if (!userExists) {
-			return NextResponse.json(
-				{ message: 'User does not exist. Please sign up first.' },
-				{ status: 400 }
-			);
-		}
+		// // Check if user exist
+		// const userExists = await checkUserExists(email);
+		// if (!userExists) {
+		// 	return NextResponse.json(
+		// 		{ message: 'User does not exist. Please sign up first.' },
+		// 		{ status: 400 }
+		// 	);
+		// }
 
 		// Sign in the user
 		const session = await signInUser({ email, password });

@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { SignUpForm } from './components/authentication/signUpForm';
 import { SignInForm } from './components/authentication/signInForm';
+import { OAuth } from './components/authentication/OAuth';
 
 function AuthContent() {
 	const searchParams = useSearchParams();
@@ -26,6 +27,7 @@ export default function Auth() {
 	return (
 		<Suspense fallback={<div>Loading...</div>}>
 			<AuthContent />
+			<OAuth />
 		</Suspense>
 	);
 }

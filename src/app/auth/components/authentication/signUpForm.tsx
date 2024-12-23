@@ -68,7 +68,7 @@ export function SignUpForm() {
 	};
 
 	return (
-		<form noValidate onSubmit={handleSubmit(onSubmit)}>
+		<form onSubmit={handleSubmit(onSubmit)}>
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-xl">Sign Up</CardTitle>
@@ -131,9 +131,6 @@ export function SignUpForm() {
 						</div>
 						<Button type="submit" className="w-full">
 							Create an account
-						</Button>
-						<Button variant="outline" className="w-full">
-							Sign up with GitHub
 						</Button>
 					</div>
 					<div className="mt-4 text-center text-sm">

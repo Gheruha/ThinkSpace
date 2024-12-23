@@ -77,7 +77,7 @@ export function SignInForm() {
 	};
 
 	return (
-		<form noValidate onSubmit={handleSubmit(onSubmit)}>
+		<form noValidate>
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-xl">Sign In</CardTitle>
@@ -135,12 +135,13 @@ export function SignInForm() {
 								<p className="text-red-500 text-sm">{errors.password.message}</p>
 							)}
 						</div>
-						<Button type="submit" className="w-full">
+
+						{/* Submit Buttons */}
+						<Button type="submit" className="w-full" onSubmit={handleSubmit(onSubmit)}>
 							Access Your Workspace
 						</Button>
-						<Button variant="outline" className="w-full">
-							Sign in with GitHub
-						</Button>
+
+						{/* Submit Buttons */}
 					</div>
 					<div className="mt-4 text-center text-sm">
 						Don&apos;t have an account?{' '}
