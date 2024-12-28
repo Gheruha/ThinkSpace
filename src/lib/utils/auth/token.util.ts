@@ -1,7 +1,6 @@
-import { ForgotPasswordDto, User } from '@/lib/dto/auth/auth.dto';
+import { User } from '@/lib/dto/auth/auth.dto';
 import { createClientSupabaseAnonymous } from '@/lib/supabase/client';
 import { createClientSupabaseServiceRole } from '@/lib/supabase/client';
-import { randomInt } from 'crypto';
 
 const TOKEN_KEY = 'supabase.auth.token';
 
@@ -87,22 +86,4 @@ export const checkUserExists = async (email: string): Promise<boolean> => {
 
 	const user = users?.users.find((u) => u.email === email);
 	return !!user;
-};
-
-// Generates a random numeric OTP code
-export const generateOTPCode = (lengthCode: number): string => {
-	return Array.from({ length: lengthCode }, () => randomInt(0, 10)).join('');
-};
-
-// Insert the OTP Code in otp_codes table
-export const insertOTPCode = async ({ email, otpCode }: ForgotPasswordDto): Promise<void> => {
-	const supabaseServiceRole = createClientSupabaseServiceRole();
-	const { error } = await supabaseServiceRole
-		.from('otp_codes')
-		.insert([{ email: email, otp: otpCode, created_at: new Date() }]);
-
-	if (error) {
-		console.error('Error inserting OTP:', error);
-		throw new Error('Failed to insert OTP into the database');
-	}
 };
