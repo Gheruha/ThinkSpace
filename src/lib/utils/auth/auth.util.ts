@@ -1,12 +1,10 @@
-import { createSupabaseApiClient, createClientSupabaseServiceRole } from '@/lib/supabase/client';
+import { createSupabaseApiClient } from '@/lib/supabase/client';
 import { ForgotPasswordDto, SignUpDto } from '@/lib/dto/auth/auth.dto';
 import { handleUserAuthentication } from '@/lib/store/auth/auth.store';
 import { SignInDto } from '@/lib/dto/auth/auth.dto';
-import { insertOTPCode } from './token.util';
 
 // Exchanges an authorization code for a Supabase session
 export const exchangeCodeForSession = async (code: string): Promise<void> => {
-	console.log('YOU ARE NOW IN THIS=====');
 	const supabase = await createSupabaseApiClient();
 	const { error } = await supabase.auth.exchangeCodeForSession(code);
 
@@ -80,12 +78,10 @@ export const signOutUser = async (): Promise<void> => {
 };
 
 // Send the OTP Code to user email
-export const forgotPassword = async ({ email, otpCode }: ForgotPasswordDto): Promise<any> => {
+export const signInUserWithOtp = async ({ email }: ForgotPasswordDto): Promise<void> => {
 	const supabase = await createSupabaseApiClient();
 
-	const { error } = await supabase.functions.invoke('send-email', {
-		body: { email: email, otp: otpCode }
-	});
+	const { error } = await supabase.auth.signInWithOtp({ email });
 
 	if (error) {
 		console.error('Error sending email:', error);

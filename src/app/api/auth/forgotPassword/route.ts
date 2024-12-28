@@ -1,6 +1,6 @@
 import { ForgotPasswordDto } from '@/lib/dto/auth/auth.dto';
-import { forgotPassword } from '@/lib/utils/auth/auth.util';
-import { checkUserExists, generateOTPCode, insertOTPCode } from '@/lib/utils/auth/token.util';
+import { signInUserWithOtp } from '@/lib/utils/auth/auth.util';
+import { checkUserExists } from '@/lib/utils/auth/token.util';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -16,13 +16,7 @@ export async function POST(req: NextRequest) {
 			);
 		}
 
-		// Generate 6-digit OTP
-		const lengthCode = 6;
-		const otpCode = generateOTPCode(lengthCode);
-		console.log('Generated OTP:', otpCode); // Log generated OTP
-
-		await insertOTPCode({ email, otpCode });
-		await forgotPassword({ email, otpCode });
+		await signInUserWithOtp({ email });
 
 		return NextResponse.json({
 			message: 'Send OTP successful.'
