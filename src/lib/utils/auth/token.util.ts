@@ -74,6 +74,19 @@ export const getCurrentUser = async (): Promise<User | null> => {
 	return mappedUser;
 };
 
+export const getUserFromSupabaseByEmail = async (email: string): Promise<any> => {
+	const supabaseServiceRole = createClientSupabaseServiceRole();
+	const { data: users, error } = await supabaseServiceRole.auth.admin.listUsers();
+
+	if (error || !users) {
+		console.error('Failed to fetch user:', error?.message);
+		throw new Error('Error fetching users from the database.');
+	}
+
+	const user = users?.users.find((u) => u.email === email);
+	return user;
+};
+
 // Check if user exist in Supabase database
 export const checkUserExists = async (email: string): Promise<boolean> => {
 	const supabaseServiceRole = createClientSupabaseServiceRole();

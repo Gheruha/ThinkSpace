@@ -13,12 +13,11 @@ export interface SignUpDto {
 
 export interface ForgotPasswordDto {
 	email: string;
-	otpCode?: string;
 }
 
 export interface VerifyOTPDto {
-	email: string;
-	otp: string;
+	email?: string;
+	otpCode: string;
 }
 
 export interface ResetPasswordDto {
@@ -32,7 +31,7 @@ export interface ResendOTPDto {
 
 export interface User {
 	id: string;
-	email: string;
-	firstName: string;
-	lastName: string;
+	email?: string;
+	firstName?: string;
+	lastName?: string;
 }
