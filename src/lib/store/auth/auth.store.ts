@@ -1,4 +1,3 @@
-import { create } from 'zustand';
 import { User } from '@/lib/dto/auth/auth.dto';
 
 interface AuthState {
@@ -8,26 +7,17 @@ interface AuthState {
 	clearUser: () => void;
 }
 
-const useAuthStore = create<AuthState>((set) => ({
-	user: null,
-	isAuthenticated: false,
-	setUser: (user) => set({ user, isAuthenticated: true }),
-	clearUser: () => set({ isAuthenticated: false })
-}));
+export const useAuthStore = null; // Max need to create logic
 
-export const handleUserAuthentication = async (responseData: any) => {
-	const { user } = responseData;
-	const mappedUser: User = {
-		id: user?.id,
-		email: user?.user_metadata?.email,
-		firstName: user?.user_metadata?.firstName,
-		lastName: user?.user_metadata?.lastName
+export const mapUserData = async (responseData: any): Promise<User> => {
+	const user = responseData;
+
+	return {
+		id: user.id,
+		email: user.email || '',
+		firstName: user.user_metadata?.firstName || '',
+		lastName: user.user_metadata?.lastName || ''
 	};
-
-	const setUser = useAuthStore.getState().setUser;
-	setUser(mappedUser);
-
-	console.log('User after setUser:', useAuthStore.getState().user);
 };
 
 export default useAuthStore;
