@@ -1,12 +1,11 @@
-import { createSupabaseApiClient, createClientSupabaseServiceRole } from '@/lib/supabase/client';
-import { ForgotPasswordDto, SignUpDto } from '@/lib/dto/auth/auth.dto';
-import { handleUserAuthentication } from '@/lib/store/auth/auth.store';
+import { createSupabaseApiClient } from '@/lib/supabase/client';
+import { ForgotPasswordDto, SignUpDto, VerifyOTPDto } from '@/lib/dto/auth/auth.dto';
+import { useAuthStore, mapUserData } from '@/lib/store/auth/auth.store';
 import { SignInDto } from '@/lib/dto/auth/auth.dto';
-import { insertOTPCode } from './token.util';
+import { getUserFromSupabaseByEmail } from '@/lib/utils/auth/token.util';
 
 // Exchanges an authorization code for a Supabase session
 export const exchangeCodeForSession = async (code: string): Promise<void> => {
-	console.log('YOU ARE NOW IN THIS=====');
 	const supabase = await createSupabaseApiClient();
 	const { error } = await supabase.auth.exchangeCodeForSession(code);
 
@@ -31,7 +30,7 @@ export const signInUser = async ({ email, password }: SignInDto): Promise<any> =
 
 	if (data?.user) {
 		console.log('Response user data:', data.user);
-		await handleUserAuthentication(data);
+		await mapUserData(data);
 	}
 
 	return data;
@@ -62,7 +61,7 @@ export const signUpUser = async ({
 
 	if (data?.user) {
 		console.log('Response user data:', data.user);
-		await handleUserAuthentication(data);
+		await mapUserData(data);
 	}
 
 	return data;
@@ -80,15 +79,47 @@ export const signOutUser = async (): Promise<void> => {
 };
 
 // Send the OTP Code to user email
-export const forgotPassword = async ({ email, otpCode }: ForgotPasswordDto): Promise<any> => {
+export const signInUserWithOtp = async ({ email }: ForgotPasswordDto): Promise<void> => {
 	const supabase = await createSupabaseApiClient();
 
-	const { error } = await supabase.functions.invoke('send-email', {
-		body: { email: email, otp: otpCode }
-	});
-
+	const { error } = await supabase.auth.signInWithOtp({ email });
 	if (error) {
 		console.error('Error sending email:', error);
 		throw new Error('Failed to send email to User');
+	}
+
+	const user = await getUserFromSupabaseByEmail(email);
+	if (user) {
+		console.log('Response user data:', user);
+		const userData = await mapUserData(user);
+		// const setUser = useAuthStore.getState().setUser;
+		// setUser(userData);
+
+		// Check if the data is in localStorage
+		console.log('User data set in Zustand:', userData);
+		// console.log('User data in localStorage:', localStorage.getItem('user-storage'));
+	} else {
+		console.log('=========================================');
+		console.log('=========================================');
+		console.warn('In sign in user with otp NOT STORED');
+		console.log(user);
+		console.log('=========================================');
+		console.log('=========================================');
+	}
+};
+
+// Verify the OTP Code
+export const verifyUserOtp = async ({ email, otpCode }: VerifyOTPDto): Promise<void> => {
+	const supabase = await createSupabaseApiClient();
+
+	const { error } = await supabase.auth.verifyOtp({
+		email: email as string,
+		token: otpCode,
+		type: 'email'
+	});
+
+	if (error) {
+		console.error('Error verifing otp:', error);
+		throw new Error('Failed to verify Otp');
 	}
 };

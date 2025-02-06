@@ -1,4 +1,4 @@
-import { ForgotPasswordDto, SignInDto, SignUpDto } from '@/lib/dto/auth/auth.dto';
+import { ForgotPasswordDto, SignInDto, SignUpDto, VerifyOTPDto } from '@/lib/dto/auth/auth.dto';
 
 class AuthService {
 	async signIn(signInData: SignInDto): Promise<{ message: string }> {
@@ -78,6 +78,27 @@ class AuthService {
 			return response.json();
 		} catch (error: any) {
 			console.error('Error forgot password:', error.message);
+			throw error;
+		}
+	}
+
+	async verifyOTP(verifyOTPData: VerifyOTPDto): Promise<{ message: string }> {
+		try {
+			const response = await fetch('/api/auth/verifyOTP', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(verifyOTPData)
+			});
+
+			console.log(verifyOTPData);
+			if (!response.ok) {
+				const error = await response.json();
+				throw new Error(error.message || 'Failed to handle verify otp');
+			}
+
+			return response.json();
+		} catch (error: any) {
+			console.error('Error verify otp:', error.message);
 			throw error;
 		}
 	}
