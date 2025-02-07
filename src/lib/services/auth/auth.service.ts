@@ -70,12 +70,18 @@ class AuthService {
 				body: JSON.stringify(forgotPasswordData)
 			});
 
+			const data = await response.json();
+
 			if (!response.ok) {
 				const error = await response.json();
 				throw new Error(error.message || 'Failed to handle forgot password');
 			}
 
-			return response.json();
+			if (data.userData) {
+				localStorage.setItem('userData', JSON.stringify(data.userData));
+			}
+
+			return data;
 		} catch (error: any) {
 			console.error('Error forgot password:', error.message);
 			throw error;
