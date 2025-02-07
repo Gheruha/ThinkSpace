@@ -3,6 +3,7 @@ import { ForgotPasswordDto, SignUpDto, User, VerifyOTPDto } from '@/lib/dto/auth
 import { mapUserData } from '@/lib/store/auth/auth.store';
 import { SignInDto } from '@/lib/dto/auth/auth.dto';
 import { getUserFromSupabaseByEmail } from '@/lib/utils/auth/token.util';
+import { ResetPasswordDto } from '@/lib/dto/auth/auth.dto';
 
 // Exchanges an authorization code for a Supabase session
 export const exchangeCodeForSession = async (code: string): Promise<void> => {
@@ -111,5 +112,16 @@ export const verifyUserOtp = async ({ email, otpCode }: VerifyOTPDto): Promise<v
 	if (error) {
 		console.error('Error verifing otp:', error);
 		throw new Error('Failed to verify Otp');
+	}
+};
+
+export const resetUserPassword = async ({ password }: ResetPasswordDto): Promise<void> => {
+	const supabase = await createSupabaseApiClient();
+
+	const { error } = await supabase.auth.updateUser({ password });
+
+	if (error) {
+		console.error('Error reseting password:', error);
+		throw new Error('Failed to reset password');
 	}
 };

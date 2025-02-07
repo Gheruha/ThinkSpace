@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
+import { authService } from '@/lib/services/auth/auth.service';
+import { toast } from '@/components/ui/use-toast';
 
 const passwordResetSchema = z
 	.object({
@@ -23,6 +26,7 @@ const passwordResetSchema = z
 type PasswordResetFormValues = z.infer<typeof passwordResetSchema>;
 
 export function PasswordResetForm() {
+	const router = useRouter();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
@@ -44,19 +48,21 @@ export function PasswordResetForm() {
 		setShowConfirmPassword((prev) => !prev);
 	};
 
-	const onSubmit: SubmitHandler<PasswordResetFormValues> = async (data) => {
-		const response = await fetch('/api/auth/resetPassword', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(data)
-		});
-
-		const result = await response.json();
-		alert(result.message || 'ResetPassword successful!');
+	const handleResetPassword: SubmitHandler<PasswordResetFormValues> = async (passwordResetData) => {
+		try {
+			const { message } = await authService.resetPassword(passwordResetData);
+			toast({ description: message, variant: 'default' });
+			router.push('/workspace');
+		} catch (error: any) {
+			toast({
+				description: error.message,
+				variant: 'destructive'
+			});
+		}
 	};
 
 	return (
-		<form noValidate onSubmit={handleSubmit(onSubmit)}>
+		<form noValidate onSubmit={handleSubmit(handleResetPassword)}>
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-xl">Reset Password</CardTitle>

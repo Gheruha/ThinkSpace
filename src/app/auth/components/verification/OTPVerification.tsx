@@ -67,10 +67,7 @@ export function OTPVerification() {
 
 	const handleVerifyOTP: SubmitHandler<OTPFormData> = async (verifyOTPData) => {
 		try {
-			console.log('\n\nIn handleVerifyOTP from client\n\n');
 			const otpCode = verifyOTPData.otp;
-			console.log(otpCode);
-			console.log(email);
 			const { message } = await authService.verifyOTP({ email, otpCode });
 			toast({ description: message, variant: 'default' });
 			router.push('/auth/resetPassword?step=reset');
@@ -96,13 +93,7 @@ export function OTPVerification() {
 	};
 
 	return (
-		<form
-			noValidate
-			onSubmit={handleSubmit((data) => {
-				console.log('Form submitted with:', data);
-				handleVerifyOTP(data);
-			})}
-		>
+		<form noValidate onSubmit={handleSubmit((data) => handleVerifyOTP(data))}>
 			<Card>
 				<CardHeader>
 					<CardTitle className="text-xl">Verification code</CardTitle>
