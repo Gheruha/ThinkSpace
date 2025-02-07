@@ -16,10 +16,11 @@ export async function POST(req: NextRequest) {
 			);
 		}
 
-		await signInUserWithOtp({ email });
+		const userData = await signInUserWithOtp({ email });
 
 		return NextResponse.json({
-			message: 'Send OTP successful.'
+			message: 'Send OTP successful.',
+			userData
 		});
 	} catch (error) {
 		return NextResponse.json({ message: 'Internal server error.' }, { status: 500 });

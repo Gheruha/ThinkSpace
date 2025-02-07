@@ -1,6 +1,6 @@
 import { createSupabaseApiClient } from '@/lib/supabase/client';
-import { ForgotPasswordDto, SignUpDto, VerifyOTPDto } from '@/lib/dto/auth/auth.dto';
-import { useAuthStore, mapUserData } from '@/lib/store/auth/auth.store';
+import { ForgotPasswordDto, SignUpDto, User, VerifyOTPDto } from '@/lib/dto/auth/auth.dto';
+import { mapUserData } from '@/lib/store/auth/auth.store';
 import { SignInDto } from '@/lib/dto/auth/auth.dto';
 import { getUserFromSupabaseByEmail } from '@/lib/utils/auth/token.util';
 
@@ -79,7 +79,7 @@ export const signOutUser = async (): Promise<void> => {
 };
 
 // Send the OTP Code to user email
-export const signInUserWithOtp = async ({ email }: ForgotPasswordDto): Promise<void> => {
+export const signInUserWithOtp = async ({ email }: ForgotPasswordDto): Promise<User | null> => {
 	const supabase = await createSupabaseApiClient();
 
 	const { error } = await supabase.auth.signInWithOtp({ email });
@@ -90,22 +90,12 @@ export const signInUserWithOtp = async ({ email }: ForgotPasswordDto): Promise<v
 
 	const user = await getUserFromSupabaseByEmail(email);
 	if (user) {
-		console.log('Response user data:', user);
 		const userData = await mapUserData(user);
-		// const setUser = useAuthStore.getState().setUser;
-		// setUser(userData);
-
-		// Check if the data is in localStorage
-		console.log('User data set in Zustand:', userData);
-		// console.log('User data in localStorage:', localStorage.getItem('user-storage'));
-	} else {
-		console.log('=========================================');
-		console.log('=========================================');
-		console.warn('In sign in user with otp NOT STORED');
-		console.log(user);
-		console.log('=========================================');
-		console.log('=========================================');
+		return userData;
 	}
+
+	console.error('User not found in Supabase');
+	return null;
 };
 
 // Verify the OTP Code
