@@ -30,7 +30,6 @@ const signUpSchema = z.object({
 });
 
 export function SignUpForm() {
-	const router = useRouter();
 	const { toast } = useToast();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 

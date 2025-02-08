@@ -133,6 +133,25 @@ class AuthService {
 			throw error;
 		}
 	}
+
+	async signInWithOAuth(): Promise<{ message: string }> {
+		try {
+			const response = await fetch('/api/auth/googleOAuth', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' }
+			});
+
+			if (!response.ok) {
+				const error = await response.json();
+				throw new Error(error.message || 'Failed to handle sign in with oauth');
+			}
+
+			return response.json();
+		} catch (error: any) {
+			console.error('Error sign in with oauth:', error.message);
+			throw error;
+		}
+	}
 }
 
 export const authService = new AuthService();

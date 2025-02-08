@@ -80,16 +80,16 @@ export function OTPVerification() {
 	};
 
 	const handleResendOTP = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
-		e.preventDefault();
-
-		const response = await fetch('/api/auth/forgotPassword', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email })
-		});
-
-		const result = await response.json();
-		alert(result.message || 'OTPResend successful!');
+		try {
+			e.preventDefault();
+			const { message } = await authService.forgotPassword({ email });
+			toast({ description: message, variant: 'default' });
+		} catch (error: any) {
+			toast({
+				description: error.message,
+				variant: 'destructive'
+			});
+		}
 	};
 
 	return (
