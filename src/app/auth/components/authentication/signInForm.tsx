@@ -1,9 +1,8 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -11,9 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
-import { authService } from '@/lib/services/auth/auth.service';
-import { SignInDto, ForgotPasswordDto } from '@/lib/dto/auth/auth.dto';
+import { SignInDto } from '@/lib/dto/auth/auth.dto';
+import { handleForgotPassword, handleSignIn } from '../handleFunctions';
 
 // Validation schema
 const signInSchema = z.object({
@@ -26,8 +24,6 @@ const forgotPasswordSchema = z.object({
 });
 
 export function SignInForm() {
-	const router = useRouter();
-	const { toast } = useToast();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [isForgotPassword, setIsForgotPassword] = useState(false);
 
@@ -42,31 +38,6 @@ export function SignInForm() {
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
 		e.preventDefault();
 		setShowPassword((prev) => !prev);
-	};
-
-	const handleForgotPassword: SubmitHandler<ForgotPasswordDto> = async (forgotPasswordData) => {
-		try {
-			const { message } = await authService.forgotPassword(forgotPasswordData);
-			toast({ description: message, variant: 'default' });
-			router.push('/auth/resetPassword?step=otp');
-		} catch (error: any) {
-			toast({
-				description: error.message,
-				variant: 'destructive'
-			});
-		}
-	};
-
-	const handleSignIn: SubmitHandler<SignInDto> = async (signInData) => {
-		try {
-			const { message } = await authService.signIn(signInData);
-			toast({ description: message, variant: 'default' });
-		} catch (error: any) {
-			toast({
-				description: error.message,
-				variant: 'destructive'
-			});
-		}
 	};
 
 	return (

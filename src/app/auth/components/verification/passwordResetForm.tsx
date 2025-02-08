@@ -1,8 +1,7 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -10,8 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
-import { authService } from '@/lib/services/auth/auth.service';
-import { toast } from '@/components/ui/use-toast';
+import { handleResetPassword } from '../handleFunctions';
 
 const passwordResetSchema = z
 	.object({
@@ -23,10 +21,9 @@ const passwordResetSchema = z
 		path: ['confirmPassword']
 	});
 
-type PasswordResetFormValues = z.infer<typeof passwordResetSchema>;
+export type PasswordResetFormValues = z.infer<typeof passwordResetSchema>;
 
 export function PasswordResetForm() {
-	const router = useRouter();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
@@ -46,19 +43,6 @@ export function PasswordResetForm() {
 	const toggleConfirmPasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
 		e.preventDefault();
 		setShowConfirmPassword((prev) => !prev);
-	};
-
-	const handleResetPassword: SubmitHandler<PasswordResetFormValues> = async (passwordResetData) => {
-		try {
-			const { message } = await authService.resetPassword(passwordResetData);
-			toast({ description: message, variant: 'default' });
-			router.push('/workspace');
-		} catch (error: any) {
-			toast({
-				description: error.message,
-				variant: 'destructive'
-			});
-		}
 	};
 
 	return (

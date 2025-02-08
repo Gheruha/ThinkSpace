@@ -1,19 +1,17 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Check, Eye, EyeOff } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
-import { authService } from '@/lib/services/auth/auth.service';
+import { Eye, EyeOff } from 'lucide-react';
 import { SignUpDto } from '@/lib/dto/auth/auth.dto';
+import { handleSignUp } from '../handleFunctions';
 
 // Validation schema
 const signUpSchema = z.object({
@@ -30,7 +28,6 @@ const signUpSchema = z.object({
 });
 
 export function SignUpForm() {
-	const { toast } = useToast();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
 	const {
@@ -46,28 +43,8 @@ export function SignUpForm() {
 		setShowPassword((prev) => !prev);
 	};
 
-	const onSubmit: SubmitHandler<SignUpDto> = async (signInData) => {
-		try {
-			const { message } = await authService.signUp(signInData);
-			toast({
-				description: (
-					<div className="flex items-center">
-						<Check className="mr-2 text-[hsl(var(--foreground))]" />
-						<span>{message}</span>
-					</div>
-				),
-				variant: 'default'
-			});
-		} catch (error: any) {
-			toast({
-				description: error.message,
-				variant: 'destructive'
-			});
-		}
-	};
-
 	return (
-		<form onSubmit={handleSubmit(onSubmit)}>
+		<form onSubmit={handleSubmit(handleSignUp)}>
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-xl">Sign Up</CardTitle>

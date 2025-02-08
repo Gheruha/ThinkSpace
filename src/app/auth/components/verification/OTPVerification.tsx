@@ -1,8 +1,7 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,9 +18,8 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
-import { authService } from '@/lib/services/auth/auth.service';
-import { useToast } from '@/components/ui/use-toast';
 import { useEffect, useState } from 'react';
+import { handleResendOTP, handleVerifyOTP } from '../handleFunctions';
 
 // Validation schema
 const otpVerificationSchema = z.object({
@@ -32,13 +30,11 @@ const otpVerificationSchema = z.object({
 		.regex(/^\d+$/, 'OTP must contain only numeric characters.')
 });
 
-interface OTPFormData {
+export interface OTPFormData {
 	otp: string;
 }
 
 export function OTPVerification() {
-	const router = useRouter();
-	const { toast } = useToast();
 	const [email, setEmail] = useState<string>('');
 
 	useEffect(() => {
@@ -64,33 +60,6 @@ export function OTPVerification() {
 		resolver: zodResolver(otpVerificationSchema),
 		defaultValues: { otp: '' }
 	});
-
-	const handleVerifyOTP: SubmitHandler<OTPFormData> = async (verifyOTPData) => {
-		try {
-			const otpCode = verifyOTPData.otp;
-			const { message } = await authService.verifyOTP({ email, otpCode });
-			toast({ description: message, variant: 'default' });
-			router.push('/auth/resetPassword?step=reset');
-		} catch (error: any) {
-			toast({
-				description: error.message,
-				variant: 'destructive'
-			});
-		}
-	};
-
-	const handleResendOTP = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
-		try {
-			e.preventDefault();
-			const { message } = await authService.forgotPassword({ email });
-			toast({ description: message, variant: 'default' });
-		} catch (error: any) {
-			toast({
-				description: error.message,
-				variant: 'destructive'
-			});
-		}
-	};
 
 	return (
 		<form noValidate onSubmit={handleSubmit((data) => handleVerifyOTP(data))}>
