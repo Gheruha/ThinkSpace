@@ -1,39 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
-import { handleResetPassword } from '../handleFunctions';
-
-const passwordResetSchema = z
-	.object({
-		password: z.string().min(8, 'Password must be at least 8 characters.'),
-		confirmPassword: z.string()
-	})
-	.refine((data) => data.password === data.confirmPassword, {
-		message: "Passwords don't match.",
-		path: ['confirmPassword']
-	});
-
-export type PasswordResetFormValues = z.infer<typeof passwordResetSchema>;
+import { useHandleResetPassword } from '../handleFunctions';
+import { usePasswordResetForm } from '../validationSchema';
 
 export function PasswordResetForm() {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+	const handleResetPassword = useHandleResetPassword();
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors }
-	} = useForm<PasswordResetFormValues>({
-		resolver: zodResolver(passwordResetSchema)
-	});
+	} = usePasswordResetForm();
 
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
 		e.preventDefault();

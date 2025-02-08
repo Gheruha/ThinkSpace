@@ -2,30 +2,13 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
-import { SignUpDto } from '@/lib/dto/auth/auth.dto';
 import { handleSignUp } from '../handleFunctions';
-
-// Validation schema
-const signUpSchema = z.object({
-	firstName: z
-		.string()
-		.regex(/^[A-Za-z]+$/, 'First name must contain only letters.')
-		.min(2, 'First name is required.'),
-	lastName: z
-		.string()
-		.regex(/^[A-Za-z]+$/, 'Last name must contain only letters.')
-		.min(2, 'Last name is required.'),
-	email: z.string().email('Invalid email format.'),
-	password: z.string().min(8, 'Password must be at least 8 characters.')
-});
+import { useSignUpForm } from '../validationSchema';
 
 export function SignUpForm() {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -34,9 +17,7 @@ export function SignUpForm() {
 		register,
 		handleSubmit,
 		formState: { errors }
-	} = useForm<SignUpDto>({
-		resolver: zodResolver(signUpSchema)
-	});
+	} = useSignUpForm();
 
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
 		e.preventDefault();
