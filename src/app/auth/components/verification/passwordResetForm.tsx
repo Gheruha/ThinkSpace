@@ -1,42 +1,24 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
-import { authService } from '@/lib/services/auth/auth.service';
-import { toast } from '@/components/ui/use-toast';
-
-const passwordResetSchema = z
-	.object({
-		password: z.string().min(8, 'Password must be at least 8 characters.'),
-		confirmPassword: z.string()
-	})
-	.refine((data) => data.password === data.confirmPassword, {
-		message: "Passwords don't match.",
-		path: ['confirmPassword']
-	});
-
-type PasswordResetFormValues = z.infer<typeof passwordResetSchema>;
+import { useHandleResetPassword } from '../handleFunctions';
+import { usePasswordResetForm } from '../validationSchema';
 
 export function PasswordResetForm() {
-	const router = useRouter();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+	const handleResetPassword = useHandleResetPassword();
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors }
-	} = useForm<PasswordResetFormValues>({
-		resolver: zodResolver(passwordResetSchema)
-	});
+	} = usePasswordResetForm();
 
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
 		e.preventDefault();
@@ -46,19 +28,6 @@ export function PasswordResetForm() {
 	const toggleConfirmPasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
 		e.preventDefault();
 		setShowConfirmPassword((prev) => !prev);
-	};
-
-	const handleResetPassword: SubmitHandler<PasswordResetFormValues> = async (passwordResetData) => {
-		try {
-			const { message } = await authService.resetPassword(passwordResetData);
-			toast({ description: message, variant: 'default' });
-			router.push('/workspace');
-		} catch (error: any) {
-			toast({
-				description: error.message,
-				variant: 'destructive'
-			});
-		}
 	};
 
 	return (

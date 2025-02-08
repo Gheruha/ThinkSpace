@@ -1,9 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import {
 	InputOTP,
@@ -19,40 +15,18 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
-import { authService } from '@/lib/services/auth/auth.service';
-import { useToast } from '@/components/ui/use-toast';
 import { useEffect, useState } from 'react';
-
-// Validation schema
-const otpVerificationSchema = z.object({
-	otp: z
-		.string()
-		.min(6, 'OTP must be exactly 6 digits.')
-		.max(6, 'OTP must be exactly 6 digits.')
-		.regex(/^\d+$/, 'OTP must contain only numeric characters.')
-});
-
-interface OTPFormData {
-	otp: string;
-}
+import {
+	useEmailFromLocalStorage,
+	useHandleResendOTP,
+	useHandleVerifyOTP
+} from '../handleFunctions';
+import { useOTPForm } from '../validationSchema';
 
 export function OTPVerification() {
-	const router = useRouter();
-	const { toast } = useToast();
-	const [email, setEmail] = useState<string>('');
-
-	useEffect(() => {
-		// Retrieve user data from localStorage
-		const storedUserData = localStorage.getItem('userData');
-		if (storedUserData) {
-			try {
-				const parsedUser = JSON.parse(storedUserData);
-				setEmail(parsedUser.email || '');
-			} catch (error) {
-				console.error('Error parsing userData from localStorage:', error);
-			}
-		}
-	}, []);
+	const handleVerifyOTP = useHandleVerifyOTP();
+	const handleResendOTP = useHandleResendOTP();
+	const email = useEmailFromLocalStorage();
 
 	const {
 		register,
@@ -60,37 +34,7 @@ export function OTPVerification() {
 		setValue,
 		watch,
 		formState: { errors }
-	} = useForm<OTPFormData>({
-		resolver: zodResolver(otpVerificationSchema),
-		defaultValues: { otp: '' }
-	});
-
-	const handleVerifyOTP: SubmitHandler<OTPFormData> = async (verifyOTPData) => {
-		try {
-			const otpCode = verifyOTPData.otp;
-			const { message } = await authService.verifyOTP({ email, otpCode });
-			toast({ description: message, variant: 'default' });
-			router.push('/auth/resetPassword?step=reset');
-		} catch (error: any) {
-			toast({
-				description: error.message,
-				variant: 'destructive'
-			});
-		}
-	};
-
-	const handleResendOTP = async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
-		e.preventDefault();
-
-		const response = await fetch('/api/auth/forgotPassword', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email })
-		});
-
-		const result = await response.json();
-		alert(result.message || 'OTPResend successful!');
-	};
+	} = useOTPForm();
 
 	return (
 		<form noValidate onSubmit={handleSubmit((data) => handleVerifyOTP(data))}>
@@ -103,11 +47,11 @@ export function OTPVerification() {
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<input type="hidden" {...register('otp')} />
+					<input type="hidden" {...register('otpCode')} />
 					<InputOTP
 						maxLength={6}
-						value={watch('otp') || ''}
-						onChange={(value: string) => setValue('otp', value, { shouldValidate: true })}
+						value={watch('otpCode') || ''}
+						onChange={(value: string) => setValue('otpCode', value, { shouldValidate: true })}
 					>
 						<InputOTPGroup>
 							<InputOTPSlot index={0} />
@@ -121,7 +65,7 @@ export function OTPVerification() {
 							<InputOTPSlot index={5} />
 						</InputOTPGroup>
 					</InputOTP>
-					{errors.otp && <p className="text-red-500 text-sm">{errors.otp.message}</p>}
+					{errors.otpCode && <p className="text-red-500 text-sm">{errors.otpCode.message}</p>}
 				</CardContent>
 				<CardFooter className="flex flex-col space-y-8">
 					<div className="flex justify-between w-full">
