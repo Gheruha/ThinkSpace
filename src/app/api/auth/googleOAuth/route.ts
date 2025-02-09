@@ -1,14 +1,22 @@
-import { signInUserWithOAuth } from '@/lib/utils/auth/auth.util';
+import { createSupabaseApiClient } from '@/lib/supabase/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
-	try {
-		const url = new URL(req.url);
+	const url = new URL(req.url);
+	const supabase = await createSupabaseApiClient();
 
-		const data = await signInUserWithOAuth(url);
+	// Redirect the user to the Google OAuth page
+	const { data, error } = await supabase.auth.signInWithOAuth({
+		provider: 'google',
+		options: {
+			redirectTo: `${url.origin}/api/auth/callback`
+		}
+	});
 
-		return NextResponse.redirect(data.url, { status: 302 });
-	} catch (error) {
-		return NextResponse.json({ message: 'Internal server error.' }, { status: 500 });
+	if (error) {
+		console.error('Error initiating Google sign-in:', error.message);
+		return NextResponse.redirect(`${url.origin}/auth/error`, { status: 301 });
 	}
+
+	return NextResponse.redirect(data.url, { status: 302 });
 }

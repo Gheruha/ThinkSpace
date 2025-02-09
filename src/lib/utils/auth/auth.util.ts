@@ -125,21 +125,3 @@ export const resetUserPassword = async ({ password }: ResetPasswordDto): Promise
 		throw new Error('Failed to reset password');
 	}
 };
-
-export const signInUserWithOAuth = async (url: URL): Promise<any> => {
-	const supabase = await createSupabaseApiClient();
-
-	const { data, error } = await supabase.auth.signInWithOAuth({
-		provider: 'google',
-		options: {
-			redirectTo: `${url.origin}/api/auth/callback`
-		}
-	});
-
-	if (error) {
-		console.error('Error initiating Google sign-in:', error.message);
-		throw new Error('Failed to initialing Google sign-in');
-	}
-
-	return data;
-};
