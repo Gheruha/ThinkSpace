@@ -32,19 +32,6 @@ export const useEmailFromLocalStorage = () => {
 	return email;
 };
 
-// OAuth.tsx
-export const handleSignInWithOAuth = async (): Promise<void> => {
-	try {
-		const { message } = await authService.signInWithOAuth();
-		toast({ description: message, variant: 'default' });
-	} catch (error: any) {
-		toast({
-			description: error.message,
-			variant: 'destructive'
-		});
-	}
-};
-
 // signInForm.tsx
 export const useHandleForgotPassword = () => {
 	const router = useRouter();
