@@ -1,38 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
-
-const passwordResetSchema = z
-	.object({
-		password: z.string().min(8, 'Password must be at least 8 characters.'),
-		confirmPassword: z.string()
-	})
-	.refine((data) => data.password === data.confirmPassword, {
-		message: "Passwords don't match.",
-		path: ['confirmPassword']
-	});
-
-type PasswordResetFormValues = z.infer<typeof passwordResetSchema>;
+import { useHandleResetPassword } from '../handleFunctions';
+import { usePasswordResetForm } from '../validationSchema';
 
 export function PasswordResetForm() {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+	const handleResetPassword = useHandleResetPassword();
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors }
-	} = useForm<PasswordResetFormValues>({
-		resolver: zodResolver(passwordResetSchema)
-	});
+	} = usePasswordResetForm();
 
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
 		e.preventDefault();
@@ -44,19 +30,8 @@ export function PasswordResetForm() {
 		setShowConfirmPassword((prev) => !prev);
 	};
 
-	const onSubmit: SubmitHandler<PasswordResetFormValues> = async (data) => {
-		const response = await fetch('/api/auth/resetPassword', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(data)
-		});
-
-		const result = await response.json();
-		alert(result.message || 'ResetPassword successful!');
-	};
-
 	return (
-		<form noValidate onSubmit={handleSubmit(onSubmit)}>
+		<form noValidate onSubmit={handleSubmit(handleResetPassword)}>
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-xl">Reset Password</CardTitle>

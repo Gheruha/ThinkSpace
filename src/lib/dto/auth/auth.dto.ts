@@ -22,7 +22,7 @@ export interface VerifyOTPDto {
 
 export interface ResetPasswordDto {
 	password: string;
-	confirmPassword: string;
+	confirmPassword?: string;
 }
 
 export interface ResendOTPDto {

@@ -1,74 +1,31 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Check, Eye, EyeOff } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
-import { authService } from '@/lib/services/auth/auth.service';
-import { SignUpDto } from '@/lib/dto/auth/auth.dto';
-
-// Validation schema
-const signUpSchema = z.object({
-	firstName: z
-		.string()
-		.regex(/^[A-Za-z]+$/, 'First name must contain only letters.')
-		.min(2, 'First name is required.'),
-	lastName: z
-		.string()
-		.regex(/^[A-Za-z]+$/, 'Last name must contain only letters.')
-		.min(2, 'Last name is required.'),
-	email: z.string().email('Invalid email format.'),
-	password: z.string().min(8, 'Password must be at least 8 characters.')
-});
+import { Eye, EyeOff } from 'lucide-react';
+import { handleSignUp } from '../handleFunctions';
+import { useSignUpForm } from '../validationSchema';
 
 export function SignUpForm() {
-	const router = useRouter();
-	const { toast } = useToast();
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors }
-	} = useForm<SignUpDto>({
-		resolver: zodResolver(signUpSchema)
-	});
+	} = useSignUpForm();
 
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
 		e.preventDefault();
 		setShowPassword((prev) => !prev);
 	};
 
-	const onSubmit: SubmitHandler<SignUpDto> = async (signInData) => {
-		try {
-			const { message } = await authService.signUp(signInData);
-			toast({
-				description: (
-					<div className="flex items-center">
-						<Check className="mr-2 text-[hsl(var(--foreground))]" />
-						<span>{message}</span>
-					</div>
-				),
-				variant: 'default'
-			});
-		} catch (error: any) {
-			toast({
-				description: error.message,
-				variant: 'destructive'
-			});
-		}
-	};
-
 	return (
-		<form onSubmit={handleSubmit(onSubmit)}>
+		<form onSubmit={handleSubmit(handleSignUp)}>
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-xl">Sign Up</CardTitle>

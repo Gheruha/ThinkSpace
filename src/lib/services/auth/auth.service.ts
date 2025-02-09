@@ -1,4 +1,10 @@
-import { ForgotPasswordDto, SignInDto, SignUpDto, VerifyOTPDto } from '@/lib/dto/auth/auth.dto';
+import {
+	ForgotPasswordDto,
+	ResetPasswordDto,
+	SignInDto,
+	SignUpDto,
+	VerifyOTPDto
+} from '@/lib/dto/auth/auth.dto';
 
 class AuthService {
 	async signIn(signInData: SignInDto): Promise<{ message: string }> {
@@ -70,12 +76,18 @@ class AuthService {
 				body: JSON.stringify(forgotPasswordData)
 			});
 
+			const data = await response.json();
+
 			if (!response.ok) {
 				const error = await response.json();
 				throw new Error(error.message || 'Failed to handle forgot password');
 			}
 
-			return response.json();
+			if (data.userData) {
+				localStorage.setItem('userData', JSON.stringify(data.userData));
+			}
+
+			return data;
 		} catch (error: any) {
 			console.error('Error forgot password:', error.message);
 			throw error;
@@ -90,10 +102,29 @@ class AuthService {
 				body: JSON.stringify(verifyOTPData)
 			});
 
-			console.log(verifyOTPData);
 			if (!response.ok) {
 				const error = await response.json();
 				throw new Error(error.message || 'Failed to handle verify otp');
+			}
+
+			return response.json();
+		} catch (error: any) {
+			console.error('Error verify otp:', error.message);
+			throw error;
+		}
+	}
+
+	async resetPassword(resetPasswordData: ResetPasswordDto): Promise<{ message: string }> {
+		try {
+			const response = await fetch('/api/auth/resetPassword', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(resetPasswordData)
+			});
+
+			if (!response.ok) {
+				const error = await response.json();
+				throw new Error(error.message || 'Failed to handle reset password');
 			}
 
 			return response.json();

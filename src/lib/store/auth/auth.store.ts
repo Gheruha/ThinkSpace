@@ -1,14 +1,5 @@
 import { User } from '@/lib/dto/auth/auth.dto';
 
-interface AuthState {
-	user: User | null;
-	isAuthenticated: boolean;
-	setUser: (user: User) => void;
-	clearUser: () => void;
-}
-
-export const useAuthStore = null; // Max need to create logic
-
 export const mapUserData = async (responseData: any): Promise<User> => {
 	const user = responseData;
 
@@ -20,4 +11,4 @@ export const mapUserData = async (responseData: any): Promise<User> => {
 	};
 };
 
-export default useAuthStore;
+// export default useAuthStore;
