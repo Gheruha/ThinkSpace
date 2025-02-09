@@ -1,9 +1,9 @@
-const Page = () => {
+export default async function Page({ params }: { params: Promise<{ pageID: string }> }) {
+	const { pageID } = await params;
+
 	return (
-		<div>
-			<h1>Page</h1>
+		<div className="pl-10">
+			<h1 className="text-3xl font-semibold">Page: {pageID}</h1>
 		</div>
 	);
-};
-
-export default Page;
+}
