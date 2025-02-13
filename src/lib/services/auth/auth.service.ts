@@ -133,6 +133,15 @@ class AuthService {
 			throw error;
 		}
 	}
+
+	async signInWithOAuth(): Promise<void> {
+		try {
+			window.location.href = '/api/auth/googleOAuth';
+		} catch (error: any) {
+			console.error('Error sign in with oauth:', error.message);
+			throw error;
+		}
+	}
 }
 
 export const authService = new AuthService();
