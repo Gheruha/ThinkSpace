@@ -6,12 +6,23 @@ export async function POST(req: NextRequest) {
 		const supabase = await createSupabaseApiClient();
 
 		// Getting the session
-		const { data, error } = await supabase.auth.getSession();
-
-		if (error || !data) {
+		const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+		if (sessionError || !sessionData) {
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 400 });
 			// status 400: Client Error
 		}
-		return NextResponse.json('Session Data:', { status: 201 });
+		// Store userID
+		const userId = sessionData.session?.user.id;
+
+		// Inserting default data into the database
+		const { data, error } = await supabase
+			.from('Page')
+			.insert([{ Title: 'Default Page', user_id: userId }]);
+
+		if (error) {
+			return NextResponse.json({ error: error.message }, { status: 400 });
+		}
+
+		return NextResponse.json(data, { status: 201 });
 	} catch (err: any) {}
 }
