@@ -2,6 +2,10 @@ import { createSupabaseApiClient } from '@/lib/supabase/client';
 import { NextRequest, NextResponse } from 'next/server';
 export async function POST(req: NextRequest) {
 	try {
+		// Getting the form data
+		const formData = await req.formData();
+		const title = formData.get('Title');
+
 		// Supabase client
 		const supabase = await createSupabaseApiClient();
 
@@ -15,9 +19,7 @@ export async function POST(req: NextRequest) {
 		const userId = sessionData.session?.user.id;
 
 		// Inserting default data into the database
-		const { data, error } = await supabase
-			.from('Page')
-			.insert([{ Title: 'Default Page', user_id: userId }]);
+		const { data, error } = await supabase.from('Page').insert([{ Title: title, user_id: userId }]);
 
 		if (error) {
 			return NextResponse.json({ error: error.message }, { status: 400 });
