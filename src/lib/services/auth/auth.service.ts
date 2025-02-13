@@ -134,19 +134,9 @@ class AuthService {
 		}
 	}
 
-	async signInWithOAuth(): Promise<{ message: string }> {
+	async signInWithOAuth(): Promise<void> {
 		try {
-			const response = await fetch('/api/auth/googleOAuth', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' }
-			});
-
-			if (!response.ok) {
-				const error = await response.json();
-				throw new Error(error.message || 'Failed to handle sign in with oauth');
-			}
-
-			return response.json();
+			window.location.href = '/api/auth/googleOAuth';
 		} catch (error: any) {
 			console.error('Error sign in with oauth:', error.message);
 			throw error;
