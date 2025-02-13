@@ -1,8 +1,17 @@
-import { createClientSupabaseAnonymous } from '@/lib/supabase/client';
+import { createSupabaseApiClient } from '@/lib/supabase/client';
 import { NextRequest, NextResponse } from 'next/server';
 export async function POST(req: NextRequest) {
-	const formData = await req.formData();
-	const title = String(formData.get('title'));
+	try {
+		// Supabase client
+		const supabase = await createSupabaseApiClient();
 
-	console.log(title);
+		// Getting the session
+		const { data, error } = await supabase.auth.getSession();
+
+		if (error || !data) {
+			return NextResponse.json({ error: 'Unauthorized' }, { status: 400 });
+			// status 400: Client Error
+		}
+		return NextResponse.json('Session Data:', { status: 201 });
+	} catch (err: any) {}
 }
