@@ -1,6 +1,6 @@
 'use client';
 
-import { ThemeImage } from '@/components/themeImage';
+import { ThemeImage } from '@/components/theme-image';
 import { Button } from '@/components/ui/button';
 import { handleSignInWithOAuth } from '../handleFunctions';
 import React from 'react';

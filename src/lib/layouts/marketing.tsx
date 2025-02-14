@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ThemeImage } from '@/components/themeImage';
+import { ThemeImage } from '@/components/theme-image';
 import { ModeToggle } from '@/components/theme-toggler';
 import { Menu } from 'lucide-react';
 import { BigMenu } from './marketing/bigMenu';
