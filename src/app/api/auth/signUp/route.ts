@@ -2,15 +2,22 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkUserExists } from '@/lib/utils/auth/token.util';
 import { signUpUser } from '@/lib/utils/auth/auth.util';
 import { SignUpDto } from '@/lib/dto/auth/auth.dto';
+import { isValidSignUpDto } from '@/lib/dto/auth/isValid.dto';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
 	try {
 		const url = new URL(req.url);
-		const { firstName, lastName, email, password }: SignUpDto = await req.json();
+		const body: unknown = await req.json();
 
-		// Check if user exist
-		const userExists = await checkUserExists(email);
-		if (userExists) {
+		if (!isValidSignUpDto(body)) {
+			return NextResponse.json({ message: 'Invalid request body.' }, { status: 400 });
+		}
+
+		const { firstName, lastName, email, password }: SignUpDto = body;
+
+		// Check if user already exist
+		const doesUserExist = await checkUserExists(email);
+		if (doesUserExist) {
 			return NextResponse.json(
 				{ message: 'Already signed up, you must sign in.' },
 				{ status: 400 }
@@ -18,7 +25,7 @@ export async function POST(req: NextRequest) {
 		}
 
 		// Sign up the user
-		const session = await signUpUser({
+		const userSession = await signUpUser({
 			firstName,
 			lastName,
 			email,
@@ -27,10 +34,12 @@ export async function POST(req: NextRequest) {
 		});
 
 		return NextResponse.json({
-			message: 'Sign up successful.',
-			session: session.session
+			message: 'Sign-up successful! Please check your email to verify your account.',
+			session: userSession.session
 		});
-	} catch (error) {
-		return NextResponse.json({ message: 'Internal server error.' }, { status: 500 });
+	} catch (error: unknown) {
+		console.error('Sign-up error', error);
+		const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+		return NextResponse.json({ message: errorMessage }, { status: 500 });
 	}
 }

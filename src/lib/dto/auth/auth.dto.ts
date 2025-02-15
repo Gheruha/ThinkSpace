@@ -11,7 +11,7 @@ export interface SignUpDto {
 	redirectUrl?: string;
 }
 
-export interface ForgotPasswordDto {
+export interface SignInWithOtpDto {
 	email: string;
 }
 

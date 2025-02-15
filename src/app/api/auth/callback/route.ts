@@ -1,17 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { exchangeCodeForSession } from '@/lib/utils/auth/auth.util';
+import { authenticateWithCode } from '@/lib/utils/auth/auth.util';
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
 	try {
 		const url = new URL(req.url);
-		const code = url.searchParams.get('code');
+		const authCode = url.searchParams.get('code');
 
-		if (code) {
-			await exchangeCodeForSession(code);
+		if (authCode) {
+			await authenticateWithCode(authCode);
 		}
 
 		return NextResponse.redirect(url.origin);
-	} catch (error: any) {
-		return NextResponse.json({ error: error.message }, { status: 400 });
+	} catch (error: unknown) {
+		console.error('Callback failed:', error);
+		const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+		return NextResponse.json({ error: errorMessage }, { status: 400 });
 	}
 }
