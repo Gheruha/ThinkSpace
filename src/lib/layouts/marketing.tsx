@@ -3,27 +3,12 @@
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ThemeImage } from '@/components/themeImage';
+import { ThemeImage } from '@/components/theme-image';
 import { ModeToggle } from '@/components/theme-toggler';
 import { Menu } from 'lucide-react';
-
+import { BigMenu } from './marketing/bigMenu';
+import { SmallMenu } from './marketing/smallMenu';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import {
-	NavigationMenu,
-	NavigationMenuContent,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuList,
-	NavigationMenuTrigger,
-	navigationMenuTriggerStyle
-} from '@/components/ui/navigation-menu';
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger
-} from '@/components/ui/accordion';
 
 export default function LearningProductLayout({ children }: { children: React.ReactNode }) {
 	const router = useRouter();
@@ -106,41 +91,7 @@ export default function LearningProductLayout({ children }: { children: React.Re
 						</Link>
 						<nav className="flex justify-between w-full h-6">
 							<div className="hidden lg:flex">
-								<NavigationMenu>
-									<NavigationMenuList>
-										<NavigationMenuItem>
-											<NavigationMenuTrigger>About</NavigationMenuTrigger>
-											<NavigationMenuContent>
-												<div className="py-16 px-28">
-													<div className="flex items-center">
-														<p className="text-4xl border-2 text-blue-900 border-blue-800 rounded-3xl p-4 dark:text-blue-400 dark:border-blue-400 whitespace-nowrap">
-															Coming soon
-														</p>
-													</div>
-												</div>
-											</NavigationMenuContent>
-										</NavigationMenuItem>
-										<NavigationMenuItem>
-											<NavigationMenuTrigger>Resources</NavigationMenuTrigger>
-											<NavigationMenuContent>
-												<div className="py-16 px-28">
-													<div className="flex items-center">
-														<p className="text-4xl border-2 text-blue-900 border-blue-800 rounded-3xl p-4 dark:text-blue-400 dark:border-blue-400 whitespace-nowrap">
-															Coming soon
-														</p>
-													</div>
-												</div>
-											</NavigationMenuContent>
-										</NavigationMenuItem>
-										<NavigationMenuItem>
-											<Link href="/pricing" legacyBehavior passHref>
-												<NavigationMenuLink className={navigationMenuTriggerStyle()}>
-													<span className="text-lg font-normal">Pricing</span>
-												</NavigationMenuLink>
-											</Link>
-										</NavigationMenuItem>
-									</NavigationMenuList>
-								</NavigationMenu>
+								<BigMenu />
 							</div>
 							<div className="hidden lg:flex space-x-3">
 								<ModeToggle />
@@ -164,50 +115,7 @@ export default function LearningProductLayout({ children }: { children: React.Re
 						</nav>
 					</div>
 				</header>
-				{menuOpen && (
-					<nav className="fixed top-16 left-0 w-full h-[calc(100%-4rem)] z-50">
-						<Card className="h-full border-0">
-							<CardContent className="h-full px-4">
-								<Accordion
-									type="single"
-									collapsible
-									className="w-full h-[calc(100vh-10.75rem)] overflow-y-auto"
-								>
-									<AccordionItem value="item-1">
-										<AccordionTrigger>About</AccordionTrigger>
-										<AccordionContent>About features</AccordionContent>
-									</AccordionItem>
-									<AccordionItem value="item-2">
-										<AccordionTrigger>Resources</AccordionTrigger>
-										<AccordionContent>Resources features</AccordionContent>
-									</AccordionItem>
-									<AccordionItem value="item-3">
-										<Link href="/pricing" legacyBehavior passHref>
-											<button className="flex flex-1 w-full items-center justify-between py-4 font-medium transition-all">
-												<span className=" font-medium">Pricing</span>
-											</button>
-										</Link>
-									</AccordionItem>
-								</Accordion>
-								<div
-									className="flex flex-col space-y-3 py-4 border-t"
-									style={{ backgroundColor: 'hsl(var(--background))' }}
-								>
-									<Link href="/auth" onClick={goToSignUp} passHref>
-										<Button size="xs" className="w-full">
-											<span className="text-lg font-normal">Sign up</span>
-										</Button>
-									</Link>
-									<Link href="/auth" onClick={goToSignIn} passHref>
-										<Button variant="outline" size="xs" className="w-full">
-											<span className="text-lg font-normal">Sign in</span>
-										</Button>
-									</Link>
-								</div>
-							</CardContent>
-						</Card>
-					</nav>
-				)}
+				<SmallMenu menuOpen={menuOpen} />
 			</div>
 			<main className="flex pt-20 px-8 justify-center z-30">{children}</main>
 			{/* Footer */}

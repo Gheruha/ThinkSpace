@@ -15,7 +15,6 @@ import {
 	CardHeader,
 	CardTitle
 } from '@/components/ui/card';
-import { useEffect, useState } from 'react';
 import {
 	useEmailFromLocalStorage,
 	useHandleResendOTP,

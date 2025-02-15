@@ -1,12 +1,12 @@
 import { createSupabaseApiClient } from '@/lib/supabase/client';
-import { ForgotPasswordDto, SignUpDto, User, VerifyOTPDto } from '@/lib/dto/auth/auth.dto';
+import { SignInWithOtpDto, SignUpDto, User, VerifyOTPDto } from '@/lib/dto/auth/auth.dto';
 import { mapUserData } from '@/lib/store/auth/auth.store';
 import { SignInDto } from '@/lib/dto/auth/auth.dto';
 import { getUserFromSupabaseByEmail } from '@/lib/utils/auth/token.util';
 import { ResetPasswordDto } from '@/lib/dto/auth/auth.dto';
 
 // Exchanges an authorization code for a Supabase session
-export const exchangeCodeForSession = async (code: string): Promise<void> => {
+export const authenticateWithCode = async (code: string): Promise<void> => {
 	const supabase = await createSupabaseApiClient();
 	const { error } = await supabase.auth.exchangeCodeForSession(code);
 
@@ -80,7 +80,7 @@ export const signOutUser = async (): Promise<void> => {
 };
 
 // Send the OTP Code to user email
-export const signInUserWithOtp = async ({ email }: ForgotPasswordDto): Promise<User | null> => {
+export const signInUserWithOtp = async ({ email }: SignInWithOtpDto): Promise<User | null> => {
 	const supabase = await createSupabaseApiClient();
 
 	const { error } = await supabase.auth.signInWithOtp({ email });
@@ -124,4 +124,22 @@ export const resetUserPassword = async ({ password }: ResetPasswordDto): Promise
 		console.error('Error reseting password:', error);
 		throw new Error('Failed to reset password');
 	}
+};
+
+export const signInUserWithOAuth = async (url: URL): Promise<any> => {
+	const supabase = await createSupabaseApiClient();
+
+	const { data, error } = await supabase.auth.signInWithOAuth({
+		provider: 'google',
+		options: {
+			redirectTo: `${url.origin}/api/auth/callback`
+		}
+	});
+
+	if (error) {
+		console.error('Error initiating Google sign-in:', error.message);
+		throw new Error('Failed to initialing Google sign-in');
+	}
+
+	return data;
 };

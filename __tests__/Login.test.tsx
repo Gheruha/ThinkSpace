@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
-import { ButtonProvider } from '@/components/clickedButton';
-import { LoginForm } from '@/app/auth/components/forms/log_in';
+import { SignInForm } from '@/app/auth/components/authentication/signInForm';
 import { useRouter } from 'next/navigation';
 
 // Mocking the useRouter
@@ -17,11 +16,7 @@ it('should show the Auth page', () => {
 	});
 
 	// Virtual DOM
-	render(
-		<ButtonProvider>
-			<LoginForm />
-		</ButtonProvider>
-	);
+	render(<SignInForm />);
 
 	// Expectation
 	// ...

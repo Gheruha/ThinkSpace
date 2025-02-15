@@ -7,19 +7,19 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
-import { useHandleForgotPassword, handleSignIn } from '../handleFunctions';
+import { useHandleSignInWithOtp, handleSignIn } from '../handleFunctions';
 import { useSignInForm } from '../validationSchema';
 
 export function SignInForm() {
 	const [showPassword, setShowPassword] = useState<boolean>(false);
-	const [isForgotPassword, setIsForgotPassword] = useState(false);
-	const handleForgotPassword = useHandleForgotPassword();
+	const [isSignInWithOtp, setIsSignInWithOtp] = useState(false);
+	const handleSignInWithOtp = useHandleSignInWithOtp();
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors }
-	} = useSignInForm(isForgotPassword);
+	} = useSignInForm(isSignInWithOtp);
 
 	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
 		e.preventDefault();
@@ -27,17 +27,14 @@ export function SignInForm() {
 	};
 
 	return (
-		<form
-			noValidate
-			onSubmit={handleSubmit(isForgotPassword ? handleForgotPassword : handleSignIn)}
-		>
+		<form noValidate onSubmit={handleSubmit(isSignInWithOtp ? handleSignInWithOtp : handleSignIn)}>
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-xl">
-						{isForgotPassword ? 'Forgot Password' : 'Sign In'}
+						{isSignInWithOtp ? 'Forgot Password' : 'Sign In'}
 					</CardTitle>
 					<CardDescription>
-						{isForgotPassword
+						{isSignInWithOtp
 							? 'Enter your email to reset your password'
 							: 'Enter your email and password below to access your workspace'}
 					</CardDescription>
@@ -54,7 +51,7 @@ export function SignInForm() {
 							/>
 							{errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
 						</div>
-						{!isForgotPassword && (
+						{!isSignInWithOtp && (
 							<div className="grid gap-2">
 								<Label htmlFor="password">Password</Label>
 								<div className="flex relative">
@@ -80,10 +77,10 @@ export function SignInForm() {
 							</div>
 						)}
 						<Button type="submit" className="w-full">
-							{isForgotPassword ? 'Reset Password' : 'Access Your Workspace'}
+							{isSignInWithOtp ? 'Reset Password' : 'Access Your Workspace'}
 						</Button>
 					</div>
-					{!isForgotPassword && (
+					{!isSignInWithOtp && (
 						<div className="mt-4 text-center text-sm">
 							Don&apos;t have an account?{' '}
 							<Link href="/auth?mode=signUp" className="underline">
@@ -93,28 +90,28 @@ export function SignInForm() {
 					)}
 				</CardContent>
 			</Card>
-			{!isForgotPassword && (
+			{!isSignInWithOtp && (
 				<div className="text-center mt-2 text-sm text-slate-500 hover:text-slate-400">
 					<Link
 						href="_"
 						className="underline"
 						onClick={(e) => {
 							e.preventDefault();
-							setIsForgotPassword(true);
+							setIsSignInWithOtp(true);
 						}}
 					>
 						Forgot your password?
 					</Link>
 				</div>
 			)}
-			{isForgotPassword && (
+			{isSignInWithOtp && (
 				<div className="text-center mt-2 text-sm text-slate-500 hover:text-slate-400">
 					<Link
 						href="_"
 						className="underline"
 						onClick={(e) => {
 							e.preventDefault();
-							setIsForgotPassword(false);
+							setIsSignInWithOtp(false);
 						}}
 					>
 						Back to Sign In

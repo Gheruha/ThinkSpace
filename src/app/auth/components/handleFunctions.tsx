@@ -2,7 +2,7 @@
 
 import { toast } from '@/components/ui/use-toast';
 import {
-	ForgotPasswordDto,
+	SignInWithOtpDto,
 	ResetPasswordDto,
 	SignInDto,
 	SignUpDto,
@@ -32,13 +32,25 @@ export const useEmailFromLocalStorage = () => {
 	return email;
 };
 
+// OAuth.tsx
+export const handleSignInWithOAuth = async (): Promise<void> => {
+	try {
+		await authService.signInWithOAuth();
+	} catch (error: any) {
+		toast({
+			description: error.message,
+			variant: 'destructive'
+		});
+	}
+};
+
 // signInForm.tsx
-export const useHandleForgotPassword = () => {
+export const useHandleSignInWithOtp = () => {
 	const router = useRouter();
 
-	return async (forgotPasswordData: ForgotPasswordDto) => {
+	return async (signInWithOtpData: SignInWithOtpDto) => {
 		try {
-			const { message } = await authService.forgotPassword(forgotPasswordData);
+			const { message } = await authService.signInWithOtp(signInWithOtpData);
 			toast({ description: message, variant: 'default' });
 			router.push('/auth/resetPassword?step=otp');
 		} catch (error: any) {
@@ -102,7 +114,7 @@ export const useHandleResendOTP = () => {
 	return async (e: React.MouseEvent<HTMLButtonElement>) => {
 		try {
 			e.preventDefault();
-			const { message } = await authService.forgotPassword({ email });
+			const { message } = await authService.signInWithOtp({ email });
 			toast({ description: message, variant: 'default' });
 		} catch (error: any) {
 			toast({ description: error.message, variant: 'destructive' });

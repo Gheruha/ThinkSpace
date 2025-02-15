@@ -1,5 +1,5 @@
 import {
-	ForgotPasswordDto,
+	SignInWithOtpDto,
 	ResetPasswordDto,
 	SignInDto,
 	SignUpDto,
@@ -68,19 +68,19 @@ class AuthService {
 		}
 	}
 
-	async forgotPassword(forgotPasswordData: ForgotPasswordDto): Promise<{ message: string }> {
+	async signInWithOtp(signInWithOtpData: SignInWithOtpDto): Promise<{ message: string }> {
 		try {
-			const response = await fetch('/api/auth/forgotPassword', {
+			const response = await fetch('/api/auth/signInWithOtp', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(forgotPasswordData)
+				body: JSON.stringify(signInWithOtpData)
 			});
 
 			const data = await response.json();
 
 			if (!response.ok) {
 				const error = await response.json();
-				throw new Error(error.message || 'Failed to handle forgot password');
+				throw new Error(error.message || 'Failed to handle sign in with otp');
 			}
 
 			if (data.userData) {
@@ -89,7 +89,7 @@ class AuthService {
 
 			return data;
 		} catch (error: any) {
-			console.error('Error forgot password:', error.message);
+			console.error('Error sign in with otp:', error.message);
 			throw error;
 		}
 	}
@@ -130,6 +130,15 @@ class AuthService {
 			return response.json();
 		} catch (error: any) {
 			console.error('Error verify otp:', error.message);
+			throw error;
+		}
+	}
+
+	async signInWithOAuth(): Promise<void> {
+		try {
+			window.location.href = '/api/auth/googleOAuth';
+		} catch (error: any) {
+			console.error('Error sign in with oauth:', error.message);
 			throw error;
 		}
 	}
