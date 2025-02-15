@@ -24,11 +24,11 @@ export const authSchemas = {
 		email: emailSchema,
 		password: passwordSchema
 	}),
-	forgotPassword: z.object({
+	signInWithOtp: z.object({
 		email: emailSchema
 	}),
 	otpVerification: z.object({
-		otp: z
+		otpCode: z
 			.string()
 			.length(6, 'OTP must be exactly 6 digits.')
 			.regex(/^\d+$/, 'OTP must contain only numbers.')
@@ -45,9 +45,9 @@ export const authSchemas = {
 };
 
 // signInForm.tsx
-export function useSignInForm(isForgotPassword: boolean) {
+export function useSignInForm(isSignInWithOtp: boolean) {
 	const form = useForm<SignInDto>({
-		resolver: zodResolver(isForgotPassword ? authSchemas.forgotPassword : authSchemas.signIn)
+		resolver: zodResolver(isSignInWithOtp ? authSchemas.signInWithOtp : authSchemas.signIn)
 	});
 
 	return {

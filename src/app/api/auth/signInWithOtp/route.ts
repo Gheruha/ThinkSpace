@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkUserExists } from '@/lib/utils/auth/token.util';
-import { signInUser } from '@/lib/utils/auth/auth.util';
-import { SignInDto } from '@/lib/dto/auth/auth.dto';
-import { isValidSignInDto } from '@/lib/dto/auth/isValid.dto';
+import { signInUserWithOtp } from '@/lib/utils/auth/auth.util';
+import { SignInWithOtpDto } from '@/lib/dto/auth/auth.dto';
+import { isValidSignInWithOtpDto } from '@/lib/dto/auth/isValid.dto';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
 	try {
 		const body: unknown = await req.json();
 
-		if (!isValidSignInDto(body)) {
+		if (!isValidSignInWithOtpDto(body)) {
 			return NextResponse.json({ message: 'Invalid request body.' }, { status: 400 });
 		}
 
-		const { email, password }: SignInDto = body;
+		const { email }: SignInWithOtpDto = body;
 
-		// Check if user exist
+		// Check if user already exist
 		const doesUserExist = await checkUserExists(email);
 		if (!doesUserExist) {
 			return NextResponse.json(
@@ -23,16 +23,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 			);
 		}
 
-		// Sign in the user
-		const userSession = await signInUser({ email, password });
+		const userData = await signInUserWithOtp({ email });
 
 		return NextResponse.json({
-			message: 'Sign in successful!',
-			session: userSession.session,
-			redirect: '/workspace'
+			message: 'Send OTP successful!',
+			userData
 		});
 	} catch (error: unknown) {
-		console.error('Sign-in error:', error);
+		console.error('Sign-in-with-otp error:', error);
 		const errorMessage = error instanceof Error ? error.message : 'Internal server error';
 		return NextResponse.json({ message: errorMessage }, { status: 500 });
 	}
