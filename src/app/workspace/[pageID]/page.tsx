@@ -1,4 +1,4 @@
-import NewPageForm from '@/app/api/workspace/components/newPageForm';
+import NewPageForm from '@/app/workspace/components/newPageForm';
 
 export default async function Page({ params }: { params: Promise<{ pageID: string }> }) {
 	const { pageID } = await params;
