@@ -3,7 +3,7 @@ import { PageDto } from '@/lib/dto/workspace/workspace.dto';
 export class WorkspaceService {
 	async newPage(newPageData: PageDto) {
 		try {
-			const response = await fetch('api/workspace/newPage', {
+			const response = await fetch('/api/workspace/newPage', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(newPageData)
