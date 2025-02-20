@@ -1,6 +1,6 @@
 import { PageDto } from '@/lib/dto/workspace/workspace.dto';
 
-class WorkspaceService {
+export class WorkspaceService {
 	async newPage(newPageData: PageDto) {
 		try {
 			const response = await fetch('api/workspace/newPage', {

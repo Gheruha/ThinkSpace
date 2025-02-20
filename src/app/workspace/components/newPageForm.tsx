@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../..
 import { Input } from '../../../components/ui/input';
 import { Label } from '../../../components/ui/label';
 
+
 export default function NewPageForm() {
 	return (
 		<form action="/api/workspace/newPage" method="POST">

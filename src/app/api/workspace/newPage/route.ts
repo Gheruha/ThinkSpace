@@ -1,30 +1,20 @@
-import { createSupabaseApiClient } from '@/lib/supabase/client';
 import { NextRequest, NextResponse } from 'next/server';
+import { createNewPage } from '@/lib/utils/workspace/workspace.utils';
 export async function POST(req: NextRequest) {
 	try {
-		// Getting the form data
-		const formData = await req.formData();
-		const title = formData.get('Title');
+		// Getting the request data
+		const { title } = await req.json();
 
-		// Supabase client
-		const supabase = await createSupabaseApiClient();
-
-		// Getting the session
-		const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-		if (sessionError || !sessionData) {
-			return NextResponse.json({ error: 'Unauthorized' }, { status: 400 });
-			// status 400: Client Error
+		// Checking if there is no title or the type is not string
+		if (!title || typeof title !== 'string') {
+			return NextResponse.json({ error: 'Invalid Title.' }, { status: 400 });
 		}
-		// Store userID
-		const userId = sessionData.session?.user.id;
 
-		// Inserting default data into the database
-		const { data, error } = await supabase.from('Page').insert([{ Title: title, user_id: userId }]);
-
-		if (error) {
-			return NextResponse.json({ error: error.message }, { status: 400 });
-		}
+		// Passing the data and calling the utils function
+		const data = await createNewPage({ title });
 
 		return NextResponse.json(data, { status: 201 });
-	} catch (err: any) {}
+	} catch (err: any) {
+		return NextResponse.json({ error: err.message }, { status: 400 });
+	}
 }
