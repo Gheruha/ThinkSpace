@@ -134,7 +134,7 @@ class AuthService {
 		}
 	}
 
-	async signInWithOAuth(): Promise<void> {
+	async signInWithGoogle(): Promise<void> {
 		try {
 			window.location.href = '/api/auth/googleOAuth';
 		} catch (error: any) {

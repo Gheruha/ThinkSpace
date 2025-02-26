@@ -95,12 +95,12 @@ export default function LearningProductLayout({ children }: { children: React.Re
 							</div>
 							<div className="hidden lg:flex space-x-3">
 								<ModeToggle />
-								<Link href="/auth" onClick={goToSignIn} passHref>
+								<Link href="/auth?mode=signIn" onClick={goToSignIn} passHref>
 									<Button variant="ghost" size="xs">
 										<span className="text-lg font-normal">Sign in</span>
 									</Button>
 								</Link>
-								<Link href="/auth" onClick={goToSignUp} passHref>
+								<Link href="/auth?mode=signUp" onClick={goToSignUp} passHref>
 									<Button size="xs" className="rounded-sm">
 										<span className="text-lg font-normal">Sign up</span>
 									</Button>

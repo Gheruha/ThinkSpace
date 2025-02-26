@@ -2,29 +2,26 @@
 
 import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { OTPVerification } from '../components/verification/OTPVerification';
-import { PasswordResetForm } from '../components/verification/passwordResetForm';
+import { OTPVerification } from '@/app/auth/components/verification/OTPVerification';
+import { PasswordResetForm } from '@/app/auth/components/verification/passwordResetForm';
+import Loader, { LoaderEnum } from '@/components/Loader';
 
 function ResetPasswordContent() {
 	const searchParams = useSearchParams();
-	const step = searchParams.get('step')?.toLowerCase();
+	const stepParam = searchParams.get('step')?.toLowerCase();
+	const resetPasswordStep = stepParam === 'otp' || stepParam === 'reset' ? stepParam : 'otp';
 
-	const renderForm = () => {
-		switch (step) {
-			case 'reset':
-				return <PasswordResetForm />;
-			case 'otp':
-			default:
-				return <OTPVerification />;
-		}
-	};
+	const resetPasswordForms = {
+		otp: <OTPVerification />,
+		reset: <PasswordResetForm />
+	} as const;
 
-	return <div>{renderForm()}</div>;
+	return resetPasswordForms[resetPasswordStep];
 }
 
 export default function ResetPassword() {
 	return (
-		<Suspense fallback={<div>Loading...</div>}>
+		<Suspense fallback={<Loader loader={LoaderEnum.HELIX} />}>
 			<ResetPasswordContent />
 		</Suspense>
 	);

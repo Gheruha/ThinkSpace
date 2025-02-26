@@ -1,9 +1,9 @@
 'use client';
 
+import React from 'react';
+import { signInWithGoogleHandler } from '../handleFunctions';
 import { ThemeImage } from '@/components/theme-image';
 import { Button } from '@/components/ui/button';
-import { handleSignInWithOAuth } from '../handleFunctions';
-import React from 'react';
 
 export const OAuth = () => {
 	return (
@@ -11,7 +11,7 @@ export const OAuth = () => {
 			<Button
 				variant="outline"
 				className="border rounded-full w-16 h-16"
-				onClick={handleSignInWithOAuth}
+				onClick={signInWithGoogleHandler}
 			>
 				<ThemeImage
 					lightSrc="/icons/google.png"

@@ -10,5 +10,3 @@ export const mapUserData = async (responseData: any): Promise<User> => {
 		lastName: user.user_metadata?.lastName || ''
 	};
 };
-
-// export default useAuthStore;
