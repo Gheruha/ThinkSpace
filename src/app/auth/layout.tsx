@@ -12,19 +12,23 @@ interface AuthLayoutProps {
 export default function AuthLayout({ children }: AuthLayoutProps) {
 	const router = useRouter();
 
+	const handleGoBack = () => {
+		router.push('/product');
+	};
+
 	return (
-		<div className="relative min-h-screen flex items-center">
+		<div className="relative flex min-h-screen items-center">
 			<div className="absolute left-4 top-4">
 				<Button
-					onClick={() => router.push('/')}
+					onClick={handleGoBack}
 					variant="link"
-					className="hover:no-underline space-x-1"
+					className="flex items-center gap-1 hover:no-underline"
 				>
 					<ArrowLeft size={15} />
 					<p>Back</p>
 				</Button>
 			</div>
-			<div className="mx-auto">{children}</div>
+			<main className="mx-auto">{children}</main>
 			<Toaster />
 		</div>
 	);

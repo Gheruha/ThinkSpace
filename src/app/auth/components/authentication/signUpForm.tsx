@@ -2,16 +2,16 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { signUpHandler } from '../handleFunctions';
+import { useSignUpForm } from '../validationSchema';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
-import { handleSignUp } from '../handleFunctions';
-import { useSignUpForm } from '../validationSchema';
 
 export function SignUpForm() {
-	const [showPassword, setShowPassword] = useState<boolean>(false);
+	const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
 	const {
 		register,
@@ -19,13 +19,13 @@ export function SignUpForm() {
 		formState: { errors }
 	} = useSignUpForm();
 
-	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
+	const handleTogglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
-		setShowPassword((prev) => !prev);
+		setIsPasswordVisible((prev) => !prev);
 	};
 
 	return (
-		<form onSubmit={handleSubmit(handleSignUp)}>
+		<form onSubmit={handleSubmit(signUpHandler)}>
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-xl">Sign Up</CardTitle>
@@ -65,17 +65,17 @@ export function SignUpForm() {
 								<Input
 									id="password"
 									{...register('password')}
-									type={showPassword ? 'text' : 'password'}
+									type={isPasswordVisible ? 'text' : 'password'}
 									placeholder="••••••••••"
 									className="pr-10"
 								/>
 								<Button
 									variant="icon"
 									size="xs"
-									onClick={togglePasswordVisibility}
+									onClick={handleTogglePasswordVisibility}
 									className="absolute right-0 py-5"
 								>
-									{showPassword ? <Eye size="20" /> : <EyeOff size="20" />}
+									{isPasswordVisible ? <Eye size="20" /> : <EyeOff size="20" />}
 								</Button>
 							</div>
 							{!errors.password ? (
