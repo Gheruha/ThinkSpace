@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 export default function Pricing() {
 	const [isMonthly, setIsMonthly] = useState(true);
+
 	return (
 		<div className="flex flex-col items-center">
 			<p className="hidden lg:block text-6xl font-semibold">Your personal toolkit.</p>
@@ -32,9 +33,7 @@ export default function Pricing() {
 						}}
 					>
 						<span>Pay yearly</span>
-						<span className="text-xs font-normal" style={{ color: 'hsl(var(--primary))' }}>
-							save 30%
-						</span>
+						<span className="text-xs font-normal text-primary">save 30%</span>
 					</TabsTrigger>
 				</TabsList>
 			</Tabs>
