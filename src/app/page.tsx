@@ -4,6 +4,7 @@ import { authService } from '@/lib/services/auth/auth.service';
 import { useToast } from '@/components/ui/use-toast';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import WorkspaceCard from './workspace/components/dashboard/workspaceCard';
 
 export default function Main() {
 	const { toast } = useToast();
@@ -28,17 +29,7 @@ export default function Main() {
 				</Button>
 			</div>
 
-			<div id="Dashboard-div" className="flex w-full h-full justify-center items-center">
-				<Link href="/workspace">
-					<Card className="hover:bg-accent hover:text-accent-foreground transition-hover duration-75">
-						<CardHeader>
-							<CardTitle>Workspace</CardTitle>
-							<CardDescription>Enter your full workspace and start to organize!</CardDescription>
-						</CardHeader>
-						<CardContent></CardContent>
-					</Card>
-				</Link>
-			</div>
+			<WorkspaceCard />
 		</div>
 	);
 }
