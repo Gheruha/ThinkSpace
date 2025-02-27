@@ -1,78 +1,79 @@
 'use client';
 
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
+import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ResetPasswordDto, SignInDto, SignUpDto, VerifyOTPDto } from '@/lib/dto/auth/auth.dto';
+import { z } from 'zod';
+import { SignInDto, SignUpDto, VerifyOTPDto, ResetPasswordDto } from '@/lib/dto/auth/auth.dto';
 
-// Schemas
+// Base schemas
 const emailSchema = z.string().email('Invalid email format.');
 const passwordSchema = z.string().min(8, 'Password must be at least 8 characters.');
 const nameSchema = z
 	.string()
-	.regex(/^[A-Za-z]+$/, 'Must contain only letters.')
+	.regex(/^[A-Za-z\s]+$/, 'Must contain only letters.')
 	.min(2, 'Required.');
 
-export const authSchemas = {
-	signIn: z.object({
-		email: emailSchema,
-		password: passwordSchema
-	}),
-	signUp: z.object({
-		firstName: nameSchema,
-		lastName: nameSchema,
-		email: emailSchema,
-		password: passwordSchema
-	}),
-	signInWithOtp: z.object({
-		email: emailSchema
-	}),
-	otpVerification: z.object({
-		otpCode: z
-			.string()
-			.length(6, 'OTP must be exactly 6 digits.')
-			.regex(/^\d+$/, 'OTP must contain only numbers.')
-	}),
-	passwordReset: z
-		.object({
-			password: passwordSchema,
-			confirmPassword: z.string()
-		})
-		.refine((data) => data.password === data.confirmPassword, {
-			message: "Passwords don't match.",
-			path: ['confirmPassword']
-		})
-};
+// Authentication Schemas
+export const signInSchema = z.object({
+	email: emailSchema,
+	password: passwordSchema
+});
 
-// signInForm.tsx
-export function useSignInForm(isSignInWithOtp: boolean) {
-	const form = useForm<SignInDto>({
-		resolver: zodResolver(isSignInWithOtp ? authSchemas.signInWithOtp : authSchemas.signIn)
+export const signUpSchema = z.object({
+	firstName: nameSchema,
+	lastName: nameSchema,
+	email: emailSchema,
+	password: passwordSchema
+});
+
+export const signInWithOtpSchema = z.object({
+	email: emailSchema
+});
+
+export const otpVerificationSchema = z.object({
+	otpCode: z
+		.string()
+		.length(6, 'OTP must be exactly 6 digits.')
+		.regex(/^\d+$/, 'OTP must contain only numbers.')
+});
+
+export const passwordResetSchema = z
+	.object({
+		password: passwordSchema,
+		confirmPassword: z.string()
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: "Passwords don't match.",
+		path: ['confirmPassword']
 	});
 
-	return {
-		...form
-	};
+// Sign In Form Hook
+export function useSignInForm(isOtpMode: boolean): UseFormReturn<SignInDto> {
+	return useForm<SignInDto>({
+		resolver: zodResolver(isOtpMode ? signInWithOtpSchema : signInSchema)
+	});
 }
 
-// signUpForm.tsx
-export function useSignUpForm() {
+// Sign Up Form Hook
+export function useSignUpForm(): UseFormReturn<SignUpDto> {
 	return useForm<SignUpDto>({
-		resolver: zodResolver(authSchemas.signUp)
+		resolver: zodResolver(signUpSchema),
+		defaultValues: { firstName: '', lastName: '', email: '', password: '' }
 	});
 }
 
-// OTPVerification.tsx
-export function useOTPForm() {
+// OTP Verification Form Hook
+export function useOTPForm(): UseFormReturn<VerifyOTPDto> {
 	return useForm<VerifyOTPDto>({
-		resolver: zodResolver(authSchemas.otpVerification),
+		resolver: zodResolver(otpVerificationSchema),
 		defaultValues: { otpCode: '' }
 	});
 }
 
-// passwordResetForm.tsx;
-export function usePasswordResetForm() {
+// Password Reset Form Hook
+export function usePasswordResetForm(): UseFormReturn<ResetPasswordDto> {
 	return useForm<ResetPasswordDto>({
-		resolver: zodResolver(authSchemas.passwordReset)
+		resolver: zodResolver(passwordResetSchema),
+		defaultValues: { password: '', confirmPassword: '' }
 	});
 }

@@ -1,18 +1,20 @@
 'use client';
 
 import { useState } from 'react';
+import { useResetPasswordHandler } from '../handleFunctions';
+import { usePasswordResetForm } from '../validationSchema';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Eye, EyeOff } from 'lucide-react';
-import { useHandleResetPassword } from '../handleFunctions';
-import { usePasswordResetForm } from '../validationSchema';
 
 export function PasswordResetForm() {
-	const [showPassword, setShowPassword] = useState<boolean>(false);
-	const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
-	const handleResetPassword = useHandleResetPassword();
+	const [passwordVisibility, setPasswordVisibility] = useState({
+		password: false,
+		confirmPassword: false
+	});
+	const resetPasswordHandler = useResetPasswordHandler();
 
 	const {
 		register,
@@ -20,18 +22,16 @@ export function PasswordResetForm() {
 		formState: { errors }
 	} = usePasswordResetForm();
 
-	const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
+	const handleToggleVisibility = (
+		e: React.MouseEvent<HTMLButtonElement>,
+		field: 'password' | 'confirmPassword'
+	) => {
 		e.preventDefault();
-		setShowPassword((prev) => !prev);
-	};
-
-	const toggleConfirmPasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
-		e.preventDefault();
-		setShowConfirmPassword((prev) => !prev);
+		setPasswordVisibility((prev) => ({ ...prev, [field]: !prev[field] }));
 	};
 
 	return (
-		<form noValidate onSubmit={handleSubmit(handleResetPassword)}>
+		<form noValidate onSubmit={handleSubmit(resetPasswordHandler)}>
 			<Card className="mx-auto max-w-sm">
 				<CardHeader>
 					<CardTitle className="text-xl">Reset Password</CardTitle>
@@ -45,7 +45,7 @@ export function PasswordResetForm() {
 								<Input
 									id="password"
 									{...register('password')}
-									type={showPassword ? 'text' : 'password'}
+									type={passwordVisibility.password ? 'text' : 'password'}
 									placeholder="••••••••"
 									className="pr-10"
 									required
@@ -53,10 +53,10 @@ export function PasswordResetForm() {
 								<Button
 									variant="icon"
 									size="xs"
-									onClick={togglePasswordVisibility}
-									className="absolute right-0 py-5"
+									onClick={(e) => handleToggleVisibility(e, 'password')}
+									className="absolute right-2 top-1/2 transform -translate-y-1/2"
 								>
-									{showPassword ? <Eye size="20" /> : <EyeOff size="20" />}
+									{passwordVisibility.password ? <Eye size="20" /> : <EyeOff size="20" />}
 								</Button>
 							</div>
 							{errors.password ? (
@@ -73,7 +73,7 @@ export function PasswordResetForm() {
 								<Input
 									id="confirmPassword"
 									{...register('confirmPassword')}
-									type={showConfirmPassword ? 'text' : 'password'}
+									type={passwordVisibility.confirmPassword ? 'text' : 'password'}
 									className="pr-10"
 									placeholder="••••••••"
 									required
@@ -81,10 +81,10 @@ export function PasswordResetForm() {
 								<Button
 									variant="icon"
 									size="xs"
-									onClick={toggleConfirmPasswordVisibility}
+									onClick={(e) => handleToggleVisibility(e, 'confirmPassword')}
 									className="absolute right-0 py-5"
 								>
-									{showConfirmPassword ? <Eye size="20" /> : <EyeOff size="20" />}
+									{passwordVisibility.confirmPassword ? <Eye size="20" /> : <EyeOff size="20" />}
 								</Button>
 							</div>
 							{errors.confirmPassword && (

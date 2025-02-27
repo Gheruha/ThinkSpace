@@ -2,32 +2,33 @@
 
 import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { SignUpForm } from './components/authentication/signUpForm';
-import { SignInForm } from './components/authentication/signInForm';
-import { OAuth } from './components/authentication/OAuth';
+import { SignUpForm } from '@/app/auth/components/authentication/signUpForm';
+import { SignInForm } from '@/app/auth/components/authentication/signInForm';
+import { OAuth } from '@/app/auth/components/authentication/OAuth';
+import Loader, { LoaderEnum } from '@/components/Loader';
 
 function AuthContent() {
 	const searchParams = useSearchParams();
-	const mode = searchParams.get('mode')?.toLowerCase();
+	const modeParam = searchParams.get('mode')?.toLowerCase();
+	const authMode = modeParam === 'signup' || modeParam === 'signin' ? modeParam : 'signin';
 
-	const renderForm = () => {
-		switch (mode) {
-			case 'signup':
-				return <SignUpForm />;
-			case 'signin':
-			default:
-				return <SignInForm />;
-		}
-	};
+	const authForms = {
+		signup: <SignUpForm />,
+		signin: <SignInForm />
+	} as const;
 
-	return <div>{renderForm()}</div>;
+	return (
+		<>
+			{authForms[authMode]}
+			<OAuth />
+		</>
+	);
 }
 
 export default function Auth() {
 	return (
-		<Suspense fallback={<div>Loading...</div>}>
+		<Suspense fallback={<Loader loader={LoaderEnum.HELIX} />}>
 			<AuthContent />
-			<OAuth />
 		</Suspense>
 	);
 }

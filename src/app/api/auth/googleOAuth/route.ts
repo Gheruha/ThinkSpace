@@ -1,5 +1,5 @@
-import { signInUserWithOAuth } from '@/lib/utils/auth/auth.util';
 import { NextRequest, NextResponse } from 'next/server';
+import { signInUserWithOAuth } from '@/lib/utils/auth/auth.util';
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
 	try {

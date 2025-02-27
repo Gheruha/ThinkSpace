@@ -43,12 +43,12 @@ export const SmallMenu = ({ menuOpen }: any) =>
 						</AccordionItem>
 					</Accordion>
 					<div className="flex flex-col space-y-3 py-4 border-t">
-						<Link href="/auth" passHref>
+						<Link href="/auth?mode=signUp" passHref>
 							<Button size="xs" className="w-full">
 								Sign up
 							</Button>
 						</Link>
-						<Link href="/auth" passHref>
+						<Link href="/auth?mode=signIn" passHref>
 							<Button variant="outline" size="xs" className="w-full">
 								Sign in
 							</Button>

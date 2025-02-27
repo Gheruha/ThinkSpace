@@ -1,12 +1,8 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import {
-	InputOTP,
-	InputOTPGroup,
-	InputOTPSeparator,
-	InputOTPSlot
-} from '@/components/ui/input-otp';
+import { useResendOtpHandler, useVerifyOtpHandler } from '../handleFunctions';
+import { useOTPForm } from '../validationSchema';
+import { useEmailFromLocalStorage } from '@/lib/store/auth/localStorage.store';
 import {
 	Card,
 	CardContent,
@@ -16,15 +12,16 @@ import {
 	CardTitle
 } from '@/components/ui/card';
 import {
-	useEmailFromLocalStorage,
-	useHandleResendOTP,
-	useHandleVerifyOTP
-} from '../handleFunctions';
-import { useOTPForm } from '../validationSchema';
+	InputOTP,
+	InputOTPGroup,
+	InputOTPSeparator,
+	InputOTPSlot
+} from '@/components/ui/input-otp';
+import { Button } from '@/components/ui/button';
 
 export function OTPVerification() {
-	const handleVerifyOTP = useHandleVerifyOTP();
-	const handleResendOTP = useHandleResendOTP();
+	const verifyOtpHandler = useVerifyOtpHandler();
+	const resendOtpHandler = useResendOtpHandler();
 	const email = useEmailFromLocalStorage();
 
 	const {
@@ -36,7 +33,7 @@ export function OTPVerification() {
 	} = useOTPForm();
 
 	return (
-		<form noValidate onSubmit={handleSubmit((data) => handleVerifyOTP(data))}>
+		<form noValidate onSubmit={handleSubmit((data) => verifyOtpHandler(data))}>
 			<Card>
 				<CardHeader>
 					<CardTitle className="text-xl">Verification code</CardTitle>
@@ -69,7 +66,7 @@ export function OTPVerification() {
 				<CardFooter className="flex flex-col space-y-8">
 					<div className="flex justify-between w-full">
 						<p className="text-sm text-muted-foreground">Didn&apos;t receive OTP?</p>
-						<Button variant="link" size="noSize" onClick={handleResendOTP}>
+						<Button variant="link" size="noSize" onClick={resendOtpHandler}>
 							Resend OTP
 						</Button>
 					</div>

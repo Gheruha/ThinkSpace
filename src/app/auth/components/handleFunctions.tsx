@@ -1,78 +1,39 @@
 'use client';
 
-import { toast } from '@/components/ui/use-toast';
-import {
-	SignInWithOtpDto,
-	ResetPasswordDto,
-	SignInDto,
-	SignUpDto,
-	VerifyOTPDto
-} from '@/lib/dto/auth/auth.dto';
-import { authService } from '@/lib/services/auth/auth.service';
-import { Check } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { SubmitHandler } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { authService } from '@/lib/services/auth/auth.service';
+import {
+	SignInDto,
+	SignUpDto,
+	SignInWithOtpDto,
+	VerifyOTPDto,
+	ResetPasswordDto
+} from '@/lib/dto/auth/auth.dto';
+import { useEmailFromLocalStorage } from '@/lib/store/auth/localStorage.store';
+import { toast } from '@/components/ui/use-toast';
+import { Check } from 'lucide-react';
 
-export const useEmailFromLocalStorage = () => {
-	const [email, setEmail] = useState<string>('');
-
-	useEffect(() => {
-		const storedUserData = localStorage.getItem('userData');
-		if (storedUserData) {
-			try {
-				const parsedUser = JSON.parse(storedUserData);
-				setEmail(parsedUser.email || '');
-			} catch (error) {
-				console.error('Error parsing userData from localStorage:', error);
-			}
-		}
-	}, []);
-
-	return email;
+const handleError = (error: unknown) => {
+	const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+	toast({
+		description: errorMessage,
+		variant: 'destructive'
+	});
 };
 
-// OAuth.tsx
-export const handleSignInWithOAuth = async (): Promise<void> => {
-	try {
-		await authService.signInWithOAuth();
-	} catch (error: any) {
-		toast({
-			description: error.message,
-			variant: 'destructive'
-		});
-	}
-};
-
-// signInForm.tsx
-export const useHandleSignInWithOtp = () => {
-	const router = useRouter();
-
-	return async (signInWithOtpData: SignInWithOtpDto) => {
-		try {
-			const { message } = await authService.signInWithOtp(signInWithOtpData);
-			toast({ description: message, variant: 'default' });
-			router.push('/auth/resetPassword?step=otp');
-		} catch (error: any) {
-			toast({ description: error.message, variant: 'destructive' });
-		}
-	};
-};
-
-export const handleSignIn: SubmitHandler<SignInDto> = async (signInData) => {
+// Sign In Handler
+export const signInHandler: SubmitHandler<SignInDto> = async (signInData) => {
 	try {
 		const { message } = await authService.signIn(signInData);
 		toast({ description: message, variant: 'default' });
-	} catch (error: any) {
-		toast({
-			description: error.message,
-			variant: 'destructive'
-		});
+	} catch (error: unknown) {
+		handleError(error);
 	}
 };
 
-// signUpForm.tsx
-export const handleSignUp: SubmitHandler<SignUpDto> = async (signInData) => {
+// Sign Up Handler
+export const signUpHandler: SubmitHandler<SignUpDto> = async (signInData) => {
 	try {
 		const { message } = await authService.signUp(signInData);
 		toast({
@@ -84,55 +45,77 @@ export const handleSignUp: SubmitHandler<SignUpDto> = async (signInData) => {
 			),
 			variant: 'default'
 		});
-	} catch (error: any) {
-		toast({
-			description: error.message,
-			variant: 'destructive'
-		});
+	} catch (error: unknown) {
+		handleError(error);
 	}
 };
 
-// OTPVerification.tsx
-export const useHandleVerifyOTP = () => {
+// Sign In with OTP Handler
+export const useSignInWithOtpHandler = (): SubmitHandler<SignInWithOtpDto> => {
+	const router = useRouter();
+
+	return async (signInWithOtpData): Promise<void> => {
+		try {
+			const { message } = await authService.signInWithOtp(signInWithOtpData);
+			toast({ description: message, variant: 'default' });
+			router.push('/auth/resetPassword?step=otp');
+		} catch (error: unknown) {
+			handleError(error);
+		}
+	};
+};
+
+// Sign In with Google OAuth Handler
+export const signInWithGoogleHandler = async (): Promise<void> => {
+	try {
+		await authService.signInWithGoogle();
+	} catch (error: unknown) {
+		handleError(error);
+	}
+};
+
+// OTP Verification Handler
+export const useVerifyOtpHandler = (): SubmitHandler<VerifyOTPDto> => {
 	const router = useRouter();
 	const email = useEmailFromLocalStorage();
 
-	return async (verifyOTPData: VerifyOTPDto) => {
+	return async (verifyOTPData): Promise<void> => {
 		try {
 			const { message } = await authService.verifyOTP({ email, otpCode: verifyOTPData.otpCode });
 			toast({ description: message, variant: 'default' });
 			router.push('/auth/resetPassword?step=reset');
-		} catch (error: any) {
-			toast({ description: error.message, variant: 'destructive' });
+		} catch (error: unknown) {
+			handleError(error);
 		}
 	};
 };
 
-export const useHandleResendOTP = () => {
+// Resend OTP Handler
+export const useResendOtpHandler = () => {
 	const email = useEmailFromLocalStorage();
 
-	return async (e: React.MouseEvent<HTMLButtonElement>) => {
+	return async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
 		try {
 			e.preventDefault();
 			const { message } = await authService.signInWithOtp({ email });
 			toast({ description: message, variant: 'default' });
-		} catch (error: any) {
-			toast({ description: error.message, variant: 'destructive' });
+		} catch (error: unknown) {
+			handleError(error);
 		}
 	};
 };
 
-// passwordResetForm.tsx
-export const useHandleResetPassword = () => {
+// Reset Password Handler
+export const useResetPasswordHandler = (): SubmitHandler<ResetPasswordDto> => {
 	const router = useRouter();
 
-	return async (passwordResetData: ResetPasswordDto) => {
+	return async (passwordResetData): Promise<void> => {
 		try {
 			const { message } = await authService.resetPassword(passwordResetData);
 			toast({ description: message, variant: 'default' });
 			router.push('/workspace');
-		} catch (error: any) {
-			toast({ description: error.message, variant: 'destructive' });
+		} catch (error: unknown) {
+			handleError(error);
 		}
 	};
 };
