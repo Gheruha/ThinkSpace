@@ -1,15 +1,9 @@
 'use client';
 import { useState } from 'react';
-import { Button } from '../../../components/ui/button';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle
-} from '../../../components/ui/card';
-import { Input } from '../../../components/ui/input';
-import { Label } from '../../../components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { WorkspaceService } from '@/lib/services/workspace/workspace.service';
 
 export default function NewPageForm() {
