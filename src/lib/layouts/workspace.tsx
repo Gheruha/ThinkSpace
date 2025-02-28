@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Ellipsis } from 'lucide-react';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { LogOutBtn } from '@/components/ui/logout-btn';
 
 export default function WorkspaceLayout({ children }: { children: React.ReactNode }) {
 	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(true);
@@ -105,7 +106,8 @@ export default function WorkspaceLayout({ children }: { children: React.ReactNod
 							<div
 								className={`flex flex-col ${isMenuOpen ? 'h-full max-h-full' : 'h-auto max-h-[calc(-118px+100vh)]'}`}
 							>
-								<div className="flex justify-end">
+								<div className="flex justify-between">
+									<LogOutBtn />
 									<Button
 										variant="icon"
 										size="xs"
