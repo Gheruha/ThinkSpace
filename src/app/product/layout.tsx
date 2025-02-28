@@ -1,5 +1,11 @@
+'use client';
+
 import LearningProductLayout from '@/lib/layouts/marketing';
 
-export default function ProductLayout({ children }: { children: React.ReactNode }) {
+interface ProductLayoutProps {
+	children: React.ReactNode;
+}
+
+export default function ProductLayout({ children }: ProductLayoutProps) {
 	return <LearningProductLayout>{children}</LearningProductLayout>;
 }

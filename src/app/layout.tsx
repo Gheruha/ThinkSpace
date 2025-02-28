@@ -1,26 +1,31 @@
+import { getMetadata } from '@/lib/utils/metadata';
 import { GeistSans } from 'geist/font/sans';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import '@/styles/global.css';
 
+const icon = '/favicon_io/favicon-32x32.png';
+const apple = '/favicon_io/apple-touch-icon.png';
 const defaultUrl = process.env.VERCEL_URL
 	? `https://${process.env.VERCEL_URL}`
 	: 'http://localhost:3000';
 
-export const metadata = {
-	metadataBase: new URL(defaultUrl),
-	title: 'Think Space',
-	description: 'Organize your life quickly and easily'
-};
+export const metadata = getMetadata({
+	title: 'Root',
+	description: 'Organize your life quickly and easily',
+	url: defaultUrl,
+	icon: icon,
+	apple: apple
+});
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+interface RootLayoutProps {
+	children: React.ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
 	return (
 		<html lang="en" className={GeistSans.className}>
-			<head>
-				<link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png" />
-				<link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png" />
-				<link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png" />
-			</head>
+			<head />
 			<body className="bg-background text-foreground">
 				<ThemeProvider
 					attribute="class"
