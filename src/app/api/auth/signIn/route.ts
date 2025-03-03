@@ -28,7 +28,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
 		return NextResponse.json({
 			message: 'Sign in successful!',
-			session: userSession.session,
+			session: userSession,
 			redirect: '/workspace'
 		});
 	} catch (error: unknown) {
