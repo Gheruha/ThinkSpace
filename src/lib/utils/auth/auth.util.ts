@@ -89,7 +89,7 @@ export const signInUserWithOtp = async ({ email }: SignInWithOtpDto): Promise<Us
 		throw new Error(error.message || 'Failed to send email to User');
 	}
 
-	const user: JSON = await getUserFromSupabaseByEmail(email);
+	const user = await getUserFromSupabaseByEmail(email);
 	return user ? mapUserData(user) : null;
 };
 

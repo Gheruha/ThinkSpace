@@ -1,33 +1,43 @@
-import { createSupabaseMiddlewareClient } from '@/lib/supabase/client';
 import { NextRequest, NextResponse } from 'next/server';
+import { createSupabaseMiddlewareClient } from '@/lib/supabase/client';
 
 export async function middleware(req: NextRequest) {
 	const res = NextResponse.next();
 	const supabase = createSupabaseMiddlewareClient(req, res);
 
-	const {
-		data: { session },
-		error
-	} = await supabase.auth.getSession();
+	const { data, error } = await supabase.auth.getSession();
+	const session = data?.session;
 
 	if (error) {
-		console.error(error);
+		console.error('Error fetching session:', error.message);
+		return NextResponse.json({ message: 'Failed to authenticate' }, { status: 500 });
 	}
 
 	// Extract the pathname from the URL
 	const { pathname } = req.nextUrl;
 
-	// Allow access to the product, auth, pricing pages without session
-	if (
-		pathname.startsWith('/product') ||
-		pathname.startsWith('/auth') ||
-		pathname.startsWith('/pricing')
-	) {
-		return res;
-	}
-	// Redirect to the auth page if there's no session and the user is accessing other protected routes
 	if (!session) {
-		return NextResponse.rewrite(new URL('/product', req.url));
+		if (
+			pathname.startsWith('/product') ||
+			pathname.startsWith('/pricing') ||
+			pathname.startsWith('/auth')
+		) {
+			return res;
+		}
+
+		if (pathname === '/' || pathname.startsWith('/workspace')) {
+			return NextResponse.redirect(new URL('/product', req.url));
+		}
+	}
+
+	if (session) {
+		if (pathname.startsWith('/workspace') || pathname.startsWith('/auth')) {
+			return res;
+		}
+
+		if (pathname === '/' || pathname.startsWith('/product') || pathname.startsWith('/pricing')) {
+			return NextResponse.redirect(new URL('/workspace', req.url));
+		}
 	}
 
 	// Always return the response object
