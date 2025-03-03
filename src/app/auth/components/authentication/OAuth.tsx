@@ -18,6 +18,8 @@ export const OAuth = () => {
 					darkSrc="/icons/google.png"
 					alt="icon"
 					className="w-8 h-8"
+					width={32}
+					height={32}
 				/>
 			</Button>
 		</div>

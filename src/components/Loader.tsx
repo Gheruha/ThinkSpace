@@ -1,4 +1,5 @@
 'use-client';
+
 import React, { useEffect } from 'react';
 
 export enum LoaderEnum {
@@ -50,12 +51,12 @@ export enum LoaderEnum {
 
 export type LoaderProps = {
 	loader: LoaderEnum;
-	color?: string | number;
-	size?: string | number;
-	speed?: string | number;
-	stroke?: string | number;
-	stroke_length?: string | number;
-	bg_opacity?: string | number;
+	color?: string;
+	size?: number;
+	speed?: number;
+	stroke?: number;
+	strokeLength?: number;
+	bgOpacity?: number;
 };
 
 const Loader: React.FC<LoaderProps> = ({
@@ -64,15 +65,19 @@ const Loader: React.FC<LoaderProps> = ({
 	size = 30,
 	speed = 2,
 	stroke = 3,
-	stroke_length = 0.1,
-	bg_opacity = 0.1
+	strokeLength = 0.1,
+	bgOpacity = 0.1
 }) => {
 	useEffect(() => {
-		const load = async () => {
-			const ldrsModule = await import('ldrs');
-			ldrsModule[loader].register('ldrs-icon');
-		};
-		load();
+		import('ldrs')
+			.then((ldrsModule) => {
+				if (ldrsModule[loader]) {
+					ldrsModule[loader].register('ldrs-icon');
+				} else {
+					console.warn(`Loader "${loader}" not found in ldrs module.`);
+				}
+			})
+			.catch((error) => console.error('Failed to load ldrs module:', error));
 	}, [loader]);
 
 	return (
@@ -83,8 +88,8 @@ const Loader: React.FC<LoaderProps> = ({
 				stroke={stroke}
 				speed={speed}
 				color={color}
-				stroke-length={stroke_length}
-				bg-opacity={bg_opacity}
+				stroke-length={strokeLength}
+				bg-opacity={bgOpacity}
 			/> */}
 		</div>
 	);
