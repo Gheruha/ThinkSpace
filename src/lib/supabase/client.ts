@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { createMiddlewareClient, createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 // Environment variables validation
@@ -15,17 +15,21 @@ if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceRoleKey) {
 }
 
 // Create a Supabase client for client-side use.
-export const createClientSupabaseAnonymous = () => {
-	return createClient(supabaseUrl, supabaseAnonKey);
-};
+export const createClientSupabaseAnonymous: SupabaseClient = createClient(
+	supabaseUrl,
+	supabaseAnonKey
+);
 
 // Create a Supabase client for server-side use.
-export const createClientSupabaseServiceRole = () => {
+export const createClientSupabaseServiceRole = (): SupabaseClient => {
 	return createClient(supabaseUrl, supabaseServiceRoleKey);
 };
 
 // Create a Supabase client for middleware use.
-export const createSupabaseMiddlewareClient = (req: NextRequest, res: NextResponse) => {
+export const createSupabaseMiddlewareClient = (
+	req: NextRequest,
+	res: NextResponse
+): SupabaseClient => {
 	return createMiddlewareClient({
 		req,
 		res
@@ -33,7 +37,7 @@ export const createSupabaseMiddlewareClient = (req: NextRequest, res: NextRespon
 };
 
 // Create a Supabase client for API route or server-side use.
-export const createSupabaseApiClient = async () => {
+export const createSupabaseApiClient = async (): Promise<SupabaseClient> => {
 	const cookieStore = cookies();
 	return createRouteHandlerClient({
 		cookies: () => cookieStore

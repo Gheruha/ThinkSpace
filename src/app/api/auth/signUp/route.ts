@@ -35,7 +35,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
 		return NextResponse.json({
 			message: 'Sign-up successful! Please check your email to verify your account.',
-			session: userSession.session
+			session: userSession
 		});
 	} catch (error: unknown) {
 		console.error('Sign-up error', error);

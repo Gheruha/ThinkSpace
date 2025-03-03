@@ -1,9 +1,15 @@
+import { Session } from '@supabase/supabase-js';
 import { createSupabaseApiClient } from '@/lib/supabase/client';
-import { SignInWithOtpDto, SignUpDto, User, VerifyOTPDto } from '@/lib/dto/auth/auth.dto';
 import { mapUserData } from '@/lib/store/auth/auth.store';
-import { SignInDto } from '@/lib/dto/auth/auth.dto';
 import { getUserFromSupabaseByEmail } from '@/lib/utils/auth/token.util';
-import { ResetPasswordDto } from '@/lib/dto/auth/auth.dto';
+import {
+	SignInDto,
+	SignUpDto,
+	SignInWithOtpDto,
+	User,
+	VerifyOTPDto,
+	ResetPasswordDto
+} from '@/lib/dto/auth/auth.dto';
 
 // Exchanges an authorization code for a Supabase session
 export const authenticateWithCode = async (code: string): Promise<void> => {
@@ -12,12 +18,12 @@ export const authenticateWithCode = async (code: string): Promise<void> => {
 
 	if (error) {
 		console.error('Error exchanging code for session:', error.message);
-		throw new Error('Failed to exchange code for session');
+		throw new Error(error.message || 'Failed to exchange code for session');
 	}
 };
 
 // Sign in the user
-export const signInUser = async ({ email, password }: SignInDto): Promise<any> => {
+export const signInUser = async ({ email, password }: SignInDto): Promise<Session> => {
 	const supabase = await createSupabaseApiClient();
 	const { data, error } = await supabase.auth.signInWithPassword({
 		email,
@@ -26,15 +32,12 @@ export const signInUser = async ({ email, password }: SignInDto): Promise<any> =
 
 	if (error) {
 		console.error('Error signing in:', error.message);
-		throw new Error('Failed to sign in');
+		throw new Error(error.message || 'Failed to sign in');
 	}
 
-	if (data?.user) {
-		console.log('Response user data:', data.user);
-		await mapUserData(data);
-	}
+	await mapUserData(data.user);
 
-	return data;
+	return data.session;
 };
 
 // Sign up the user
@@ -44,7 +47,7 @@ export const signUpUser = async ({
 	email,
 	password,
 	redirectUrl
-}: SignUpDto): Promise<any> => {
+}: SignUpDto): Promise<Session | null> => {
 	const supabase = await createSupabaseApiClient();
 	const { data, error } = await supabase.auth.signUp({
 		email,
@@ -57,15 +60,12 @@ export const signUpUser = async ({
 
 	if (error) {
 		console.error('Error signing up:', error.message);
-		throw new Error('Failed to sign up');
+		throw new Error(error.message || 'Failed to sign up');
 	}
 
-	if (data?.user) {
-		console.log('Response user data:', data.user);
-		await mapUserData(data);
-	}
+	await mapUserData(data.user);
 
-	return data;
+	return data.session;
 };
 
 // Sign out the current user and clear their session
@@ -75,7 +75,7 @@ export const signOutUser = async (): Promise<void> => {
 
 	if (error) {
 		console.error('Error signing out:', error.message);
-		throw new Error('Failed to sign out');
+		throw new Error(error.message || 'Failed to sign out');
 	}
 };
 
@@ -86,17 +86,11 @@ export const signInUserWithOtp = async ({ email }: SignInWithOtpDto): Promise<Us
 	const { error } = await supabase.auth.signInWithOtp({ email });
 	if (error) {
 		console.error('Error sending email:', error);
-		throw new Error('Failed to send email to User');
+		throw new Error(error.message || 'Failed to send email to User');
 	}
 
 	const user = await getUserFromSupabaseByEmail(email);
-	if (user) {
-		const userData = await mapUserData(user);
-		return userData;
-	}
-
-	console.error('User not found in Supabase');
-	return null;
+	return user ? mapUserData(user) : null;
 };
 
 // Verify the OTP Code
@@ -111,7 +105,7 @@ export const verifyUserOtp = async ({ email, otpCode }: VerifyOTPDto): Promise<v
 
 	if (error) {
 		console.error('Error verifing otp:', error);
-		throw new Error('Failed to verify Otp');
+		throw new Error(error.message || 'Failed to verify Otp');
 	}
 };
 
@@ -122,11 +116,11 @@ export const resetUserPassword = async ({ password }: ResetPasswordDto): Promise
 
 	if (error) {
 		console.error('Error reseting password:', error);
-		throw new Error('Failed to reset password');
+		throw new Error(error.message || 'Failed to reset password');
 	}
 };
 
-export const signInUserWithOAuth = async (url: URL): Promise<any> => {
+export const signInUserWithOAuth = async (url: URL): Promise<string> => {
 	const supabase = await createSupabaseApiClient();
 
 	const { data, error } = await supabase.auth.signInWithOAuth({
@@ -138,8 +132,8 @@ export const signInUserWithOAuth = async (url: URL): Promise<any> => {
 
 	if (error) {
 		console.error('Error initiating Google sign-in:', error.message);
-		throw new Error('Failed to initialing Google sign-in');
+		throw new Error(error.message || 'Failed to initialing Google sign-in');
 	}
 
-	return data;
+	return data.url;
 };

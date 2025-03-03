@@ -1,10 +1,12 @@
+import {
+	createClientSupabaseAnonymous,
+	createClientSupabaseServiceRole
+} from '@/lib/supabase/client';
 import { User } from '@/lib/dto/auth/auth.dto';
-import { createClientSupabaseAnonymous } from '@/lib/supabase/client';
-import { createClientSupabaseServiceRole } from '@/lib/supabase/client';
 
 // Fetch the current user's details using the Supabase client
 export const getCurrentUser = async (): Promise<User | null> => {
-	const supabase = createClientSupabaseAnonymous();
+	const supabase = createClientSupabaseAnonymous;
 	const {
 		data: { user },
 		error
@@ -12,7 +14,7 @@ export const getCurrentUser = async (): Promise<User | null> => {
 
 	if (error) {
 		console.error('Failed to fetch current user:', error.message);
-		throw new Error('Unable to fetch user details');
+		throw new Error(error.message || 'Unable to fetch user details');
 	}
 
 	if (!user) {
@@ -34,13 +36,13 @@ export const getCurrentUser = async (): Promise<User | null> => {
 };
 
 // some function
-export const getUserFromSupabaseByEmail = async (email: string): Promise<any> => {
+export const getUserFromSupabaseByEmail = async (email: string): Promise<User | undefined> => {
 	const supabaseServiceRole = createClientSupabaseServiceRole();
 	const { data: users, error } = await supabaseServiceRole.auth.admin.listUsers();
 
 	if (error || !users) {
 		console.error('Failed to fetch user:', error?.message);
-		throw new Error('Error fetching users from the database.');
+		throw new Error(error?.message || 'Error fetching users from the database.');
 	}
 
 	const user = users?.users.find((u) => u.email === email);
@@ -54,7 +56,7 @@ export const checkUserExists = async (email: string): Promise<boolean> => {
 
 	if (error || !users) {
 		console.error('Failed to fetch user:', error?.message);
-		throw new Error('Error fetching users from the database.');
+		throw new Error(error?.message || 'Error fetching users from the database.');
 	}
 
 	const user = users?.users.find((u) => u.email === email);
