@@ -131,6 +131,8 @@ export default function LearningProductLayout({ children }: { children: React.Re
 							darkSrc="/icons/dark_mode/github_logo.png"
 							alt="icon"
 							className="w-8 h-8"
+							width={32}
+							height={32}
 						/>
 					</Button>
 					<span className="opacity-70 pt-1">© 2024 Think Space</span>
