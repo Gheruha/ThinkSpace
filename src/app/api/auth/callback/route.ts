@@ -10,7 +10,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 			await authenticateWithCode(authCode);
 		}
 
-		return NextResponse.redirect(url.origin);
+		return NextResponse.redirect(`${url.origin}/workspace`);
 	} catch (error: unknown) {
 		console.error('Callback failed:', error);
 		const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
