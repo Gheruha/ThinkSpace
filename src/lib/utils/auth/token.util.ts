@@ -4,7 +4,7 @@ import { createClientSupabaseServiceRole } from '@/lib/supabase/client';
 
 // Fetch the current user's details using the Supabase client
 export const getCurrentUser = async (): Promise<User | null> => {
-	const supabase = createClientSupabaseAnonymous();
+	const supabase = createClientSupabaseAnonymous;
 	const {
 		data: { user },
 		error
