@@ -1,146 +1,80 @@
 import {
-	SignInWithOtpDto,
-	ResetPasswordDto,
 	SignInDto,
 	SignUpDto,
-	VerifyOTPDto
+	SignInWithOtpDto,
+	VerifyOTPDto,
+	ResetPasswordDto
 } from '@/lib/dto/auth/auth.dto';
 
+type ApiResponse<T = { message: string }> = T;
+
 class AuthService {
-	async signIn(signInData: SignInDto): Promise<{ message: string }> {
+	private async fetchApi<T>(endpoint: string, options: RequestInit): Promise<ApiResponse<T>> {
 		try {
-			const response = await fetch('api/auth/signIn', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(signInData)
-			});
-
-			if (!response.ok) {
-				const error = await response.json();
-				throw new Error(error.message || 'Failed to sign in');
-			}
-
-			return response.json();
-		} catch (error: any) {
-			console.error('Error signing in:', error.message);
-			throw error;
-		}
-	}
-
-	async signUp(signUpData: SignUpDto): Promise<{ message: string }> {
-		try {
-			const response = await fetch('api/auth/signUp', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(signUpData)
-			});
-
-			if (!response.ok) {
-				const error = await response.json();
-				throw new Error(error.message || 'Failed to sign up');
-			}
-
-			return response.json();
-		} catch (error: any) {
-			console.error('Error signing up:', error.message);
-			throw error;
-		}
-	}
-
-	async signOut(): Promise<{ message: string }> {
-		try {
-			const response = await fetch('api/auth/signOut', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			});
-
-			if (!response.ok) {
-				const error = await response.json();
-				throw new Error(error.message || 'Failed to sign out');
-			}
-
-			return response.json();
-		} catch (error: any) {
-			console.error('Error signing out:', error.message);
-			throw error;
-		}
-	}
-
-	async signInWithOtp(signInWithOtpData: SignInWithOtpDto): Promise<{ message: string }> {
-		try {
-			const response = await fetch('/api/auth/signInWithOtp', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(signInWithOtpData)
+			const response = await fetch(`/api/auth/${endpoint}`, {
+				...options,
+				headers: { 'Content-Type': 'application/json', ...options.headers }
 			});
 
 			const data = await response.json();
-
 			if (!response.ok) {
-				const error = await response.json();
-				throw new Error(error.message || 'Failed to handle sign in with otp');
-			}
-
-			if (data.userData) {
-				localStorage.setItem('userData', JSON.stringify(data.userData));
+				throw new Error(data.message || `Request to ${endpoint} failed`);
 			}
 
 			return data;
-		} catch (error: any) {
-			console.error('Error sign in with otp:', error.message);
+		} catch (error: unknown) {
+			console.error(`Error in ${endpoint}:`, (error as Error).message);
 			throw error;
 		}
 	}
 
-	async verifyOTP(verifyOTPData: VerifyOTPDto): Promise<{ message: string }> {
-		try {
-			const response = await fetch('/api/auth/verifyOTP', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(verifyOTPData)
-			});
-
-			if (!response.ok) {
-				const error = await response.json();
-				throw new Error(error.message || 'Failed to handle verify otp');
-			}
-
-			return response.json();
-		} catch (error: any) {
-			console.error('Error verify otp:', error.message);
-			throw error;
-		}
+	async signIn(payload: SignInDto): Promise<ApiResponse> {
+		return this.fetchApi('signIn', {
+			method: 'POST',
+			body: JSON.stringify(payload)
+		});
 	}
 
-	async resetPassword(resetPasswordData: ResetPasswordDto): Promise<{ message: string }> {
-		try {
-			const response = await fetch('/api/auth/resetPassword', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(resetPasswordData)
-			});
+	async signUp(payload: SignUpDto): Promise<ApiResponse> {
+		return this.fetchApi('signUp', {
+			method: 'POST',
+			body: JSON.stringify(payload)
+		});
+	}
 
-			if (!response.ok) {
-				const error = await response.json();
-				throw new Error(error.message || 'Failed to handle reset password');
-			}
+	async signOut(): Promise<ApiResponse> {
+		return this.fetchApi('signOut', { method: 'POST' });
+	}
 
-			return response.json();
-		} catch (error: any) {
-			console.error('Error verify otp:', error.message);
-			throw error;
+	async signInWithOtp(payload: SignInWithOtpDto): Promise<ApiResponse> {
+		const data: any = await this.fetchApi('signInWithOtp', {
+			method: 'POST',
+			body: JSON.stringify(payload)
+		});
+
+		if (data.userData) {
+			localStorage.setItem('userData', JSON.stringify(data.userData));
 		}
+
+		return data;
+	}
+
+	async verifyOtp(payload: VerifyOTPDto): Promise<ApiResponse> {
+		return this.fetchApi('verifyOTP', {
+			method: 'POST',
+			body: JSON.stringify(payload)
+		});
+	}
+
+	async resetPassword(payload: ResetPasswordDto): Promise<ApiResponse> {
+		return this.fetchApi('resetPassword', {
+			method: 'POST',
+			body: JSON.stringify(payload)
+		});
 	}
 
 	async signInWithGoogle(): Promise<void> {
-		try {
-			window.location.href = '/api/auth/googleOAuth';
-		} catch (error: any) {
-			console.error('Error sign in with oauth:', error.message);
-			throw error;
-		}
+		window.location.href = '/api/auth/googleOAuth';
 	}
 }
 

@@ -81,7 +81,7 @@ export const useVerifyOtpHandler = (): SubmitHandler<VerifyOTPDto> => {
 
 	return async (verifyOTPData): Promise<void> => {
 		try {
-			const { message } = await authService.verifyOTP({ email, otpCode: verifyOTPData.otpCode });
+			const { message } = await authService.verifyOtp({ email, otpCode: verifyOTPData.otpCode });
 			toast({ description: message, variant: 'default' });
 			router.push('/auth/resetPassword?step=reset');
 		} catch (error: unknown) {
