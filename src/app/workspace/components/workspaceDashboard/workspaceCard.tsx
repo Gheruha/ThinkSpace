@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import Link from 'next/link';
 
 export default function WorkspaceCard() {
-	return (
+	return (	
 		<div id="Dashboard-div" className="flex w-full h-full justify-center items-center">
 			<Link href="/workspace">
 				<Card className="hover:bg-accent hover:text-accent-foreground transition-hover duration-75">

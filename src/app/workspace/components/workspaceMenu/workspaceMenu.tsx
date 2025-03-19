@@ -9,41 +9,11 @@ import { useMenuStore } from '@/lib/store/workspace/menu.store';
 export default function WorkspaceMenu() {
 	const { isMenuOpen, toggleMenu } = useMenuStore();
 
-	// useEffect for menu-side
-	// menu-side
-	useEffect(() => {
-		const sidebar = document.getElementById('menu-side') as HTMLElement | null;
-		const hideDistance = 240;
-
-		if (sidebar) {
-			const handleMouseMove = (event: MouseEvent) => {
-				const cursorX = event.clientX;
-
-				if (!isMenuOpen) {
-					if (cursorX < hideDistance) {
-						sidebar.setAttribute('aria-hidden', 'true');
-					} else {
-						sidebar.setAttribute('aria-hidden', 'false');
-					}
-				} else {
-					sidebar.setAttribute('aria-hidden', 'false');
-				}
-			};
-
-			document.addEventListener('mousemove', handleMouseMove);
-
-			return () => {
-				document.removeEventListener('mousemove', handleMouseMove);
-			};
-		}
-	}, [isMenuOpen]);
-
 	// menu-side-workspace
 	useEffect(() => {
 		const sidemenu = document.getElementById('menu-side-workspace') as HTMLElement | null;
 		const hideDistance = 240;
 		const appearDistance = 20;
-
 		if (sidemenu) {
 			const handleMouseMove = (event: MouseEvent) => {
 				const cursorX = event.clientX;
