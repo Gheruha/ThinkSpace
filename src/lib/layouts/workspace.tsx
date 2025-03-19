@@ -5,6 +5,8 @@ import { Ellipsis } from 'lucide-react';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LogOutBtn } from '@/components/ui/logout-btn';
+import WorkspaceMenu from '@/app/workspace/components/workspaceMenu/workspaceMenu';
+import WorkspaceHeader from '@/app/workspace/components/workspaceMenu/workspaceHeader';
 
 export default function WorkspaceLayout({ children }: { children: React.ReactNode }) {
 	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(true);
@@ -91,56 +93,9 @@ export default function WorkspaceLayout({ children }: { children: React.ReactNod
 
 	return (
 		<div className="flex fixed min-h-screen w-full">
-			<nav
-				id="menu-side"
-				className={`flex-grow-0 flex-shrink-0 pointer-events-none relative transition-width duration-200 ease-in-out ${isMenuOpen ? 'w-[240px]' : 'w-0'}`}
-			>
-				<div className="absolute top-0 left-0 bottom-0 w-0 overflow-visible z-[9] pointer-events-none">
-					<div
-						id="menu-side-workspace"
-						className={`relative w-[240px] transition-[width,opacity,transform] duration-200 ease-in-out bg-secondary dark:bg-slate-900 rounded-r-lg ${isMenuOpen ? 'h-full' : 'h-auto transform translate-y-[59px] translate-z-[0px]'}`}
-					>
-						<div
-							className={`overflow-hidden relative ${isMenuOpen ? 'h-full max-h-full' : 'h-auto max-h-[calc(-118px+100vh)]'}`}
-						>
-							<div
-								className={`flex flex-col ${isMenuOpen ? 'h-full max-h-full' : 'h-auto max-h-[calc(-118px+100vh)]'}`}
-							>
-								<div className="flex justify-between">
-									<LogOutBtn />
-									<Button
-										variant="icon"
-										size="xs"
-										onClick={toggleMenu}
-										className={`${isMenuOpen ? '' : 'hidden'}`}
-									>
-										<ChevronsLeft />
-									</Button>
-								</div>
-								<div className="py-4 px-4">
-									<div className="flex flex-col h-[80vh] justify-around items-center">
-										{/* CONTENT */}
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</nav>
+			<WorkspaceMenu />
 			<div className="flex flex-col min-h-screen flex-grow">
-				<header className={`flex h-8 w-full ${isMenuOpen ? 'justify-end' : 'justify-between'}`}>
-					<Button
-						variant="icon"
-						size="xs"
-						className={`px-2 ${isMenuOpen ? 'hidden' : ''}`}
-						onClick={toggleMenu}
-					>
-						<ChevronsRight />
-					</Button>
-					<Button variant="icon" size="xs" className="px-2">
-						<Ellipsis />
-					</Button>
-				</header>
+				<WorkspaceHeader />
 				<main className="p-4">{children}</main>
 			</div>
 		</div>
