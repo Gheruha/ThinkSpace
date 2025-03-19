@@ -20,31 +20,26 @@ export default function WorkspaceMenu() {
 
 				if (!isMenuOpen) {
 					if (cursorX < appearDistance) {
-						sidemenu.classList.add('pointer-events-auto');
-						sidemenu.classList.add('visible');
-						sidemenu.classList.add('opacity-100');
-						sidemenu.classList.remove('pointer-events-none');
-						sidemenu.classList.remove('hidden');
-						sidemenu.classList.remove('opacity-0');
-						sidemenu.classList.remove('translate-x-[-220]');
+						sidemenu.classList.add('pointer-events-auto', 'visible', 'opacity-100');
+						sidemenu.classList.remove('hidden', 'opacity-0', 'translate-x[-220]');
 					}
 					if (cursorX > hideDistance) {
-						sidemenu.classList.add('pointer-events-none');
-						sidemenu.classList.add('hidden');
-						sidemenu.classList.add('opacity-0');
-						sidemenu.classList.add('translate-x-[-220]');
-						sidemenu.classList.remove('pointer-events-auto');
-						sidemenu.classList.remove('visible');
-						sidemenu.classList.remove('opacity-100');
+						sidemenu.classList.add(
+							'pointer-events-none',
+							'hidden',
+							'opacity-0',
+							'translate-x-[-220]'
+						);
+						sidemenu.classList.remove('pointer-events-auto', 'visible', 'opacity-100');
 					}
 				} else {
-					sidemenu.classList.add('pointer-events-auto');
-					sidemenu.classList.add('visible');
-					sidemenu.classList.add('opacity-100');
-					sidemenu.classList.remove('pointer-events-none');
-					sidemenu.classList.remove('hidden');
-					sidemenu.classList.remove('opacity-0');
-					sidemenu.classList.remove('translate-x-[-220]');
+					sidemenu.classList.add('pointer-events-auto', 'visible', 'opacity-100');
+					sidemenu.classList.remove(
+						'pointer-events-none',
+						'hidden',
+						'opacity-0',
+						'translate-x-[-220]'
+					);
 				}
 			};
 
