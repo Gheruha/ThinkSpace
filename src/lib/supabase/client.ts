@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { createMiddlewareClient, createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import type { Database } from '@/types/database.types';
 
 // Environment variables validation
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -20,31 +21,31 @@ if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceRoleKey) {
 }
 
 // Create a Supabase client for client-side use.
-export const createSupabaseClientAnonymous: SupabaseClient = createClient(
+export const createSupabaseClientAnonymous: SupabaseClient<Database> = createClient<Database>(
 	supabaseUrl,
 	supabaseAnonKey
 );
 
 // Create a Supabase client for server-side use.
-export const createSupabaseClientServiceRole = (): SupabaseClient => {
-	return createClient(supabaseUrl, supabaseServiceRoleKey);
+export const createSupabaseClientServiceRole = (): SupabaseClient<Database> => {
+	return createClient<Database>(supabaseUrl, supabaseServiceRoleKey);
 };
 
 // Create a Supabase client for middleware use.
 export const createSupabaseClientMiddleware = (
 	req: NextRequest,
 	res: NextResponse
-): SupabaseClient => {
-	return createMiddlewareClient({
+): SupabaseClient<Database> => {
+	return createMiddlewareClient<Database>({
 		req,
 		res
 	});
 };
 
 // Create a Supabase client for API route or server-side use.
-export const createSupabaseClientApi = async (): Promise<SupabaseClient> => {
+export const createSupabaseClientApi = async (): Promise<SupabaseClient<Database>> => {
 	const cookieStore = cookies();
-	return createRouteHandlerClient({
+	return createRouteHandlerClient<Database>({
 		cookies: () => cookieStore
 	});
 };
