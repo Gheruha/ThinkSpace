@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyUserOtp } from '@/lib/utils/auth/auth.util';
-import { VerifyOTPDto } from '@/lib/dto/auth/auth.dto';
-import { isValidVerifyOtpDto } from '@/lib/dto/auth/isValid.dto';
+import { verifyUserOtp } from '@/lib/utils/auth/auth.utils';
+import { VerifyOtpDto } from '@/types/auth.type';
+import { isValidVerifyOtpDto } from '@/lib/utils/auth/auth-validation';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
 	try {
@@ -11,8 +11,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 			return NextResponse.json({ message: 'Invalid request body.' }, { status: 400 });
 		}
 
-		const { email, otpCode }: VerifyOTPDto = body;
-
+		const { email, otpCode }: VerifyOtpDto = body;
 		await verifyUserOtp({ email, otpCode });
 
 		return NextResponse.json({

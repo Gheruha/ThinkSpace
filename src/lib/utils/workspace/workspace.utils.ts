@@ -1,5 +1,5 @@
 import { PageDto } from '@/lib/dto/workspace/workspace.dto';
-import { createSupabaseApiClient } from '@/lib/supabase/client';
+import { createSupabaseClientApi } from '@/lib/supabase/client';
 import { SupabaseClient, Session } from '@supabase/supabase-js';
 
 export const getSession = async (supabase: SupabaseClient): Promise<Session | null> => {
@@ -14,7 +14,7 @@ export const getSession = async (supabase: SupabaseClient): Promise<Session | nu
 // Creates a new page into the database
 export const createNewPage = async ({ title }: PageDto): Promise<any> => {
 	// Create supabase api client
-	const supabase = await createSupabaseApiClient();
+	const supabase = await createSupabaseClientApi();
 
 	// Retrieve the session
 	const session = await getSession(supabase);
@@ -39,7 +39,7 @@ export const createNewPage = async ({ title }: PageDto): Promise<any> => {
 // Getting all the pages from the database
 export const getPages = async (): Promise<any> => {
 	// Create supabase api client
-	const supabase = await createSupabaseApiClient();
+	const supabase = await createSupabaseClientApi();
 
 	// Getting the session
 	const session = await getSession(supabase);

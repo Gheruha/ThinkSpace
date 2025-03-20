@@ -1,4 +1,4 @@
-import { authService } from '@/lib/services/auth/auth.service';
+import { authService } from '@/lib/services/api/auth.api';
 import { Button } from './button';
 import { toast } from './use-toast';
 

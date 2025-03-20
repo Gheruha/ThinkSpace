@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authenticateWithCode } from '@/lib/utils/auth/auth.util';
+import { authenticateWithCode } from '@/lib/utils/auth/auth.utils';
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
 	try {

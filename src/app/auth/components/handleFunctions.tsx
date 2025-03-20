@@ -2,15 +2,15 @@
 
 import { useRouter } from 'next/navigation';
 import { SubmitHandler } from 'react-hook-form';
-import { authService } from '@/lib/services/auth/auth.service';
+import { authService } from '@/lib/services/api/auth.api';
 import {
 	SignInDto,
 	SignUpDto,
 	SignInWithOtpDto,
-	VerifyOTPDto,
+	VerifyOtpDto,
 	ResetPasswordDto
-} from '@/lib/dto/auth/auth.dto';
-import { useEmailFromLocalStorage } from '@/lib/store/auth/localStorage.store';
+} from '@/types/auth.type';
+import { useUserDataFromLocalStorage } from '@/lib/store/local-storage.util';
 import { toast } from '@/components/ui/use-toast';
 import { Check } from 'lucide-react';
 
@@ -75,9 +75,10 @@ export const signInWithGoogleHandler = async (): Promise<void> => {
 };
 
 // OTP Verification Handler
-export const useVerifyOtpHandler = (): SubmitHandler<VerifyOTPDto> => {
+export const useVerifyOtpHandler = (): SubmitHandler<VerifyOtpDto> => {
 	const router = useRouter();
-	const email = useEmailFromLocalStorage();
+	const userData = useUserDataFromLocalStorage();
+	const email = userData?.email;
 
 	return async (verifyOTPData): Promise<void> => {
 		try {
@@ -92,7 +93,8 @@ export const useVerifyOtpHandler = (): SubmitHandler<VerifyOTPDto> => {
 
 // Resend OTP Handler
 export const useResendOtpHandler = () => {
-	const email = useEmailFromLocalStorage();
+	const userData = useUserDataFromLocalStorage();
+	const email = userData?.email ?? '';
 
 	return async (e: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
 		try {

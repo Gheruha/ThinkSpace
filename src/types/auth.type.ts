@@ -15,7 +15,7 @@ export interface SignInWithOtpDto {
 	email: string;
 }
 
-export interface VerifyOTPDto {
+export interface VerifyOtpDto {
 	email?: string;
 	otpCode: string;
 }
@@ -23,15 +23,4 @@ export interface VerifyOTPDto {
 export interface ResetPasswordDto {
 	password: string;
 	confirmPassword?: string;
-}
-
-export interface ResendOTPDto {
-	email: string;
-}
-
-export interface User {
-	id: string;
-	email?: string;
-	firstName?: string;
-	lastName?: string;
 }

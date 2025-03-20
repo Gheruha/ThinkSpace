@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { checkUserExists } from '@/lib/utils/auth/token.util';
-import { signInUserWithOtp } from '@/lib/utils/auth/auth.util';
-import { SignInWithOtpDto } from '@/lib/dto/auth/auth.dto';
-import { isValidSignInWithOtpDto } from '@/lib/dto/auth/isValid.dto';
+import { checkUserExists } from '@/lib/utils/user.utils';
+import { signInUserWithOtp } from '@/lib/utils/auth/auth.utils';
+import { SignInWithOtpDto } from '@/types/auth.type';
+import { isValidSignInWithOtpDto } from '@/lib/utils/auth/auth-validation';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
 	try {
@@ -23,6 +23,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 			);
 		}
 
+		// Sign in the user with otp
 		const userData = await signInUserWithOtp({ email });
 
 		return NextResponse.json({

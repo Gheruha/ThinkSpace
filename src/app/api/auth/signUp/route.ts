@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { checkUserExists } from '@/lib/utils/auth/token.util';
-import { signUpUser } from '@/lib/utils/auth/auth.util';
-import { SignUpDto } from '@/lib/dto/auth/auth.dto';
-import { isValidSignUpDto } from '@/lib/dto/auth/isValid.dto';
+import { checkUserExists } from '@/lib/utils/user.utils';
+import { signUpUser } from '@/lib/utils/auth/auth.utils';
+import { SignUpDto } from '@/types/auth.type';
+import { isValidSignUpDto } from '@/lib/utils/auth/auth-validation';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
 	try {

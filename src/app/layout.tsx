@@ -1,4 +1,4 @@
-import { getMetadata } from '@/lib/utils/metadata';
+import { getMetadata } from '@/lib/utils/metadata.utils';
 import { GeistSans } from 'geist/font/sans';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';

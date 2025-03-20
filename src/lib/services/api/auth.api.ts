@@ -2,13 +2,14 @@ import {
 	SignInDto,
 	SignUpDto,
 	SignInWithOtpDto,
-	VerifyOTPDto,
+	VerifyOtpDto,
 	ResetPasswordDto
-} from '@/lib/dto/auth/auth.dto';
+} from '@/types/auth.type';
 
 type ApiResponse<T = { message: string }> = T;
 
 class AuthService {
+	// Template for fetching endpoints
 	private async fetchApi<T>(endpoint: string, options: RequestInit): Promise<ApiResponse<T>> {
 		try {
 			const response = await fetch(`/api/auth/${endpoint}`, {
@@ -28,6 +29,7 @@ class AuthService {
 		}
 	}
 
+	// Sends a POST request to sign in the user
 	async signIn(payload: SignInDto): Promise<ApiResponse> {
 		return this.fetchApi('signIn', {
 			method: 'POST',
@@ -35,6 +37,7 @@ class AuthService {
 		});
 	}
 
+	// Sends a POST request to sign up a new user
 	async signUp(payload: SignUpDto): Promise<ApiResponse> {
 		return this.fetchApi('signUp', {
 			method: 'POST',
@@ -42,10 +45,12 @@ class AuthService {
 		});
 	}
 
+	// Sends a POST request to sign out the user
 	async signOut(): Promise<ApiResponse> {
 		return this.fetchApi('signOut', { method: 'POST' });
 	}
 
+	// Sends a POST request to sign in the user using OTP
 	async signInWithOtp(payload: SignInWithOtpDto): Promise<ApiResponse> {
 		const data: any = await this.fetchApi('signInWithOtp', {
 			method: 'POST',
@@ -59,13 +64,15 @@ class AuthService {
 		return data;
 	}
 
-	async verifyOtp(payload: VerifyOTPDto): Promise<ApiResponse> {
+	// Sends a POST request to verify the OTP during the sign-in process
+	async verifyOtp(payload: VerifyOtpDto): Promise<ApiResponse> {
 		return this.fetchApi('verifyOTP', {
 			method: 'POST',
 			body: JSON.stringify(payload)
 		});
 	}
 
+	// Sends a POST request to reset the user's password
 	async resetPassword(payload: ResetPasswordDto): Promise<ApiResponse> {
 		return this.fetchApi('resetPassword', {
 			method: 'POST',
@@ -73,6 +80,7 @@ class AuthService {
 		});
 	}
 
+	// Redirects the user to the Google OAuth sign-in route
 	async signInWithGoogle(): Promise<void> {
 		window.location.href = '/api/auth/googleOAuth';
 	}

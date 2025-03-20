@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { resetUserPassword } from '@/lib/utils/auth/auth.util';
-import { ResetPasswordDto } from '@/lib/dto/auth/auth.dto';
-import { isValidResetPasswordDto } from '@/lib/dto/auth/isValid.dto';
+import { resetUserPassword } from '@/lib/utils/auth/auth.utils';
+import { ResetPasswordDto } from '@/types/auth.type';
+import { isValidResetPasswordDto } from '@/lib/utils/auth/auth-validation';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
 	try {
@@ -12,7 +12,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 		}
 
 		const { password }: ResetPasswordDto = body;
-
 		await resetUserPassword({ password });
 
 		return NextResponse.json({

@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { signInUserWithOAuth } from '@/lib/utils/auth/auth.util';
+import { signInUserWithOAuth } from '@/lib/utils/auth/auth.utils';
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
 	try {
 		const url = new URL(req.url);
-
 		const redirectUrl = await signInUserWithOAuth(url);
 
 		return NextResponse.redirect(redirectUrl, { status: 302 });
