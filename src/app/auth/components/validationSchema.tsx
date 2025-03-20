@@ -3,7 +3,7 @@
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { SignInDto, SignUpDto, VerifyOTPDto, ResetPasswordDto } from '@/lib/dto/auth/auth.dto';
+import { SignInDto, SignUpDto, VerifyOtpDto, ResetPasswordDto } from '@/types/auth.type';
 
 // Base schemas
 const emailSchema = z.string().email('Invalid email format.');
@@ -63,8 +63,8 @@ export function useSignUpForm(): UseFormReturn<SignUpDto> {
 }
 
 // OTP Verification Form Hook
-export function useOTPForm(): UseFormReturn<VerifyOTPDto> {
-	return useForm<VerifyOTPDto>({
+export function useOTPForm(): UseFormReturn<VerifyOtpDto> {
+	return useForm<VerifyOtpDto>({
 		resolver: zodResolver(otpVerificationSchema),
 		defaultValues: { otpCode: '' }
 	});

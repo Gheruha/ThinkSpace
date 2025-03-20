@@ -1,12 +1,12 @@
 import {
-	createClientSupabaseAnonymous,
-	createClientSupabaseServiceRole
+	createSupabaseClientAnonymous,
+	createSupabaseClientServiceRole
 } from '@/lib/supabase/client';
-import { User } from '@/lib/dto/auth/auth.dto';
+import { User } from '@/types/user.type';
 
 // Fetch the current user's details using the Supabase client
 export const getCurrentUser = async (): Promise<User | null> => {
-	const supabase = createClientSupabaseAnonymous;
+	const supabase = createSupabaseClientAnonymous;
 	const {
 		data: { user },
 		error
@@ -23,8 +23,6 @@ export const getCurrentUser = async (): Promise<User | null> => {
 	}
 
 	const { id, email, user_metadata } = user;
-
-	// Map the Supabase user object to match the User interface
 	const mappedUser: User = {
 		id,
 		email: email || 'Unknown',
@@ -35,9 +33,9 @@ export const getCurrentUser = async (): Promise<User | null> => {
 	return mappedUser;
 };
 
-// some function
+// Get the user data by email
 export const getUserFromSupabaseByEmail = async (email: string): Promise<User | undefined> => {
-	const supabaseServiceRole = createClientSupabaseServiceRole();
+	const supabaseServiceRole = createSupabaseClientServiceRole();
 	const { data: users, error } = await supabaseServiceRole.auth.admin.listUsers();
 
 	if (error || !users) {
@@ -51,7 +49,7 @@ export const getUserFromSupabaseByEmail = async (email: string): Promise<User | 
 
 // Check if user exist in Supabase database
 export const checkUserExists = async (email: string): Promise<boolean> => {
-	const supabaseServiceRole = createClientSupabaseServiceRole();
+	const supabaseServiceRole = createSupabaseClientServiceRole();
 	const { data: users, error } = await supabaseServiceRole.auth.admin.listUsers();
 
 	if (error || !users) {
@@ -59,6 +57,5 @@ export const checkUserExists = async (email: string): Promise<boolean> => {
 		throw new Error(error?.message || 'Error fetching users from the database.');
 	}
 
-	const user = users?.users.find((u) => u.email === email);
-	return !!user;
+	return users?.users.some((u) => u.email === email) ?? false;
 };

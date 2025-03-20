@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { signOutUser } from '@/lib/utils/auth/auth.util';
+import { signOutUser } from '@/lib/utils/auth/auth.utils';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
 	try {

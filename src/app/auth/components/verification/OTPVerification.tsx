@@ -2,7 +2,7 @@
 
 import { useResendOtpHandler, useVerifyOtpHandler } from '../handleFunctions';
 import { useOTPForm } from '../validationSchema';
-import { useEmailFromLocalStorage } from '@/lib/store/auth/localStorage.store';
+import { useUserDataFromLocalStorage } from '@/lib/store/local-storage.util';
 import {
 	Card,
 	CardContent,
@@ -22,7 +22,8 @@ import { Button } from '@/components/ui/button';
 export function OTPVerification() {
 	const verifyOtpHandler = useVerifyOtpHandler();
 	const resendOtpHandler = useResendOtpHandler();
-	const email = useEmailFromLocalStorage();
+	const userData = useUserDataFromLocalStorage();
+	const email = userData?.email;
 
 	const {
 		register,

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseMiddlewareClient } from '@/lib/supabase/client';
+import { createSupabaseClientMiddleware } from '@/lib/supabase/client';
 
 export async function middleware(req: NextRequest) {
 	const res = NextResponse.next();
-	const supabase = createSupabaseMiddlewareClient(req, res);
+	const supabase = createSupabaseClientMiddleware(req, res);
 
 	const { data, error } = await supabase.auth.getSession();
 	const session = data?.session;
@@ -13,7 +13,7 @@ export async function middleware(req: NextRequest) {
 		return NextResponse.json({ message: 'Failed to authenticate' }, { status: 500 });
 	}
 
-	// Extract the pathname from the URL
+	// Giving the user access to certain pages
 	const { pathname } = req.nextUrl;
 
 	if (!session) {
@@ -40,7 +40,6 @@ export async function middleware(req: NextRequest) {
 		}
 	}
 
-	// Always return the response object
 	return res;
 }
 

@@ -1,19 +1,19 @@
 import { Session } from '@supabase/supabase-js';
-import { createSupabaseApiClient } from '@/lib/supabase/client';
-import { mapUserData } from '@/lib/store/auth/auth.store';
-import { getUserFromSupabaseByEmail } from '@/lib/utils/auth/token.util';
+import { createSupabaseClientApi } from '@/lib/supabase/client';
+import { mapUserData } from '@/lib/store/user.mapper';
+import { getUserFromSupabaseByEmail } from '@/lib/utils/user.utils';
 import {
 	SignInDto,
 	SignUpDto,
 	SignInWithOtpDto,
-	User,
-	VerifyOTPDto,
+	VerifyOtpDto,
 	ResetPasswordDto
-} from '@/lib/dto/auth/auth.dto';
+} from '@/types/auth.type';
+import { User } from '@/types/user.type';
 
 // Exchanges an authorization code for a Supabase session
 export const authenticateWithCode = async (code: string): Promise<void> => {
-	const supabase = await createSupabaseApiClient();
+	const supabase = await createSupabaseClientApi();
 	const { error } = await supabase.auth.exchangeCodeForSession(code);
 
 	if (error) {
@@ -24,7 +24,7 @@ export const authenticateWithCode = async (code: string): Promise<void> => {
 
 // Sign in the user
 export const signInUser = async ({ email, password }: SignInDto): Promise<Session> => {
-	const supabase = await createSupabaseApiClient();
+	const supabase = await createSupabaseClientApi();
 	const { data, error } = await supabase.auth.signInWithPassword({
 		email,
 		password
@@ -48,7 +48,7 @@ export const signUpUser = async ({
 	password,
 	redirectUrl
 }: SignUpDto): Promise<Session | null> => {
-	const supabase = await createSupabaseApiClient();
+	const supabase = await createSupabaseClientApi();
 	const { data, error } = await supabase.auth.signUp({
 		email,
 		password,
@@ -63,6 +63,10 @@ export const signUpUser = async ({
 		throw new Error(error.message || 'Failed to sign up');
 	}
 
+	if (!data.user) {
+		throw new Error('User data is missing after sign-up');
+	}
+
 	await mapUserData(data.user);
 
 	return data.session;
@@ -70,7 +74,7 @@ export const signUpUser = async ({
 
 // Sign out the current user and clear their session
 export const signOutUser = async (): Promise<void> => {
-	const supabase = await createSupabaseApiClient();
+	const supabase = await createSupabaseClientApi();
 	const { error } = await supabase.auth.signOut();
 
 	if (error) {
@@ -81,7 +85,7 @@ export const signOutUser = async (): Promise<void> => {
 
 // Send the OTP Code to user email
 export const signInUserWithOtp = async ({ email }: SignInWithOtpDto): Promise<User | null> => {
-	const supabase = await createSupabaseApiClient();
+	const supabase = await createSupabaseClientApi();
 
 	const { error } = await supabase.auth.signInWithOtp({ email });
 	if (error) {
@@ -93,9 +97,9 @@ export const signInUserWithOtp = async ({ email }: SignInWithOtpDto): Promise<Us
 	return user ? mapUserData(user) : null;
 };
 
-// Verify the OTP Code
-export const verifyUserOtp = async ({ email, otpCode }: VerifyOTPDto): Promise<void> => {
-	const supabase = await createSupabaseApiClient();
+// Verify the OTP during the sign-in process
+export const verifyUserOtp = async ({ email, otpCode }: VerifyOtpDto): Promise<void> => {
+	const supabase = await createSupabaseClientApi();
 
 	const { error } = await supabase.auth.verifyOtp({
 		email: email as string,
@@ -109,8 +113,9 @@ export const verifyUserOtp = async ({ email, otpCode }: VerifyOTPDto): Promise<v
 	}
 };
 
+// Reset the user's password
 export const resetUserPassword = async ({ password }: ResetPasswordDto): Promise<void> => {
-	const supabase = await createSupabaseApiClient();
+	const supabase = await createSupabaseClientApi();
 
 	const { error } = await supabase.auth.updateUser({ password });
 
@@ -120,8 +125,9 @@ export const resetUserPassword = async ({ password }: ResetPasswordDto): Promise
 	}
 };
 
+// Sign in the user with Google
 export const signInUserWithOAuth = async (url: URL): Promise<string> => {
-	const supabase = await createSupabaseApiClient();
+	const supabase = await createSupabaseClientApi();
 
 	const { data, error } = await supabase.auth.signInWithOAuth({
 		provider: 'google',
