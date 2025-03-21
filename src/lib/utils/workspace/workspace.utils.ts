@@ -44,6 +44,12 @@ export const getPages = async (): Promise<any> => {
 	// Getting the session
 	const session = await getSession(supabase);
 
+	// Code added by Dorin
+	if (!session) {
+		return null;
+	}
+	// Code added by Dorin
+
 	// Store the usedId
 	const userId = session?.user.id;
 
