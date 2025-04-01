@@ -10,7 +10,7 @@ interface PageMetadata {
 
 export function getMetadata({ title, description, url, icon, apple }: PageMetadata): Metadata {
 	return {
-		title: `${title} | Think Space`,
+		title: `${title}`,
 		description: description || 'Organize your life quickly and easily',
 		openGraph: {
 			title: `${title} | Think Space`,

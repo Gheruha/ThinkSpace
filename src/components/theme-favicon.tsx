@@ -1,26 +1,33 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useTheme } from 'next-themes';
 
 export function ThemeFavicon() {
-	const { theme, systemTheme } = useTheme();
-
 	useEffect(() => {
-		const currentTheme = theme === 'system' ? systemTheme : theme;
-		const faviconLink = document.querySelector("link[rel='icon']") as HTMLLinkElement;
-		const appleIconLink = document.querySelector("link[rel='apple-touch-icon']") as HTMLLinkElement;
+		const updateFavicon = (isDark: boolean) => {
+			const favicon = document.querySelector("link[rel='icon']") as HTMLLinkElement;
+			const appleIcon = document.querySelector("link[rel='apple-touch-icon']") as HTMLLinkElement;
 
-		if (faviconLink && appleIconLink) {
-			if (currentTheme === 'dark') {
-				faviconLink.href = '/darkModeLogo/favicon-32x32.png';
-				appleIconLink.href = '/darkModeLogo/apple-touch-icon.png';
-			} else {
-				faviconLink.href = '/lightModeLogo/favicon-32x32.png';
-				appleIconLink.href = '/lightModeLogo/apple-touch-icon.png';
+			if (favicon && appleIcon) {
+				favicon.href = isDark
+					? '/darkModeLogo/favicon-32x32.png'
+					: '/lightModeLogo/favicon-32x32.png';
+				appleIcon.href = isDark
+					? '/darkModeLogo/apple-touch-icon.png'
+					: '/lightModeLogo/apple-touch-icon.png';
 			}
-		}
-	}, [theme, systemTheme]);
+		};
+
+		// Get system theme
+		const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+		updateFavicon(prefersDark.matches);
+
+		// Listen for changes in system theme
+		const listener = (event: MediaQueryListEvent) => updateFavicon(event.matches);
+		prefersDark.addEventListener('change', listener);
+
+		return () => prefersDark.removeEventListener('change', listener);
+	}, []);
 
 	return null;
 }
