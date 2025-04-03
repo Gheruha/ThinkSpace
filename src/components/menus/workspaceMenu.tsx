@@ -1,13 +1,31 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { Ellipsis } from 'lucide-react';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LogOutBtn } from '@/components/ui/logout-btn';
 import { useMenuStore } from '@/lib/store/workspace/menu.store';
+import { useState, useEffect } from 'react';
+import WorkspaceHeader from '@/components/headers/workspaceHeader';
+import { useWorkspaceStore } from '@/lib/store/workspace/workspace.store';
+import { WorkspaceService } from '@/lib/services/workspace/workspace.service';
 
 export default function WorkspaceMenu() {
 	const { isMenuOpen, toggleMenu } = useMenuStore();
+	const { pages } = useWorkspaceStore((state) => state.pages);
+	const { setPages } = useWorkspaceStore((state) => state.setPages);
+
+	const workspaceService = new WorkspaceService();
+	useEffect(() => {
+		async function fetchAndStorePages() {
+			try {
+				const data = await workspaceService.getPagesService();
+				console.log(data);
+			} catch (err: any) {
+				console.error('Errir fetching pages: ', err);
+			}
+		}
+
+		fetchAndStorePages();
+	}, [pages, setPages]);
 
 	// menu-side-workspace
 	useEffect(() => {

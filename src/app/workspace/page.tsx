@@ -11,7 +11,6 @@ export default function Workspace() {
 		async function fetchAndStorePages() {
 			try {
 				const data = await workspaceService.getPagesService();
-				console.log(data);
 			} catch (err: any) {
 				console.error('Error fetching pages:', err);
 			}
