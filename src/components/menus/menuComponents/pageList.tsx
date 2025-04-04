@@ -1,6 +1,16 @@
 import React from 'react';
-import { useEffect } from 'react';
 import { useWorkspaceStore } from '@/lib/store/workspace/workspace.store';
-import { WorkspaceService } from '@/lib/services/workspace/workspace.service';
 
-export default function pageList() {}
+export default function PageList() {
+	const pages = useWorkspaceStore((state) => state.pages);
+
+	return (
+		<div>
+			{pages && pages.length > 0 ? (
+				pages.map((page) => <li key={page.id}>{page.Title}</li>)
+			) : (
+				<p>There are no pages.</p>
+			)}
+		</div>
+	);
+}

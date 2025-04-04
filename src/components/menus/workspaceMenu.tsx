@@ -5,27 +5,10 @@ import { LogOutBtn } from '@/components/ui/logout-btn';
 import { useMenuStore } from '@/lib/store/workspace/menu.store';
 import { useState, useEffect } from 'react';
 import WorkspaceHeader from '@/components/headers/workspaceHeader';
-import { useWorkspaceStore } from '@/lib/store/workspace/workspace.store';
-import { WorkspaceService } from '@/lib/services/workspace/workspace.service';
+import PageList from './menuComponents/pageList';
 
 export default function WorkspaceMenu() {
 	const { isMenuOpen, toggleMenu } = useMenuStore();
-	const { pages } = useWorkspaceStore((state) => state.pages);
-	const { setPages } = useWorkspaceStore((state) => state.setPages);
-
-	const workspaceService = new WorkspaceService();
-	useEffect(() => {
-		async function fetchAndStorePages() {
-			try {
-				const data = await workspaceService.getPagesService();
-				console.log(data);
-			} catch (err: any) {
-				console.error('Errir fetching pages: ', err);
-			}
-		}
-
-		fetchAndStorePages();
-	}, [pages, setPages]);
 
 	// menu-side-workspace
 	useEffect(() => {
@@ -98,7 +81,7 @@ export default function WorkspaceMenu() {
 							</div>
 							<div className="py-4 px-4">
 								<div className="flex flex-col h-[80vh] justify-around items-center">
-									{/* CONTENT */}
+									<PageList />
 								</div>
 							</div>
 						</div>
