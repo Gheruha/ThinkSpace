@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import WorkspaceMenu from '@/components/menus/workspaceMenu';
-import WorkspaceHeader from '@/components/headers/workspaceHeader';
+import WorkspaceMenu from '@/containers/menus/workspaceMenu';
+import WorkspaceHeader from '@/containers/headers/workspaceHeader';
 
 export default function WorkspaceLayout({ children }: { children: React.ReactNode }) {
 	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(true);

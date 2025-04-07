@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { LogOutBtn } from '@/components/ui/logout-btn';
 import { useMenuStore } from '@/lib/store/workspace/menu.store';
 import { useState, useEffect } from 'react';
-import WorkspaceHeader from '@/components/headers/workspaceHeader';
 import PageList from './menuComponents/pageList';
 
 export default function WorkspaceMenu() {
