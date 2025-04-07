@@ -1,10 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { Ellipsis } from 'lucide-react';
 import { ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LogOutBtn } from '@/components/ui/logout-btn';
 import { useMenuStore } from '@/lib/store/workspace/menu.store';
+import { useState, useEffect } from 'react';
+import PageList from './menuComponents/pageList';
 
 export default function WorkspaceMenu() {
 	const { isMenuOpen, toggleMenu } = useMenuStore();
@@ -80,7 +80,7 @@ export default function WorkspaceMenu() {
 							</div>
 							<div className="py-4 px-4">
 								<div className="flex flex-col h-[80vh] justify-around items-center">
-									{/* CONTENT */}
+									<PageList />
 								</div>
 							</div>
 						</div>
