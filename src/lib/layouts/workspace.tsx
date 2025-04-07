@@ -1,12 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Ellipsis } from 'lucide-react';
-import { ChevronsLeft, ChevronsRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { LogOutBtn } from '@/components/ui/logout-btn';
-import WorkspaceMenu from '@/app/workspace/components/workspaceMenu/workspaceMenu';
-import WorkspaceHeader from '@/app/workspace/components/workspaceMenu/workspaceHeader';
+import WorkspaceMenu from '@/containers/menus/workspaceMenu';
+import WorkspaceHeader from '@/containers/headers/workspaceHeader';
 
 export default function WorkspaceLayout({ children }: { children: React.ReactNode }) {
 	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(true);
