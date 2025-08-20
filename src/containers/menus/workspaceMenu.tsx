@@ -5,6 +5,7 @@ import { LogOutBtn } from '@/components/ui/logout-btn';
 import { useMenuStore } from '@/lib/store/workspace/menu.store';
 import { useState, useEffect } from 'react';
 import PageList from './menuComponents/pageList';
+import { ModeToggle } from '@/components/theme-toggler';
 
 export default function WorkspaceMenu() {
 	const { isMenuOpen, toggleMenu } = useMenuStore();
@@ -69,6 +70,7 @@ export default function WorkspaceMenu() {
 						>
 							<div className="flex justify-between">
 								<LogOutBtn />
+								<ModeToggle />
 								<Button
 									variant="icon"
 									size="xs"
